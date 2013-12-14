@@ -1,10 +1,10 @@
 
-from ..util import ordered
+from ...util import ordered
 
-class RevertDetector(ordered.HistoricalMap):
+class Detector(ordered.HistoricalMap):
 	
 	def __init__(self, radius):
-		super().__init__(self, radius)
+		super().__init__(maxlen=radius+1)
 		
 	def _process(self, checksum, revision):
 		revert = None
@@ -13,10 +13,10 @@ class RevertDetector(ordered.HistoricalMap):
 			
 			reverteds = list(self.up_to(checksum))
 			
-			if len(reverts) > 0:
-				revert = (revisions, reverteds, self[checksum])
+			if len(reverteds) > 0:
+				revert = (revision, reverteds, self[checksum])
 			else:
-				#noop!
+				pass #noop!
 			
 		
 		self.insert(checksum, revision)
@@ -26,7 +26,7 @@ class RevertDetector(ordered.HistoricalMap):
 	
 	def process(self, checksum_revisions):
 		
-		for checksum, revision in checksum_revision:
+		for checksum, revision in checksum_revisions:
 			
 			revert = self._process(checksum, revision)
 			if revert != None: yield revert

@@ -2,7 +2,6 @@
 A set of utilities for parsing and normalizing MediaWiki page names and titles. 
 """
 
-
 @classmethod
 def normalize_title(title):
 	if title == None: 
@@ -32,21 +31,7 @@ def parse_page_name(page_name, namespaces):
 	return ns_id, title
 	
 
-class Namespace:
-	
-	__slots__ = ('id', 'names', 'case', 'cannonical')
-	
-	def __init__(self, names, id, canonical=None, case=None):
-		self.id = int(id)
-		self.names = set(normalize_title(n) for n in names)
-		self.case = case
-		
-		if canonical == None:
-			self.canonical = normalize_title(names[0])
-		else:
-			assert canonical in self.names:
-			self.canonical = normalize_title(canonical)
-		
+
 	
 	
 
@@ -89,13 +74,18 @@ class Namespaces:
 		return namespaces
 	
 	@classmethod
-	def from_dump(cls, si_doc):
+	def from_dump(cls, namespaces):
 		
 		namespaces = (
-			Namespace(ns_doc['id'], [ns_doc['canonical'], ns_doc['*']], 
-				      canonical=ns_doc['canonical'], case=ns_doc['case'])
-			for ns_doc in si_doc['query']['namespaces'].values()
+			Namespace(namespace.id, [namespace.name], canonical=namespace.name,
+			          case=namespace.case)
+			for id, namespace in si_doc['query']['namespaces'].values()
 		)
 		
 		return namespaces
 	
+	
+class Parser:
+	
+	def __init__(self, namespaces):
+		

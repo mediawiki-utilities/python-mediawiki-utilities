@@ -1,4 +1,4 @@
-
+from .detector import Detector
 
 def reverts(checksum_revisions, radius=15):
 	"""
@@ -14,6 +14,6 @@ def reverts(checksum_revisions, radius=15):
 		a generator of (reverting, reverteds, reverted_to) for each reverting revision
 	"""
 	
-	revert_detector = RevertDetector(radius)
+	revert_detector = Detector(radius)
 	
 	return revert_detector.process(checksum_revisions)

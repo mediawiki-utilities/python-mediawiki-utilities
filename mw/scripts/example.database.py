@@ -1,3 +1,6 @@
+"""
+Prints the stats of a list of users (passed through stdin)
+"""
 import oursql, sys
 from mwlib.database import DB
 from mwlib.database.generators import NewcomerStats

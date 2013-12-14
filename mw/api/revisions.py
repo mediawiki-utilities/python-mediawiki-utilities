@@ -11,21 +11,29 @@ class Revisions(Collection):
 	
 	DIFF_TO = {'prev', 'next', 'cur'}
 	
+	# This is *not* the right way to do this, but it should work for all queries.
+	MAX_REVISIONS = 50
+	
 	def revert(self, rev_id, radius=15, page_id=None, sha1=None):
 		
 		if None in (page_id, sha1):
 			pass
 			#TODO -- Revert detector
 	
-	def query(self, *args, **kwargs):
-		
+	def query(self, *args, limit=sys.maxsize, **kwargs):
+		# `limit` means something diffent here
+		kwargs['limit'] = min(limit, self.MAX_REVISIONS)
+		revisions_yielded = 0
 		done = False
-		while not done:
+		while not done and revisions_yielded <= limit:
 			rev_docs, rvcontinue = self._query(*args, **kwargs)
 			
 			if rvcontinue != None and len(rev_docs) > 0:
 				for doc in rev_docs:
 					yield doc
+					revisions_yielded += 1
+					if revisions_yielded >= limit: break
+				
 				kwargs['rvcontinue'] = rvcontinue
 			else:
 				done = True

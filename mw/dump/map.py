@@ -7,25 +7,25 @@ from .functions import file
 
 logger = logging.getLogger("mw.dump.map")
 
-def map(paths, process_dump, threads=cpu_count()-1, output_buffer=100):
+def map(paths, process_dump, threads=cpu_count(), output_buffer=100):
 	"""
 	Maps a function across all of the pages in a set of dump files and returns
 	an (order not guaranteed) iterator over the output.  Increasing the 
-	`outputBuffer` size will allow more mapplications to happen before the 
+	`output_buffer` size will allow more mapplications to happen before the 
 	output is read, but will consume memory to do so.  Big output buffers 
 	are benefitial when the resulting iterator from this map will be read in
 	bursts.
 	
-	The `process_page` function must return an iterable object (such as a 
-	generator).  If your processPage function does not need to produce 
+	The `process_dump` function must return an iterable object (such as a 
+	generator).  If your process_dump function does not need to produce 
 	output, make it return an empty iterable upon completion (like an empty
 	list).
 	
 	:Parameters:
 		dumps : `list`
 			a list of paths to dump files to process
-		process_page : `function`
-			a function to run on every page of a set of dump files
+		process_dump : `function`
+			a function to run on every 'dump.Iterator'
 		threads : `int`
 			the number of individual processing threads to spool up
 		output_buffer : `int`

@@ -1,2 +1,2 @@
 from .functions import reverts
-from .revert_detector import RevertDetector
+from .detector import Detector

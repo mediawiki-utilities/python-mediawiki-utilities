@@ -1,3 +1,8 @@
+"""
+Prints the page_id, page_namespace, page_title of all pages in a set of dump
+files using as many cores as possible.
+"""
+
 import argparse
 
 from mw import dump

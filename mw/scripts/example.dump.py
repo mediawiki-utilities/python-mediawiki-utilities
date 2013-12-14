@@ -1,6 +1,6 @@
-'''
-Prints the revision ids of all talk pages.
-'''
+"""
+Prints the revision ids of all talk pages contained in a dump file.
+"""
 import sys
 from mw.dump import Dump
 

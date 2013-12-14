@@ -49,7 +49,7 @@ class RecentChanges(Collection):
 		
 		params = {
 			'action': "query",
-			'list': "recentchanges"
+			'list':   "recentchanges"
 		}
 		
 		params['rcstart'] = none_or(start, str)

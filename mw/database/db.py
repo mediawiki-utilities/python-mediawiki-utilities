@@ -1,6 +1,7 @@
 import oursql, os, getpass, time, logging
 
-from .revisions import Revisions
+from .revisions import Revisions, Archives, AllRevisions
+from .page import Page
 
 logger = logging.getLogger("database")
 
@@ -13,6 +14,9 @@ class DB:
 		self.shared_connection = oursql.connect(*args, **kwargs)
 		
 		self.revisions = Revisions(self)
+		self.archives = Archives(self)
+		self.all_revisions = AllRevisions(self)
+		self.pages = Pages(self)
 		
 	def __repr__(self):
 		return "%s(%s)" % (
@@ -58,14 +62,4 @@ class DB:
 			read_default_file=args.defaults_file
 		)
 	
-
-class Collection:
-	
-	def __init__(self, db):
-		self.db = db
-	
-	def __str__(self): return self.__repr__()
-	
-	def __repr__(self):
-		return "{0}({1})".format(self.__class__.__name__, repr(self.db))
 

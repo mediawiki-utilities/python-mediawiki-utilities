@@ -1,3 +1,6 @@
+"""
+Prints the data about reverted revisions (rev_id, reverting_id, timediff).
+"""
 import sys
 
 from mw import dump

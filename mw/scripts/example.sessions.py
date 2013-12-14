@@ -1,3 +1,5 @@
+
+
 from mw.lib import sessions
 from mw.api import API
 from mw.types import Timestamp
@@ -5,14 +7,14 @@ from mw.types import Timestamp
 api = API("http://en.wikipedia.org/w/api.php")
 
 revs = api.revisions.query(user="EpochFail", direction="newer")
-events = (
+user_timestamp_events = (
 	(rev['user'], Timestamp(rev['timestamp']), rev)
 	for rev in revs
 )
 
-for user_text, session in sessions.sessions(events):
+for user_text, session in sessions.sessions(user_timestamp_events):
 	
-	for event in enumerate(session):
+	for i, revision in enumerate(session):
 		rev = event.data
 		print(
 		  "\t".join([user_text, 

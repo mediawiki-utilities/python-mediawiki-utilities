@@ -1,3 +1,5 @@
+from . import autovivifying
+
 class Circle(list):
 	def __init__(self, maxsize, iterable=None):
 		self._maxsize = int(maxsize)
@@ -18,11 +20,11 @@ class Circle(list):
 			return (self._pointer + index) % self._maxsize
 	
 	def __iter__(self):
-		for i in xrange(0, self._size):
+		for i in range(0, self._size):
 			yield list.__getitem__(self, self._internalize(i))
 	
 	def __reversed__(self):
-		for i in xrange(self._size-1, -1, -1):
+		for i in range(self._size-1, -1, -1):
 			yield list.__getitem__(self, self._internalize(i))
 	
 	def pop(self, index=None):
