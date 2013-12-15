@@ -1,9 +1,11 @@
+import logging 
 
 from ..types import Timestamp
-
 from .collection import Collection
 
-class RecentChanges:
+logger = logging.getLogger("mw.database.pages")
+
+class RecentChanges(Collection):
 	
 	 # (https://www.mediawiki.org/wiki/Manual:Recentchanges_table)
 	TYPES = {
@@ -15,8 +17,47 @@ class RecentChanges:
 		'external': 5 # An external recent change. Primarily used by Wikidata
 	}
 	
+	
+	def listen(self, last=None, types=None, max_wait=5):
+		"""
+		Listens to the recent changes table.  Given no parameters, this function
+		will return an iterator over the entire recentchanges table and then 
+		continue to "listen" for new changes to come in every 5 seconds.
+		
+		:Parameters:
+			last : dict
+				a recentchanges row to pick up after
+			types : set
+				a set of recentchanges types to filter for
+			max_wait : float
+				the maximum number of seconds to wait between repeated queries
+		"""
+		while True:
+			if last != None:
+				after = last['rc_timestamp']
+				after_id = last['rc_id']
+			else:
+				after = None
+				after_id = None
+			
+			start = time.time()
+			rcs = self.query(after=after, after_id=after_id, direction="newer")
+			
+			count = 0
+			for rc in rcs:
+				yield rc
+				count += 1
+				
+			time.sleep(max_wait - (time.time() - start))
+				
+		
+			
+	
 	def query(self, before=None, after=None, before_id=None, after_id=None, 
 	                types=None, direction=None, limit=None):
+		"""
+		
+		"""
 		
 		query = """
 			SELECT * FROM recentchanges
@@ -40,7 +81,7 @@ class RecentChanges:
 			types = set(str(t) for t in types)
 			non_types = types - self.TYPES.keys()
 			if len(non_types) > 0:
-				raise TypeError("types must be a set of values from {0}".format(self.KEYS)
+				raise TypeError("types must be a set of values from {0}".format(self.KEYS))
 			query += " AND rc_type IN ({0}) ".format(
 				",".join(self.TYPES[t] for t in types)
 			)

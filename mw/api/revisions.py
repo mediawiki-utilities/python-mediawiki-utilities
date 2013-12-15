@@ -1,4 +1,8 @@
-import re, logging
+import re, logging, sys
+
+from ..util import none_or
+from .collection import Collection
+from .errors import MalformedResponse
 
 logger = logging.getLogger("mwlib.api.revisions")
 
@@ -14,11 +18,33 @@ class Revisions(Collection):
 	# This is *not* the right way to do this, but it should work for all queries.
 	MAX_REVISIONS = 50
 	
-	def revert(self, rev_id, radius=15, page_id=None, sha1=None):
+	def revert(self, rev, radius=15, before=None):
+		"""
+		Note that rev must contain 'page' and 'sha1'.
+		"""
 		
-		if None in (page_id, sha1):
-			pass
-			#TODO -- Revert detector
+		# Load history
+		past_revs = reversed(list(self.query(
+			pageids=rev['page']['id'],
+			limit=radius,
+			before_id=rev['revid'],
+			direction="older"
+		)))
+		future_revs = self.query(
+			page_id=rev['page']['id'],
+			limit=radius,
+			after_id=rev['revid'],
+			before=before,
+			direction="newer"
+		)
+		checksum_revisions = ((rev['sha1'], rev)
+		                      for rev in chain(past_revs, [rev], future_revs))
+		
+		for reverting, reverteds, reverted_to in reverts.reverts(checksum_revisions, radius=radius):
+			if rev['id'] in {r['id'] for r in reverteds}:
+				return revert
+			
+		return None
 	
 	def query(self, *args, limit=sys.maxsize, **kwargs):
 		# `limit` means something diffent here
@@ -76,18 +102,18 @@ class Revisions(Collection):
 		params['rvdifftotext'] = none_or(difftotext, str)
 		params['rvcontentformat'] = none_or(contentformat, str)
 		
-		doc = self.api.get(params)
+		doc = self.session.get(params)
 		
 		try:
 			if 'query-continue' in doc:
-				rvcontinue = doc['query-continue']['rvcontinue']
+				rvcontinue = doc['query-continue']['revisions']['rvcontinue']
 			else:
 				rvcontinue = None
 			
 			pages = doc['query']['pages'].values()
 			rev_docs = []
 			for page_doc in pages:
-				page = {k, d[k] for k in page_doc if k != 'revisions'}
+				page = {k: v for k, v in page_doc.items() if k != 'revisions'}
 				
 				for rev_doc in page_doc['revisions']:
 					rev_doc['page'] = page
@@ -97,7 +123,7 @@ class Revisions(Collection):
 			return rev_docs, rvcontinue
 			
 		except KeyError as e:
-			raise MalformedResponse(e.message, doc)
+			raise MalformedResponse(str(e), doc)
 		
 	
 	def _check_diffto(self, diffto):

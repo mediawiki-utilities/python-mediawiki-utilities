@@ -1,5 +1,8 @@
 import re, logging
 
+from .collection import Collection
+from .errors import MalformedResponse
+
 logger = logging.getLogger("mwlib.api.user_contribs")
 
 class UserContribs(Collection):
@@ -31,9 +34,18 @@ class UserContribs(Collection):
 		params['ucprop'] = self._items(properties, levels=self.PROPERTIES)
 		params['ucshow'] = self._items(show, levels=self.SHOW)
 		
-		doc = self.api.query(params)
+		doc = self.session.query(params)
 		
 		try:
+			if 'query-continue' in doc:
+				uccontinue = doc['query-continue']['uccontinue']
+			else:
+				uccontinue = None
+			
 			contribs_docs = doc['query']['usercontribs']
 			
+			return contibs_docs, uccontinue
+			
+		except KeyError as e:
+			raise MalformedResponse(str(e), doc)
 

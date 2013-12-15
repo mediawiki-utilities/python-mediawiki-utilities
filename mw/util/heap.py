@@ -1,8 +1,9 @@
 import heapq
 
 class Heap(list) :
-	def __init__(self, * pos_arg, ** nam_arg) :
-		list.__init__(self, * pos_arg, ** nam_arg)
+	def __init__(self, *args, **kwargs):
+		list.__init__(self, *args, **kwargs)
+		heapq.heapify(self)
 		
 	def pop(self) :
 		return heapq.heappop(self)

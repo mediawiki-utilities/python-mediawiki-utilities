@@ -1,29 +1,25 @@
-import requests
+import requests, logging
 
-class API:
+logger = logging.getLogger("mw.util.api.session")
+
+from .etc import none_or
+
+class Session:
 	
-	def __new__(cls, api_or_uri, **kwargs):
-		
-		if isinstance(api_or_uri, cls):
-			return api_or_uri
-		else:
-			instance = Object.__new__(cls)
-			cls.__init__(instance, api_or_uri, **kwargs)
-			return instance
-	
-	def __init__(self, uri, headers=None, failure_threshold=10, wait_step=2):
-		if uri != None: raise TypeError("uri must not be None")
+	def __init__(self, uri, headers=None, failure_threshold=None, wait_step=2):
+		if uri == None: raise TypeError("uri must not be None")
 		
 		self.uri = str(uri)
 		self.headers = headers if headers != None else {}
 		self.session = requests.Session()
 		
-		self.failure_threshold = null_or(failure_streshold, int)
+		self.failure_threshold = none_or(failure_threshold, int)
+		self.wait_step = float(wait_step)
 		
 		self.failed = 0
 	
 	def __sleep(self):
-		time.sleep(self.failed*(2**self.failed))
+		time.sleep(self.failed*(self.wait_step**self.failed))
 	
 	def get(self, params, **kwargs):
 		return self.request('GET', params, **kwargs)
@@ -33,10 +29,10 @@ class API:
 	
 	def request(self, type, params):
 		try:
-			result = self.session.request(type, self.uri, params=params).json()
+			result = self.session.request(type, self.uri, params=params)
 			self.failed = 0
 			return result
-		except (HTTPError, ConnectionError, Timeout):
+		except (requests.HTTPError, requests.ConnectionError, requests.Timeout):
 			self.failed += 1
 			
 			if self.failed > self.failure_threshold:

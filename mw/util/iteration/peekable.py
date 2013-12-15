@@ -1,13 +1,11 @@
-class Peekable:
+def Peekable(it):
+	if isinstance(it, PeekableType):
+		return it
+	else:
+		return PeekableType(it)
+
+class PeekableType:
 	class EMPTY: pass
-	
-	def __new__(cls, it):
-		if isinstance(it, cls):
-			return it
-		else:
-			inst = object.__new__(cls)
-			inst.__init__(it)
-			return inst
 	
 	def __init__(self, it):
 		self.it = iter(it)
@@ -20,7 +18,7 @@ class Peekable:
 		try:                  self.lookahead = next(self.it)
 		except StopIteration: self.lookahead = self.EMPTY
 	
-	def next(self):
+	def __next__(self):
 		item = self.peek()
 		self.__cycle()
 		return item

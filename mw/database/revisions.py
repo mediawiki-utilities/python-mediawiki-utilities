@@ -13,20 +13,20 @@ class RevisionLike(Collection):
 			page_id=rev['page_id'],
 			limit=radius,
 			before_id=rev['rev_id'],
-			dir='older'
+			direction="older"
 		)))
 		future_revs = self.query(
 			page_id=rev['page_id'],
 			limit=radius,
 			after_id=rev['rev_id'],
 			before=before,
-			dir='newer'
+			direction="newer"
 		)
 		checksum_revisions = ((rev['rev_sha1'], rev)
 		                      for rev in chain(past_revs, [rev], future_revs))
 		
-		for reverting, reverteds, reverted_to in reverts.reverts(checksum_revisions):
-			if rev in reverteds:
+		for reverting, reverteds, reverted_to in reverts.reverts(checksum_revisions, radius=radius):
+			if rev['rev_id'] in {r['rev_id'] for r in reverteds}:
 				return revert
 			
 		return None

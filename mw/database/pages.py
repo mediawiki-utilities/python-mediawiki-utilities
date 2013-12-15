@@ -1,8 +1,22 @@
+import logging
 
 from .collection import Collection
 
+logger = logging.getLogger("mw.database.pages")
+
 class Pages(Collection):
 	def get(self, namespace=None, title=None, rev_id=None, page_ids=None):
+		"""
+		Gets a single page based on a legitimate identifier of the page.  Note 
+		that namespace and title must be provided together.
+		
+		:Parameters:
+			namespace : int
+				the page's namespace
+			title : str
+				the page's title (namespace excluded)
+			
+		"""
 		
 		query = """
 		SELECT page.*

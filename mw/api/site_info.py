@@ -1,5 +1,8 @@
 import re, logging
 
+from .collection import Collection
+from .errors import MalformedResponse
+
 logger = logging.getLogger("mwlib.api.site_info")
 
 class SiteInfo(Collection):
@@ -20,7 +23,7 @@ class SiteInfo(Collection):
 		
 		siprop = self._items(properties, levels=self.PROPERTIES)
 		
-		doc = self.api.get(
+		doc = self.session.get(
 			{
 				'action': "query",
 				'meta': "siteinfo",
@@ -35,5 +38,5 @@ class SiteInfo(Collection):
 		try:
 			return doc['query']
 		except KeyError as e:
-			raise MalformedResponse(e.message, doc)
+			raise MalformedResponse(str(e), doc)
 			

@@ -1,5 +1,8 @@
 import re, logging
 
+from .collection import Collection
+from .errors import MalformedResponse
+
 logger = logging.getLogger("mwlib.api.pages")
 
 class Pages(Collection):
@@ -41,5 +44,6 @@ class Pages(Collection):
 		params['undo'] = none_or(undo, int)
 		params['undoafter'] = none_or(undoafter, int)
 		
+		# TODO finish this
 		
 		

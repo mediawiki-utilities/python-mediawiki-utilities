@@ -4,7 +4,7 @@ class Namespace:
 	
 	__slots__ = ('id', 'names', 'case', 'canonical')
 	
-	def __init__(self, names, id, canonical=None, case=None):
+	def __init__(self, id, names, canonical=None, case=None):
 		self.id = int(id)
 		self.names = set(titles.normalize(n) for n in names)
 		self.case = none_or(case, str)

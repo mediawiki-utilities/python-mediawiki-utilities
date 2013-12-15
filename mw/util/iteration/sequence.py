@@ -1,8 +1,14 @@
 from .peekable import Peekable
 
-def sequence(*iterables, **kwargs):
+def sequence(*iterables, by=None, compare=None):
 	
-	compare = kwargs.get('compare', lambda i1,i2:i1<i2)
+	if compare != None:
+		compare = compare 
+	elif by != None:
+		compare = lambda i1, i2: by(i1) <= by(i2)
+	else:
+		compare = lambda i1, i2: i1 <= i2
+	
 	iterables = [Peekable(it) for it in iterables]
 	
 	done = False
@@ -18,6 +24,6 @@ def sequence(*iterables, **kwargs):
 		if next_i == None:
 			done = True
 		else:
-			yield iterables[next_i].next()
+			yield next(iterables[next_i])
 		
 		

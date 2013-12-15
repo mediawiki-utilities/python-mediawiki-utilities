@@ -1,9 +1,11 @@
 import oursql, os, getpass, time, logging
 
+from .pages import Pages
+from .recent_changes import RecentChanges
 from .revisions import Revisions, Archives, AllRevisions
-from .page import Page
+from .users import Users
 
-logger = logging.getLogger("database")
+logger = logging.getLogger("mw.database.db")
 
 class DB:
 	

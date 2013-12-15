@@ -1,5 +1,8 @@
 import re, logging
 
+from .collection import Collection
+from .errors import MalformedResponse
+
 logger = logging.getLogger("mwlib.api.recent_changes")
 
 class RecentChanges(Collection):
@@ -71,16 +74,7 @@ class RecentChanges(Collection):
 		params['rctoponly'] = none_or(toponly, bool)
 		params['rccontinue'] = self._check_rccontinue(rccontinue)
 		
-		doc = self.api.get(
-			{
-				'list': "recentchanges",
-				'rcprop': rcprop,
-				'rccontinue': rccontinue,
-				'rcshow': rcshow,
-				'rcdir': rcdir,
-				'rclimit': int(limit)
-			}
-		)
+		doc = self.session.get(params)
 		
 		try:
 			rc_docs = doc['query']['recentchanges']
@@ -94,7 +88,7 @@ class RecentChanges(Collection):
 				pass # Leave it be
 		
 		except KeyError as e:
-			raise MalformedResponse(e.message, doc)
+			raise MalformedResponse(str(e), doc)
 		
 		
 		return rc_docs, rccontinue

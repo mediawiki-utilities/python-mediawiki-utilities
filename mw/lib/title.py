@@ -1,41 +1,23 @@
 """
 A set of utilities for parsing and normalizing MediaWiki page names and titles. 
+
+For use in this 
 """
 
 @classmethod
-def normalize_title(title):
+def normalize(title):
 	if title == None: 
 		return title
 	else:
 		return title.capitalize().replace(" ", "_")
 
-@classmethod
-def parse_page_name(page_name, namespaces):
-	page_name = cls.normalize(page_name)
-	
-	parts = page_name.split(":", 1)
-	if len(parts) == 1:
-		ns_id = 0
-		title = page_name
+def Namespaces(*args, **kwargs):
+	if isinstance(args[0], NamespacesType):
+		return namespaces
 	else:
-		ns_name, title = parts
-		
-		if namespace.contains(name=ns_nane):
-			ns_id = namespaces.get(name=ns_name).id
-			title = cls.normalize(title)
-		else:
-			ns_id = 0
-			title = page_name
-		
-	
-	return ns_id, title
-	
+		return NamespacesType(*args, **kwargs)
 
-
-	
-	
-
-class Namespaces:
+class NamespacesType:
 	
 	def __init__(self, namespaces=None):
 		self.ids   = {}
@@ -50,6 +32,9 @@ class Namespaces:
 		for name in namespace.names:
 			self.names[name] = namespace
 		
+	def __contains__(self, name):
+		return self.contains(name=name)
+	
 	def contains(self, id=None, name=None):
 		if id != None:
 			return int(id) in self.ids
@@ -88,4 +73,22 @@ class Namespaces:
 class Parser:
 	
 	def __init__(self, namespaces):
+		self.namespaces = Namespaces(namespaces)
 		
+	def parse(page_name):
+		parts = page_name.split(":", 1)
+		if len(parts) == 1:
+			ns_id = 0
+			title = normalize(page_name)
+		else:
+			ns_name, title = parts
+			ns_name, title = normalize(ns_name), normalize(ns_title)
+			
+			if ns_name in self.namespaces:
+				ns_id = self.namespaces.get(name=ns_name).id
+			else:
+				ns_id = 0
+				title = normalize(page_name)
+			
+		
+		return ns_id, title

@@ -1,5 +1,8 @@
+import logging 
 
 from .collection import Collection
+
+logger = logging.getLogger("mw.database.users")
 
 class Users(Collection):
 	def get(self, user_id=None, user_name=None):

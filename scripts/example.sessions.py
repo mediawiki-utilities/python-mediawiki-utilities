@@ -1,5 +1,6 @@
-
-
+"""
+Write a TSV file of user_name, session_index, timestamp, revid
+"""
 from mw.lib import sessions
 from mw.api import API
 from mw.types import Timestamp

@@ -1,4 +1,3 @@
-
 def count(iterable):
 	"""
 	Consumes all items in an iterable and returns a count.
