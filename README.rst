@@ -16,15 +16,20 @@ MW Utilities is a library developed by Aaron Halfaker for extracting data from M
 
 Package modules
 ===============
-:``mw.api``: A set of utilities for interacting with MediaWiki's web API.
+	``mw.api``
+		A set of utilities for interacting with MediaWiki's web API.
 
-:``mw.database``: A set of utilities for interacting with MediaWiki's database.
+	``mw.database``
+		A set of utilities for interacting with MediaWiki's database.
 
-:``mw.dump``: A set of utilities for interacting with MediaWiki's XML database dumps.
+	``mw.dump``
+		A set of utilities for interacting with MediaWiki's XML database dumps.
 
-:``mw.lib``: A set of utilities for doing interesting things with MediaWiki.  See below.
+	``mw.lib``
+		A set of utilities for doing interesting things with MediaWiki.  See below.
 
-:``mw.types``: A set of types for working with MediaWiki data.
+	``mw.types``
+		A set of types for working with MediaWiki data.
 
 
 Libraries
