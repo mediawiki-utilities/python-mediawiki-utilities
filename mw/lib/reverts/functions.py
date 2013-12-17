@@ -19,5 +19,5 @@ def reverts(checksum_revisions, radius=defaults.RADIUS):
 	revert_detector = Detector(radius)
 	
 	for checksum, revision in checksum_revisions:
-		revert = revert_detector.process(checksum_revisions)
+		revert = revert_detector.process(checksum, revision)
 		if revert != None: yield revert

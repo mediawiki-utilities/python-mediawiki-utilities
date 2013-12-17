@@ -1,4 +1,4 @@
-from .functions import group_events, sessions
+from .functions import sessions
 from .event import Event
-from .session_manager import SessionManager
+from .cache import Cache
 from . import defaults

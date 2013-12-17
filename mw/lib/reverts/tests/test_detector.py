@@ -5,31 +5,28 @@ from ..detector import Detector
 def test_detector():
 	detector = Detector(2)
 	
-	eq_(list(detector.process([("a", {'id': 1})])), [])
+	eq_(detector.process("a", {'id': 1}), None)
 	
 	# Check noop
-	eq_(list(detector.process([("a", {'id': 2})])), [])
+	eq_(detector.process("a", {'id': 2}), None)
 	
 	# Short revert
-	eq_(list(detector.process([("b", {'id': 3})])), [])
+	eq_(detector.process("b", {'id': 3}), None)
 	eq_(
-		list(detector.process([("a", {'id': 4})])),
-		[({'id': 4}, [{'id': 3}], {'id': 2})]
+		detector.process("a", {'id': 4}),
+		({'id': 4}, [{'id': 3}], {'id': 2})
 	)
 	
 	# Medium revert
-	eq_(list(detector.process([("c", {'id': 4})])), [])
-	eq_(list(detector.process([("d", {'id': 5})])), [])
+	eq_(detector.process("c", {'id': 5}), None)
+	eq_(detector.process("d", {'id': 6}), None)
 	eq_(
-		list(detector.process([("a", {'id': 6})])),
-		[({'id': 6}, [{'id': 5}, {'id': 4}], {'id': 4})]
+		detector.process("a", {'id': 7}),
+		({'id': 7}, [{'id': 6}, {'id': 5}], {'id': 4})
 	)
 	
 	# Long (undetected) revert
-	eq_(list(detector.process([("e", {'id': 7})])), [])
-	eq_(list(detector.process([("f", {'id': 8})])), [])
-	eq_(list(detector.process([("g", {'id': 9})])), [])
-	eq_(
-		list(detector.process([("a", {'id': 10})])),
-		[]
-	)
+	eq_(detector.process("e", {'id': 8}), None)
+	eq_(detector.process("f", {'id': 9}), None)
+	eq_(detector.process("g", {'id': 10}), None)
+	eq_(detector.process("a", {'id': 11}), None)

@@ -1,6 +1,6 @@
 import logging
 
-from .constants import DEFAULT_CUTOFF
+from . import defaults
 from .event import Event
 from .cache import Cache
 

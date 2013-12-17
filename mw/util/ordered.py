@@ -65,9 +65,9 @@ class HistoricalMap(autovivifying.Dict):
 	TODO: Rename this to FIFOCache
 	'''
 	
-	def __init__(self, maxlen):
+	def __init__(self, *args, maxlen, **kwargs):
 		'''Maxlen specifies the maximum amount of history to keep'''
-		super().__init__(self, vivifier=lambda k:[])
+		super().__init__(self, *args, vivifier=lambda k:[], **kwargs)
 		
 		self._circle = Circle(maxlen)  #List to preserve order for history
 	

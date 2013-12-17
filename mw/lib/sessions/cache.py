@@ -1,7 +1,9 @@
 import logging
 
 from ...util import Heap
+
 from . import defaults
+from .event import Event
 
 logger = logging.getLogger("mw.lib.sessions.cache")
 
@@ -28,7 +30,7 @@ class Cache:
 			self.active_users[event.user] = session
 			self.recently_active.push((event.timestamp, session))
 			
-		session.append((event.user, event.timestamp, event.data))
+		session.append(event)
 	
 	def get_active_sessions(self):
 		for user, session in self.active_users.items():

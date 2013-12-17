@@ -2,7 +2,7 @@ import requests, logging
 
 logger = logging.getLogger("mw.util.api.session")
 
-from .etc import none_or
+from .functions import none_or
 
 class Session:
 	
