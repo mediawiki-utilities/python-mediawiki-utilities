@@ -1,2 +1,0 @@
-
-DEFAULT_CUTOFF = 60*60

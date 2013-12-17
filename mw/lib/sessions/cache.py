@@ -1,19 +1,21 @@
 import logging
 
 from ...util import Heap
-from .constants import DEFAULT_CUTOFF
+from . import defaults
 
-logger = logging.getLogger("mw.lib.sessions.session_manager")
+logger = logging.getLogger("mw.lib.sessions.cache")
 
-class SessionManager:
+class Cache:
 	
-	def __init__(self, cutoff=DEFAULT_CUTOFF):
+	def __init__(self, cutoff=defaults.CUTOFF):
 		self.cutoff = int(cutoff)
 		
 		self.recently_active = Heap()
 		self.active_users  = {}
 	
-	def process(self, event):
+	def process(self, user, timestamp, data=None):
+		
+		event = Event(user, timestamp, data)
 		
 		for user, session in self._clear_expired(event.timestamp):
 			yield user, session
@@ -26,7 +28,7 @@ class SessionManager:
 			self.active_users[event.user] = session
 			self.recently_active.push((event.timestamp, session))
 			
-		session.append(event)
+		session.append((event.user, event.timestamp, event.data))
 	
 	def get_active_sessions(self):
 		for user, session in self.active_users.items():
@@ -45,3 +47,7 @@ class SessionManager:
 				yield session[-1].user, session
 			else:
 				self.recently_active.push((session[-1].timestamp, session))
+			
+		
+	def __repr__(self):
+		return "%s(%s)".format(self.__class__.__name__, repr(self.cutoff))

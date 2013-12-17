@@ -2,60 +2,23 @@ import logging
 
 from .constants import DEFAULT_CUTOFF
 from .event import Event
-from .session_manager import SessionManager
+from .cache import Cache
+
+from . import defaults
 
 logger = logging.getLogger("mw.lib.sessions.functions")
 
-def sessions(user_timestamp_sessions, cutoff=DEFAULT_CUTOFF):
-	return group_events((Event(*uts) for uts in user_timestamp_sessions), 
-	                    cutoff=cutoff)
-
-
-def group_events(events, cutoff=DEFAULT_CUTOFF):
+def sessions(events, cutoff=defaults.CUTOFF):
 	
-	events = (Event(e) for e in events)
+	# Construct the session manager 
+	cache = Cache(cutoff)
 	
-	session_manager = SessionManager(cutoff)
-	
-	for event in events:
+	# Apply the events
+	for user, timestamp, data in events:
 		
-		for user, session in session_manager.process(event):
+		for user, session in cache.process(user, timestamp, data):
 			yield user, session
 		
-	
-	for user, session in session_manager.get_active_sessions():
+	# Yield the left-overs
+	for user, session in cache.get_active_sessions():
 		yield user, session
-
-"""
-def _pre_grouped(user_events, cutoff=DEFAULT_CUTOFF):
-	
-	grouped_events = iteration.group(user_events, by=lambda e: e.user)
-	
-	for user, events in grouped_events:
-		
-		for session in _group_user_sessions(events, cutoff):
-			yield user, session
-			deque(session, maxlen=0) # Consumes any leftovers
-		
-	
-def _group_user_sessions(events, cutoff=DEFAULT_CUTOFF):
-	
-	#events = list(events);print(events)
-	events = iteration.Peekable(events)
-	
-	while not events.empty():
-		yield list(_group_user_session(events, cutoff))
-
-def _group_user_session(events, cutoff=DEFAULT_CUTOFF):
-	last = None
-	while not events.empty():
-		if last == None: print(events.peek())
-		if last == None or events.peek().timestamp - last.timestamp < cutoff:
-			event = events.next()
-			yield event
-			last = event
-		else:
-			#print(events.peek().timestamp - last.timestamp)
-			break
-		
-"""

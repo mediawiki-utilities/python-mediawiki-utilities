@@ -1,6 +1,8 @@
 from .detector import Detector
 
-def reverts(checksum_revisions, radius=15):
+from . import defaults
+
+def reverts(checksum_revisions, radius=defaults.RADIUS):
 	"""
 	Detects identity reverts that occur in a sequence of revisions based on 
 	matching checksums and limited by a radius -- the maximum distance that a
@@ -16,4 +18,6 @@ def reverts(checksum_revisions, radius=15):
 	
 	revert_detector = Detector(radius)
 	
-	return revert_detector.process(checksum_revisions)
+	for checksum, revision in checksum_revisions:
+		revert = revert_detector.process(checksum_revisions)
+		if revert != None: yield revert

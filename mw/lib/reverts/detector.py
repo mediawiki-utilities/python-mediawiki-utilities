@@ -1,32 +1,20 @@
 
 from ...util import ordered
+from . import defaults
 
 class Detector(ordered.HistoricalMap):
 	
-	def __init__(self, radius):
+	def __init__(self, radius=defaults.RADIUS):
 		super().__init__(maxlen=radius+1)
 		
-	def _process(self, checksum, revision):
+	def process(self, checksum, revision=None):
 		revert = None
 		
 		if checksum in self: #potential revert
 			
 			reverteds = list(self.up_to(checksum))
 			
-			if len(reverteds) > 0:
-				revert = (revision, reverteds, self[checksum])
-			else:
-				pass #noop!
+			if len(reverteds) > 0: # If no reverted revisions, this is a noop
+				return (revision, reverteds, self[checksum])
 			
-		
 		self.insert(checksum, revision)
-		
-		return revert
-		
-	
-	def process(self, checksum_revisions):
-		
-		for checksum, revision in checksum_revisions:
-			
-			revert = self._process(checksum, revision)
-			if revert != None: yield revert

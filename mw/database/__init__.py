@@ -1,3 +1,3 @@
-from .db import DB
 #from . import errors
 from .collection import Collection
+from .db import DB

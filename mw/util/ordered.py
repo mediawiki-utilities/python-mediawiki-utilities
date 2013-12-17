@@ -60,7 +60,9 @@ class Circle(list):
 class HistoricalMap(autovivifying.Dict):
 	'''
 	A datastructure for efficiently storing and retrieving a 
-	limited number of historical records.  
+	limited number of historical records.
+	
+	TODO: Rename this to FIFOCache
 	'''
 	
 	def __init__(self, maxlen):
@@ -68,6 +70,9 @@ class HistoricalMap(autovivifying.Dict):
 		super().__init__(self, vivifier=lambda k:[])
 		
 		self._circle = Circle(maxlen)  #List to preserve order for history
+	
+	def __iter__(self):
+		return iter(self._circle)
 	
 	def __setitem__(self, key, value):
 		'''Adds a new key-value pair. Returns any discarded values.'''

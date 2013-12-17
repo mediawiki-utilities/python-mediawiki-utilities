@@ -1,13 +1,8 @@
 	
 class Dict(dict):
 	
-	def __init__(self, *args, **kwargs):
-		if 'vivifier' in kwargs:
-			self.vivifier = kwargs['vivifier']
-		else:
-			raise TypeError("Argument vivifier must be provided")
-		
-		del kwargs['vivifier']
+	def __init__(self, *args, vivifier=lambda k:None, **kwargs):
+		self.vivifier = vivifier
 		
 		dict.__init__(self, *args, **kwargs)
 	
