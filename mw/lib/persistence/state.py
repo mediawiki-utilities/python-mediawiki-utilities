@@ -7,8 +7,8 @@ from . import defaults
 class Version:
 	__slots__ = ('tokens')
 	
-	def __init__(self, tokens=None):
-		self.tokens = tokens if tokens != None else Tokens()
+	def __init__(self):
+		self.tokens = None
 
 class State:
 	"""
@@ -27,7 +27,7 @@ class State:
 			self.revert_detector = revert_detector
 		
 		# Stores the last tokens
-		self.last_tokens = None
+		self.last = None
 	
 	def process(self, text, revision=None, checksum=None):
 		"""
@@ -42,21 +42,19 @@ class State:
 		if revert != None: # Revert
 			
 			# Empty words.
-			tokens = version.tokens
 			tokens_added = Tokens()
 			tokens_removed = Tokens()
 			
 			# Extract reverted_to revision
 			_, _, reverted_to = revert
-			tokens.extend(reverted_to.tokens)
-			print([t.text for t in reverted_to.tokens])
+			version.tokens = reverted_to.tokens
 			
 		else:
 			
-			if self.last_tokens == None: # First version of the page!
+			if self.last == None: # First version of the page!
 				
-				tokens = Tokens(Token(t) for t in self.tokenize(text))
-				tokens_added = tokens
+				version.tokens = Tokens(Token(t) for t in self.tokenize(text))
+				tokens_added = version.tokens
 				tokens_removed = Tokens()
 				
 			else:
@@ -67,15 +65,15 @@ class State:
 				# but you're still going to spend most of your time here. 
 				# Diffs usually run in O(n^2) -- O(n^3) time and most tokenizers
 				# produce a lot of tokens.
-				tokens, tokens_added, tokens_removed = \
-					self.last_tokens.compare(self.tokenize(text), self.diff)
+				version.tokens, tokens_added, tokens_removed = \
+					self.last.tokens.compare(self.tokenize(text), self.diff)
 				
 				
 			
-		tokens.persist(revision)
+		version.tokens.persist(revision)
 		
-		self.last_tokens = tokens
+		self.last = version
 		
-		return tokens, tokens_added, tokens_removed
+		return version.tokens, tokens_added, tokens_removed
 	
 	

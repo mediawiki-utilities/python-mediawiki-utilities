@@ -20,7 +20,6 @@ def test_state():
 		eq_("".join(token_sets[i][0].texts()), content)
 	
 	eq_(token_sets[0][0][0].text, "Apples")
-	print(token_sets[0][0][0].revisions)
 	eq_(len(token_sets[0][0][0].revisions), 5)
 	eq_(token_sets[0][0][4].text, "red")
 	eq_(len(token_sets[0][0][4].revisions), 3)

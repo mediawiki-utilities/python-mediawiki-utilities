@@ -9,7 +9,7 @@ def reverts(checksum_revisions, radius=defaults.RADIUS):
 	revert can span.
 	
 	:Parameters:
-		checksum_revisions : iterable((checksum, revision))
+		checksum_revisions : iterable
 			an iterable of checksums and revisions 
 	
 	:Return:
