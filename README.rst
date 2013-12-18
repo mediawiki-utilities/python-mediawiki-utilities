@@ -2,16 +2,17 @@
 MW Utilities
 ============
 
-MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting data from MediaWiki installations and performing some interesting computations.  A typical usage looks like this:
-
-.. code-block::python
+MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting data from MediaWiki installations and performing some interesting computations.  A typical usage looks like this::
 
 	from mw.api import API
+	from mw.lib import revert
 	
 	api = API("https://en.wikipedia.org/w/api.php")
+	revs = api.revisions.query(titles=["User:EpochFail"])
 	
-	for rev in api.revisions.query(user="EpochFail"):
-		print(rev['rev_id'])
+	for revert in revert.reverts(revs):
+		print("{0} reverted back to {1}".format(rev['revid'],
+		                                        revert.revert_to['revid'])
 
 
 Core modules
@@ -33,6 +34,9 @@ Libraries
 =========
 ``mw.lib.events``
 	A set of utilities for converting Recentchanges to conceptual events
+
+``mw.lib.persistence``
+	A set of utilities for tracking the persistence of content between revisions
 
 ``mw.lib.reverts``
 	A set of utilities for performing revert detection
