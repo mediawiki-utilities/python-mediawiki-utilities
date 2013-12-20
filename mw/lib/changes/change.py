@@ -31,7 +31,7 @@ class Change:
 		self.timestamp = Timestamp(timestamp)
 		self.comment   = str(comment)
 	
-	
+
 class LogEvent(dictish.Type):
 	
 	def __init__(self, log_id, *args, **kwargs):
@@ -59,6 +59,10 @@ class Match:
 		return hash(self.type, self.action, self.has_rev_id)
 	
 	@classmethod
-	def from_api(self, doc):
+	def from_api(self, rc_doc):
 		return cls(doc['logtype'], doc['logaction'], doc['revid'] > 0)
+	
+	@classmethod
+	def from_db(self, rc_row):
+		return cls(doc['rc_log_type'], doc['rc_log_action'], doc['rc_this_oldid'] > 0)
 

@@ -40,6 +40,7 @@ class TimestampType:
 	
 	def long_format(self):
 		return time.strftime(LONG_MW_TIME_STRING, self.__time)
+		
 	
 	def __repr__(self):
 		return "{0}({1})".format(

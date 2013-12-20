@@ -1,6 +1,15 @@
 from ..lib import dictish
 from .event import Event
 
+def try_keys(d, keys):
+	attempted_keys = []
+	for key in keys:
+		if key in d: 
+			return d[key]
+		attempted_keys.append(key)
+		
+	raise KeyError("|".join(str(k) for k in attempted_keys))
+
 class Revised(Event):
 	
 	matches = [
@@ -308,7 +317,7 @@ class Restored(LogEvent):
 			doc['rcid'],
 			doc['timestamp'],
 			doc['comment'],
-			rc_id=doc['rc_id']
+			rc_id=doc['rcid']
 		)
 	
 	@classmethod
@@ -322,7 +331,23 @@ class Restored(LogEvent):
 			+-----------+----------------+-------------+---------+--------------+--------------+------------+---------------------------------------------+----------+--------+--------+-----------+---------------+---------------+---------+-----------+----------------+-------------------+--------------+---------------+------------+------------+------------+----------+-------------+---------------+-----------+
 			1 row in set (0.05 sec)
 		"""
-		pass
+		return cls(
+			User(
+				int(row.get('log_namespace', row['rc_user'])),
+				row['rc_user_text']
+			),
+			Page(
+				row['log_page'],
+				row.get('log_namespace', row['rc_namespace']),
+				row['rc_title']
+			),
+			row['rc_logid'],
+			row['rc_id'],
+			row['rc_timestamp'],
+			row['rc_comment'],
+			rc_id=row['rc_id']
+		)
+			
 	
 class Protect(LogEvent):
 	
@@ -337,7 +362,7 @@ class Protect(LogEvent):
 		self.param   = str(param)
 	
 	@classmethod
-	def from_api(cls, doc):
+	def from_api(cls, doc, title_parser=None):
 		"""
 		:Example API doc::
 			{
@@ -362,7 +387,7 @@ class Protect(LogEvent):
 				"tags": []
 			}
 		"""
-		ns, title = Page.parse_title(doc['title'])
+		ns, title = title_parser.parse(doc['title'])
 		assert ns == doc['ns']
 		return cls(
 			Page(
@@ -375,11 +400,11 @@ class Protect(LogEvent):
 			doc['rcid'],
 			doc['timestamp'],
 			doc['comment'],
-			rc_id=doc['rc_id']
+			rc_id=doc['rcid']
 		)
 		
 	@classmethod
-	def from_db(cls, row):
+	def from_db(cls, row, title_parser=None):
 		"""
 		:Example DB row::
 			+-----------+----------------+-------------+---------+--------------+--------------+--------------+----------------------------------------------------------------------------------------+----------+--------+--------+-----------+---------------+---------------+---------+-----------+----------------+-------------------+--------------+----------------+------------+------------+------------+----------+-------------+---------------+---------------------------------+
@@ -388,7 +413,19 @@ class Protect(LogEvent):
 			| 624359365 | 20131219014049 |             | 3072955 | Kelapstick   |            0 | Misterduncan | repeatedly created [[WP:CSD#A7|A7]] article − non-notable person, organisation, etc.   |        0 |      0 |      0 |         0 |             0 |             0 |       3 | mw.log    |              0 |                   |            1 | 207.231.234.23 |       NULL |       NULL |          0 | 53586837 | protect     | protect       | ‎[create=sysop] (indefinite)     |
 			+-----------+----------------+-------------+---------+--------------+--------------+--------------+----------------------------------------------------------------------------------------+----------+--------+--------+-----------+---------------+---------------+---------+-----------+----------------+-------------------+--------------+----------------+------------+------------+------------+----------+-------------+---------------+---------------------------------+
 		"""
-		pass
+		return cls(
+			Page(
+				try_keys(row, ['log_page', 'rc_page']),
+				try_keys(row, ['log_namespace', 'rc_namespace']),
+				try_keys(row, ['log_namespace', 'rc_namespace'])
+			),
+			row.get('0'),
+			row['logid'],
+			row['rcid'],
+			row['timestamp'],
+			row['comment'],
+			rc_id=row['rcid']
+		)
 	
 class Unprotect(LogEvent):
 	"""
@@ -406,7 +443,7 @@ class Unprotect(LogEvent):
 		self.page    = Page(page)
 	
 	@classmethod
-	def from_api(cls, doc):
+	def from_api(cls, doc, title_parser):
 		"""
 		:Example API doc::
 			{
@@ -430,7 +467,7 @@ class Unprotect(LogEvent):
 				"tags": []
 			}
 		"""
-		ns, title = Page.parse_title(doc['title'])
+		ns, title = title_parser.parse(doc['title'])
 		assert ns == doc['ns']
 		return cls(
 			Page(
@@ -457,13 +494,13 @@ class Unprotect(LogEvent):
 		"""
 		return cls(
 			Page(
-				row['log_page'],
-				row['rc_namespace'],
-				row['rc_title']
+				try_keys(row, ['log_page']),
+				try_keys(row, ['log_namespace', 'rc_namespace']),
+				try_keys(row, ['log_title', 'rc_title'])
 			),
-			row['rc_logid'],
-			row['rc_id'],
-			row['rc_timestamp'],
-			row['rc_comment']
+			try_keys(row, ['log_id', 'rc_logid']),
+			row.get('rc_id'),
+			try_keys(row, ['log_timestamp', 'rc_timestamp']),
+			try_keys(row, ['log_comment', 'rc_comment']),
 		)
 		

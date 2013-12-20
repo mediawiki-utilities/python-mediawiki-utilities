@@ -1,4 +1,10 @@
 
+
+2013-12-19
+	Still working on `mw.lib.changes`.  I like the structure for the most part.  It looks like I'm going to have to join `revision` and `logging` to `recentchanges` in order construct an appropriate `change.Change` from a row.  That means I'm going to need a funny new method on `database.RecentChanges`.  That's going to confuse people.  Boo.
+	
+	I also need to figure out a way to configure for the lame timestamp format that appears in blocks and page protections.  I think I'm going to extend `types.TimestampType` to have a `strptime` method. 
+
 2013-12-18
 	Tests passing.  HistoricalMap was fine.  Will be code-complete once lib.changes is done.  Still need to figure out how I'm going to configure a title parser and pass it into the change constructor.  Also, I rediscovered how stupid the recentchanges table is.
 	
