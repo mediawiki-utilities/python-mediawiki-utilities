@@ -32,12 +32,14 @@ class Change:
 		self.comment   = str(comment)
 	
 
-class LogEvent(dictish.Type):
+class LogEvent:
 	
 	def __init__(self, log_id, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.log_id = int(log_id)
 		
+
+
 class Match:
 	
 	def __init__(self, type, action, has_rev_id):

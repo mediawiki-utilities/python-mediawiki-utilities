@@ -1,4 +1,13 @@
 
+2013-12-23
+	Still hacking on `mw.lib.changes`.  It's the same set of issues described in the last log.  I'm making progress building a params parser.  I think that my strategy is going to be to let the user handle params parsing themselves with a new `types.Protection` type.
+	
+	Oh! And I did get `types.TimestampType` extended to have a `strptime` method.  That's all nice and tested.  
+	
+	Note that I think it might be a good idea to consolidate all defaults for
+	better documentation.
+	
+	Anyway.  All tests are passing.  It's time to work on something else for a little while. 
 
 2013-12-19
 	Still working on `mw.lib.changes`.  I like the structure for the most part.  It looks like I'm going to have to join `revision` and `logging` to `recentchanges` in order construct an appropriate `change.Change` from a row.  That means I'm going to need a funny new method on `database.RecentChanges`.  That's going to confuse people.  Boo.

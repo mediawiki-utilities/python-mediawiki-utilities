@@ -1,4 +1,5 @@
-from ..lib import titles
+from ..lib import title
+from ..util import none_or
 
 class Namespace:
 	
@@ -6,12 +7,15 @@ class Namespace:
 	
 	def __init__(self, id, names, canonical=None, case=None):
 		self.id = int(id)
-		self.names = set(titles.normalize(n) for n in names)
+		self.names = set(title.normalize(n) for n in names)
 		self.case = none_or(case, str)
 		
 		if canonical == None:
-			self.canonical = titles.normalize(names[0])
+			self.canonical = title.normalize(names[0])
 		else:
-			assert canonical in self.names:
-			self.canonical = titles.normalize(canonical)
+			canonical = title.normalize(canonical)
+			
+			if canonical not in self.names:
+				raise KeyError(canonical)
+			self.canonical = canonical
 		

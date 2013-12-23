@@ -16,8 +16,11 @@ def Timestamp(time_thing):
 	else:
 		return TimestampType(time_thing)
 	
+Timestamp.strptime = lambda string, format: \
+	TimestampType(time.strptime(string, format))
+	
 class TimestampType:
-		
+	
 	def __init__(self, time_thing):
 		if isinstance(time_thing, time.struct_time):
 			self.__time = time_thing
@@ -33,6 +36,10 @@ class TimestampType:
 				except ValueError as e:
 					raise ValueError("'%s' is not a valid Wikipedia date format" % time_string)
 			
+	def strftime(self, format): return self.__format__(format)
+	def __format__(self, format):
+		return time.strftime(format, self.__time)
+	
 	def __str__(self): return self.short_format()
 	
 	def short_format(self):
@@ -92,4 +99,3 @@ class TimestampType:
 		except AttributeError:
 			return NotImplemented
 		
-	

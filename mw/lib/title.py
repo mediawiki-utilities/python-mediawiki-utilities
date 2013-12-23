@@ -4,7 +4,6 @@ A set of utilities for parsing and normalizing MediaWiki page names and titles.
 For use in this 
 """
 
-@classmethod
 def normalize(title):
 	if title == None: 
 		return title

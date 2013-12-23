@@ -1,16 +1,8 @@
 from ..lib import dictish
-from .event import Event
+from .change import Change, try_keys, INDEFINITE
 
-def try_keys(d, keys):
-	attempted_keys = []
-	for key in keys:
-		if key in d: 
-			return d[key]
-		attempted_keys.append(key)
-		
-	raise KeyError("|".join(str(k) for k in attempted_keys))
 
-class Revised(Event):
+class Revised(Change):
 	
 	matches = [
 		Match(None, None, True)
@@ -399,12 +391,11 @@ class Protect(LogEvent):
 			doc['logid'],
 			doc['rcid'],
 			doc['timestamp'],
-			doc['comment'],
-			rc_id=doc['rcid']
+			doc['comment']
 		)
 		
 	@classmethod
-	def from_db(cls, row, title_parser=None):
+	def from_db(cls, row, title_parser=None, ):
 		"""
 		:Example DB row::
 			+-----------+----------------+-------------+---------+--------------+--------------+--------------+----------------------------------------------------------------------------------------+----------+--------+--------+-----------+---------------+---------------+---------+-----------+----------------+-------------------+--------------+----------------+------------+------------+------------+----------+-------------+---------------+---------------------------------+
@@ -417,15 +408,15 @@ class Protect(LogEvent):
 			Page(
 				try_keys(row, ['log_page', 'rc_page']),
 				try_keys(row, ['log_namespace', 'rc_namespace']),
-				try_keys(row, ['log_namespace', 'rc_namespace'])
+				try_keys(row, ['log_title', 'rc_title'])
 			),
-			row.get('0'),
-			row['logid'],
-			row['rcid'],
-			row['timestamp'],
-			row['comment'],
-			rc_id=row['rcid']
+			try_keys(row, ['log_params', 'rc_params']),
+			try_keys(row, ['log_id', 'rc_logid']),
+			row.get('rc_id'),
+			try_keys(row, ['log_timestamp', 'rc_timestamp']),
+			try_keys(row, ['log_comment', 'rc_comment'])
 		)
+	
 	
 class Unprotect(LogEvent):
 	"""

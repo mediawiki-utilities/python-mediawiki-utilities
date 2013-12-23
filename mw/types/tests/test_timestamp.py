@@ -1,6 +1,6 @@
 from nose.tools import eq_
 
-from ..timestamp import Timestamp
+from ..timestamp import Timestamp, LONG_MW_TIME_STRING
 
 def test_self():
 	t1 = Timestamp(1234567890)
@@ -30,3 +30,16 @@ def test_subtraction():
 	eq_(t1 - t2, -1)
 	
 	
+def test_strptime():
+	eq_(
+		Timestamp("2009-02-13T23:31:30Z"),
+		Timestamp.strptime("2009-02-13T23:31:30Z", LONG_MW_TIME_STRING)
+	)
+	
+	eq_(
+		Timestamp.strptime(
+			"expires 03:20, 21 November 2013 (UTC)",
+			"expires %H:%M, %d %B %Y (UTC)"
+		),
+		Timestamp("2013-11-21T03:20:00Z")
+	)
