@@ -52,7 +52,7 @@ class Match:
 			return (
 				self.type == other.type and
 				self.action == other.action and
-				self.has_rev_id = other.has_rev_id
+				self.has_rev_id == other.has_rev_id
 			)
 		except AttributeError:
 			return False

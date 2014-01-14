@@ -90,7 +90,7 @@ class Created(LogEvent):
 			),
 			doc['logid'],
 			doc['rcid'],
-			Timestamp(doc['timestamp'])
+			Timestamp(doc['timestamp']),
 			doc['comment']
 		)
 
@@ -142,7 +142,7 @@ class Renamed(LogEvent):
 			doc['newuser'],
 			doc['logid'],
 			doc['rcid'],
-			Timestamp(doc['timestamp'])
+			Timestamp(doc['timestamp']),
 			doc['comment']
 		)
 
@@ -198,13 +198,13 @@ class Blocked(Event):
 				doc['userid'],
 				doc['user']
 			),
-			blocked_name
+			blocked_name,
 			doc['block']['flags'],
 			doc['block']['duration'],
 			doc['block']['expiry'],
 			doc['logid'],
 			doc['rcid'],
-			Timestamp(doc['timestamp'])
+			Timestamp(doc['timestamp']),
 			doc['comment']
 		)
 
@@ -254,6 +254,6 @@ class Unblocked(Event):
 			unblocked_name,
 			doc['logid'],
 			doc['rcid'],
-			Timestamp(doc['timestamp'])
+			Timestamp(doc['timestamp']),
 			doc['comment']
 		)

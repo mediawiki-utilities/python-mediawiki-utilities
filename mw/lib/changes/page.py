@@ -43,7 +43,7 @@ class Revised(Change):
 			}
 		"""
 		ns, title = Page.parse_title(doc['title'])
-		assert ns = doc['ns']
+		assert ns == doc['ns']
 		
 		return cls(
 			doc['revid'],
@@ -97,7 +97,7 @@ class Revised(Change):
 			),
 			row['rc_bot'] > 0,
 			row['rc_minor'] > 0,
-			row['rc_new'] > 0
+			row['rc_new'] > 0,
 			row['rev_sha1'],
 			row['rc_id'],
 			row['timestamp'],

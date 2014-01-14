@@ -27,7 +27,11 @@ class TimestampType:
 		elif type(time_thing) in (int, float):
 			self.__time = datetime.datetime.utcfromtimestamp(time_thing).timetuple()
 		else:
-			time_string = str(time_thing)
+			if type(time_thing) == bytes:
+				time_string = str(time_thing, 'utf8')
+			else:
+				time_string = str(time_thing)
+			
 			try:
 				self.__time = time.strptime(time_string, LONG_MW_TIME_STRING)
 			except ValueError as e:

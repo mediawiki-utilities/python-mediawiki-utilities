@@ -1,8 +1,13 @@
+import time, logging
 from itertools import chain
 
-from ..util import iteration
 from ..lib import reverts
+from ..types import Timestamp
+from ..util import iteration
+
 from .collection import Collection
+
+logger = logging.getLogger("mw.database.revisions")
 
 class RevisionLike(Collection):
 	
@@ -27,7 +32,7 @@ class RevisionLike(Collection):
 		
 		for reverting, reverteds, reverted_to in reverts.reverts(checksum_revisions, radius=radius):
 			if rev['rev_id'] in {r['rev_id'] for r in reverteds}:
-				return revert
+				return (reverting, reverteds, reverted_to)
 			
 		return None
 	
@@ -136,8 +141,8 @@ class Revisions(RevisionLike):
 			if direction not in self.DIRECTIONS: 
 				raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
 			
-			dir = ("ASC " if dir == "ASC" else "DESC ")
-			query += " ORDER BY rev_timestamp {0}, rev_id {0}".format(dir)
+			direction = ("ASC " if direction == "newer" else "DESC ")
+			query += " ORDER BY rev_timestamp {0}, rev_id {0}".format(direction)
 		
 		if limit != None:
 			query += " LIMIT ? "
