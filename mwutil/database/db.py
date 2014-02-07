@@ -44,7 +44,7 @@ class DB:
 			default="enwiki"
 		)
 		parser.add_argument(
-			'--defaults_file',
+			'--defaults-file',
 			help="MySQL defaults file (defaults to ~/.my.cnf)",
 			default=os.path.expanduser("~/.my.cnf")
 		)

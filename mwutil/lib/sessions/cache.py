@@ -1,9 +1,9 @@
 import logging
 
 from ...util import Heap
-
+from ...types import Timestamp
 from . import defaults
-from .event import Event
+from .event import Event, unpack_events
 
 logger = logging.getLogger("mw.lib.sessions.cache")
 
@@ -17,10 +17,10 @@ class Cache:
 	
 	def process(self, user, timestamp, data=None):
 		
-		event = Event(user, timestamp, data)
+		event = Event(user, Timestamp(timestamp), data)
 		
 		for user, session in self._clear_expired(event.timestamp):
-			yield user, session
+			yield user, unpack_events(session)
 		
 		#Apply revision
 		if event.user in self.active_users:
@@ -34,7 +34,7 @@ class Cache:
 	
 	def get_active_sessions(self):
 		for user, session in self.active_users.items():
-			yield user, session
+			yield user, unpack_events(session)
 	
 	def _clear_expired(self, timestamp):
 		

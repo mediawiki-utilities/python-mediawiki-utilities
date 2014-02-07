@@ -23,5 +23,6 @@ setup(
 	long_description=open('README.rst').read(),
 	install_requires=[
 	    "argparse >= 1.1",
-	    "requests >= 2.0.1"]
+	    "requests >= 2.0.1"],
+	test_suite = 'nose.collector'
 )

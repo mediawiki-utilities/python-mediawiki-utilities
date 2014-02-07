@@ -1,30 +1,31 @@
 from nose.tools import eq_
 from itertools import chain 
 
+
 from .. import defaults
 from ..functions import sessions
 
 EVENTS = {
 	"foo": [
 		[
-			("foo", 1234567890, None),
-			("foo", 1234567892, None),
-			("foo", 1234567894, None)
+			("foo", 1234567890, 1),
+			("foo", 1234567892, 2),
+			("foo", 1234567894, 3)
 		],
 		[
-			("foo", 1234567894+defaults.CUTOFF, None),
-			("foo", 1234567897+defaults.CUTOFF, None)
+			("foo", 1234567894+defaults.CUTOFF, 4),
+			("foo", 1234567897+defaults.CUTOFF, 5)
 		]
 	],
 	"bar": [
 		[
-			("bar", 1234567891, None),
-			("bar", 1234567892, None),
-			("bar", 1234567893, None)
+			("bar", 1234567891, 6),
+			("bar", 1234567892, 7),
+			("bar", 1234567893, 8)
 		],
 		[
-			("bar", 1234567895+defaults.CUTOFF, None),
-			("bar", 1234567898+defaults.CUTOFF, None)
+			("bar", 1234567895+defaults.CUTOFF, 9),
+			("bar", 1234567898+defaults.CUTOFF, 0)
 		]
 	]
 }
@@ -44,5 +45,5 @@ def test_group_events():
 	}
 	
 	for user, session in user_sessions:
-		eq_(EVENTS[user][counts[user]], list(session))
+		eq_(list(e[2] for e in EVENTS[user][counts[user]]), list(session))
 		counts[user] += 1
