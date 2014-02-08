@@ -4,8 +4,8 @@ MW Utilities
 
 MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting data from MediaWiki installations and performing some interesting computations.  A typical usage looks like this::
 
-	from mw.api import API
-	from mw.lib import reverts
+	from mwutil.api import API
+	from mwutil.lib import reverts
 	
 	api = API("https://en.wikipedia.org/w/api.php")
 	revs = api.revisions.query(titles=["User:EpochFail"])
@@ -13,6 +13,7 @@ MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfake
 	for revert in reverts.reverts(revs):
 		print("{0} reverted back to {1}".format(rev['revid'],
 		                                        revert.revert_to['revid'])
+	
 
 
 Core modules
@@ -32,9 +33,6 @@ Core modules
 
 Libraries
 =========
-``mw.lib.events``
-	A set of utilities for converting Recentchanges to conceptual events
-
 ``mw.lib.persistence``
 	A set of utilities for tracking the persistence of content between revisions
 
@@ -55,9 +53,9 @@ Coming soon...
 
 About the author
 ================
-Aaron Halfaker (aaron.halfaker@gmail.com) -- http://halfaker.info
+Aaron Halfaker (aaron.halfaker@gmail.com) -- http://halfaker.info -- http://en.wikipedia.org/User:EpochFail
 
 
 Contributors
 ============
-None yet.  See http://bitbucket.org/halfak/mediawiki
+None yet.  See http://bitbucket.org/halfak/mediawiki-utilities

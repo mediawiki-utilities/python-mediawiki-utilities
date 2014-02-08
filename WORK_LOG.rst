@@ -1,13 +1,23 @@
 
+2013-02-08
+	It's time to kill `mw.lib.changes`.  I just don't see that working as a core 
+	part of this library.  It might make sense to return build up another library 
+	to handle changes.  I'll have to get back to that at some other time.
+
 2013-12-23
-	Still hacking on `mw.lib.changes`.  It's the same set of issues described in the last log.  I'm making progress building a params parser.  I think that my strategy is going to be to let the user handle params parsing themselves with a new `types.Protection` type.
+	Still hacking on `mw.lib.changes`.  It's the same set of issues described in 
+	the last log.  I'm making progress building a params parser.  I think that my 
+	strategy is going to be to let the user handle params parsing themselves with 
+	a new `types.Protection` type.
 	
-	Oh! And I did get `types.TimestampType` extended to have a `strptime` method.  That's all nice and tested.  
+	Oh! And I did get `types.TimestampType` extended to have a `strptime` method.  
+	That's all nice and tested.  
 	
 	Note that I think it might be a good idea to consolidate all defaults for
 	better documentation.
 	
-	Anyway.  All tests are passing.  It's time to work on something else for a little while. 
+	Anyway.  All tests are passing.  It's time to work on something else for a 
+	little while. 
 
 2013-12-19
 	Still working on `mw.lib.changes`.  I like the structure for the most part.  It looks like I'm going to have to join `revision` and `logging` to `recentchanges` in order construct an appropriate `change.Change` from a row.  That means I'm going to need a funny new method on `database.RecentChanges`.  That's going to confuse people.  Boo.
