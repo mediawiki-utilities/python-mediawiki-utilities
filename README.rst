@@ -4,8 +4,8 @@ MW Utilities
 
 MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting data from MediaWiki installations and performing some interesting computations.  A typical usage looks like this::
 
-	from mw.api import API
-	from mw.lib import reverts
+	from mwutil.api import API
+	from mwutil.lib import reverts
 	
 	api = API("https://en.wikipedia.org/w/api.php")
 	revs = api.revisions.query(titles=["User:EpochFail"])
@@ -13,6 +13,7 @@ MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfake
 	for revert in reverts.reverts(revs):
 		print("{0} reverted back to {1}".format(rev['revid'],
 		                                        revert.revert_to['revid'])
+	
 
 
 Core modules
