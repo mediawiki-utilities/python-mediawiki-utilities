@@ -10,7 +10,7 @@ setup(
 	          'mwutil.database', 
 	          'mwutil.dump', 
 	          'mwutil.lib', 
-	          'mwutil.lib.changes', 
+	          'mwutil.lib.persistence', 
 	          'mwutil.lib.reverts', 
 	          'mwutil.lib.sessions', 
 	          'mwutil.types',
