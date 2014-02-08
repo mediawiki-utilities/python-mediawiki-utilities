@@ -1,23 +1,17 @@
-from .xml_iterator import XMLIterator
+from .element_iterator import ElementIterator
 
 from ..types import Timestamp
 from ..util import none_or
 
 from .errors import MalformedXML
 
-def clean_tag(ns, raw):
-	if ns != None:
-		return raw[len(ns):]
-	else:
-		return raw
-
-def consume_tags(tag_map, element, ns=None):
+def consume_tags(tag_map, element):
 	value_map = {}
 	for sub_element in element:
-		tag_name = clean_tag(ns, sub_element.tag)
+		tag_name = sub_element.tag
 		
 		if tag_name in tag_map:
-			value_map[tag_name] = tag_map[tag_name](sub_element, ns)
+			value_map[tag_name] = tag_map[tag_name](sub_element)
 	
 	return value_map
 
@@ -47,13 +41,13 @@ class Iterator:
 		return next(self.pages)
 	
 	@classmethod
-	def load_namespaces(cls, element, ns=None):
+	def load_namespaces(cls, element):
 		namespaces = {}
 		for sub_element in element:
-			tag = clean_tag(ns, sub_element.tag)
+			tag = sub_element.tag
 			
 			if tag == "namespace":
-				namespace = Namespace.from_element(sub_element, ns)
+				namespace = Namespace.from_element(sub_element)
 				namespaces[namespace.id] = namespace
 			else:
 				assert False, "This should never happen"
@@ -61,7 +55,7 @@ class Iterator:
 		return namespaces
 	
 	@classmethod
-	def load_site_info(cls, element, ns=None):
+	def load_site_info(cls, element):
 		
 		site_name  = None
 		base       = None
@@ -70,59 +64,58 @@ class Iterator:
 		namespaces = {}
 		
 		for sub_element in element:
-			tag = clean_tag(ns, sub_element.tag)
-			
-			if tag == 'sitename':
+			if sub_element.tag == 'sitename':
 				site_name = sub_element.text
-			elif tag == 'base':
+			elif sub_element.tag == 'base':
 				base = sub_element.text
-			elif tag == 'generator':
+			elif sub_element.tag == 'generator':
 				generator = sub_element.text
-			elif tag == 'case':
+			elif sub_element.tag == 'case':
 				case = sub_element.text
-			elif tag == 'namespaces':
-				namespaces = cls.load_namespaces(sub_element, ns)
+			elif sub_element.tag == 'namespaces':
+				namespaces = cls.load_namespaces(sub_element)
 			
 		
 		return site_name, base, generator, case, namespaces
 		
 	@classmethod
-	def load_pages(cls, element, ns=None):
+	def load_pages(cls, element):
 		
 		for sub_element in element:
-			tag = clean_tag(ns, sub_element.tag)
+			tag = sub_element.tag
 			
 			if tag == "page":
-				yield Page.from_element(sub_element, ns)
+				yield Page.from_element(sub_element)
 			else:
-				assert False, "This should never happen"
+				assert MalformedXML("Expected to see 'page'.  " + \
+					               "Instead saw '{0}'".format(tag))
 	
 	@classmethod
 	def from_element(cls, element):
 		
-		ns = element.tag[:-len('mediawiki')]
-		
-		site_name = None
-		base      = None
-		generator = None
-		case      = None
-		namespace = None
+		site_name  = None
+		base       = None
+		generator  = None
+		case       = None
+		namespaces = None
 		
 		# Consume <siteinfo>
 		for sub_element in element:
-			tag = clean_tag(ns, sub_element.tag)
+			tag = sub_element.tag
+			print(tag)
 			if tag == "siteinfo":
-				site_name, base, generator, case, namespaces = cls.load_site_info(sub_element, ns)
+				site_name, base, generator, case, namespaces = cls.load_site_info(sub_element)
 				break
 			
 		# Consume all <page>
-		pages = cls.load_pages(element, ns)
+		pages = cls.load_pages(element)
 		
 		return cls(site_name, base, generator, case, namespaces, pages)
 	
 	@classmethod 
 	def from_file(cls, f):
-		element = XMLIterator(f)
+		element = ElementIterator.from_file(f)
+		assert element.tag == "mediawiki"
 		return cls.from_element(element)
 	
 
@@ -148,22 +141,23 @@ class Namespace:
 		)
 		
 	@classmethod
-	def from_element(cls, element, ns=None):
+	def from_element(cls, element):
 		return cls(
-			element.get('key'),
-			element.get('case'),
+			element.attr('key'),
+			element.attr('case'),
 			element.text
 		)
 	
 
 
 class Page:
-	__slots__ = ('id', 'title', 'namespace', 'revisions')
+	__slots__ = ('id', 'title', 'namespace', 'redirect', 'revisions')
 	
-	def __init__(self, id, title, namespace, revisions):
+	def __init__(self, id, title, namespace, redirect, revisions):
 		self.id = none_or(id, int)
 		self.title = none_or(title, str)
 		self.namespace = none_or(namespace, int)
+		self.redirect = none_or(redirect, str)
 		
 		# Should be a lazy generator
 		self.revisions = revisions
@@ -176,57 +170,71 @@ class Page:
 		return next(self.revisions)
 	
 	@classmethod
-	def load_revisions(cls, element, ns=None):
+	def load_revisions(cls, first_revision, element):
+		yield Revision.from_element(first_revision)
+		
 		for sub_element in element:
-			tag = clean_tag(ns, sub_element.tag)
+			tag = sub_element.tag
 			
 			if tag == "revision":
-				yield Revision.from_element(sub_element, ns)
+				yield Revision.from_element(sub_element)
 			else:
 				raise MalformedXML("Expected to see 'revision'.  " + \
 					               "Instead saw '{0}'".format(tag))
 			
 	
 	@classmethod
-	def from_element(cls, element, ns=None):
+	def from_element(cls, element):
 		title     = None
 		namespace = None
 		id        = None
+		redirect  = None
+		
+		first_revision = None
 		
 		# Consume each of the elements until we see <id> which should come last.
 		for sub_element in element:
-			tag = clean_tag(ns, sub_element.tag)
+			tag = sub_element.tag
 			if tag == "title":
 				title = sub_element.text
 			elif tag == "ns":
 				namespace = sub_element.text
 			elif tag == "id":
 				id    = int(sub_element.text)
-				break # This should be the last element before revisions start.
-				      # I don't feel great about this practice, so I thought
-				      # I'd write a long enough note that future me (you) will
-				      # take notice of what's going on here.
+			elif tag == "redirect":
+				redirect = sub_element.attr("title", None)
+			elif tag == "revision":
+				first_revision = sub_element
+				break
+				# Assuming that the first revision seen marks the end of page 
+				# metadata.  I'm not too keen on this assumption, so I'm leaving
+				# this long comment to warn whoever ends up maintaining this. 
+			else:
+				raise MalformedXML("Unexpected tag found when processing " + \
+					               "a <page>: '{0}'".format(tag))
 		
-		# <revision>s should be the only left at this point
-		revisions = cls.load_revisions(element, ns)
+		# Assuming that I got here by seeing a <revision> tag.  See verbose
+		# comment above. 
+		revisions = cls.load_revisions(first_revision, element)
 		
-		return cls(id, title, namespace, revisions)
+		
+		return cls(id, title, namespace, redirect, revisions)
 
 class Revision:
 	__slots__ = ('id', 'timestamp', 'contributor', 'minor', 'comment', 'text',
 	             'bytes', 'sha1', 'parent_id', 'model', 'format')
 	
 	TAG_MAP = {
-		'id':          lambda e, ns: int(e.text),
-		'timestamp':   lambda e, ns: Timestamp(e.text),
-		'contributor': lambda e, ns: Contributor.from_element(e, ns),
-		'minor':       lambda e, ns: True,
-		'comment':     lambda e, ns: str(e.text),
-		'text':        lambda e, ns: str(e.text) if e.get("deleted", None) == None else None,
-		'sha1':        lambda e, ns: str(e.text),
-		'parentid':    lambda e, ns: int(e.text),
-		'model':       lambda e, ns: str(e.text),
-		'format':      lambda e, ns: str(e.text)
+		'id':          lambda e: int(e.text),
+		'timestamp':   lambda e: Timestamp(e.text),
+		'contributor': lambda e: Contributor.from_element(e),
+		'minor':       lambda e: True,
+		'comment':     lambda e: str(e.text),
+		'text':        lambda e: str(e.text) if e.attr("deleted", None) == None else None,
+		'sha1':        lambda e: str(e.text),
+		'parentid':    lambda e: int(e.text),
+		'model':       lambda e: str(e.text),
+		'format':      lambda e: str(e.text)
 	}
 	
 	def __init__(self, id, timestamp, contributor, minor, comment, text, bytes,
@@ -245,8 +253,8 @@ class Revision:
 		self.format      = none_or(format, str)
 	
 	@classmethod
-	def from_element(cls, element, ns=None):
-		values = consume_tags(cls.TAG_MAP, element, ns)
+	def from_element(cls, element):
+		values = consume_tags(cls.TAG_MAP, element)
 		
 		return cls(
 			values.get('id'),
@@ -267,9 +275,9 @@ class Contributor:
 	__slots__ = ('id', 'user_text')
 	
 	TAG_MAP = {
-		'id':       lambda e, ns: int(e.text),
-		'username': lambda e, ns: str(e.text),
-		'ip':       lambda e, ns: str(e.text)
+		'id':       lambda e: int(e.text),
+		'username': lambda e: str(e.text),
+		'ip':       lambda e: str(e.text)
 	}
 	
 	def __init__(self, id, user_text):
@@ -277,8 +285,8 @@ class Contributor:
 		self.user_text = none_or(user_text, str)
 	
 	@classmethod
-	def from_element(cls, element, ns=None):
-		values = consume_tags(cls.TAG_MAP, element, ns)
+	def from_element(cls, element):
+		values = consume_tags(cls.TAG_MAP, element)
 		
 		return cls(
 			values.get('id'),

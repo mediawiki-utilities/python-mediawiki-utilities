@@ -51,6 +51,7 @@ SAMPLE_XML = """
     <title>Bar</title>
     <ns>1</ns>
     <id>2</id>
+    <redirect title="Computer accessibility" />
     <revision>
       <id>3</id>
       <timestamp>2004-08-11T09:04:08Z</timestamp>
