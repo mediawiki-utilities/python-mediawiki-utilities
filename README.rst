@@ -32,9 +32,6 @@ Core modules
 
 Libraries
 =========
-``mw.lib.events``
-	A set of utilities for converting Recentchanges to conceptual events
-
 ``mw.lib.persistence``
 	A set of utilities for tracking the persistence of content between revisions
 
@@ -55,9 +52,9 @@ Coming soon...
 
 About the author
 ================
-Aaron Halfaker (aaron.halfaker@gmail.com) -- http://halfaker.info
+Aaron Halfaker (aaron.halfaker@gmail.com) -- http://halfaker.info -- http://en.wikipedia.org/User:EpochFail
 
 
 Contributors
 ============
-None yet.  See http://bitbucket.org/halfak/mediawiki
+None yet.  See http://bitbucket.org/halfak/mediawiki-utilities

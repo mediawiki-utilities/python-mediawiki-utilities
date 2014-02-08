@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
 	name='MW Utilities',
-	version='0.0.1',
+	version='0.1.0',
 	author='Aaron Halfaker',
 	author_email='aaron.halfaker@gmail.com',
 	packages=['mwutil', 
@@ -10,7 +10,6 @@ setup(
 	          'mwutil.database', 
 	          'mwutil.dump', 
 	          'mwutil.lib', 
-	          'mwutil.lib.changes', 
 	          'mwutil.lib.reverts', 
 	          'mwutil.lib.sessions', 
 	          'mwutil.types',
