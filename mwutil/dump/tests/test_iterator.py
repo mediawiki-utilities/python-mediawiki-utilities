@@ -52,6 +52,7 @@ SAMPLE_XML = """
     <ns>1</ns>
     <id>2</id>
     <redirect title="Computer accessibility" />
+    <restrictions>edit=sysop:move=sysop</restrictions>
     <revision>
       <id>3</id>
       <timestamp>2004-08-11T09:04:08Z</timestamp>
@@ -77,6 +78,8 @@ def test_complete():
 	eq_(page.title, "Foo")
 	eq_(page.namespace, 0)
 	eq_(page.id, 1)
+	eq_(page.redirect, None)
+	eq_(page.restrictions, None)
 	
 	revision = next(page)
 	eq_(revision.id, 1)
@@ -104,6 +107,8 @@ def test_complete():
 	eq_(page.title, "Bar")
 	eq_(page.namespace, 1)
 	eq_(page.id, 2)
+	eq_(page.redirect, "Computer accessibility")
+	eq_(page.restrictions, "edit=sysop:move=sysop")
 	
 	revision = next(page)
 	eq_(revision.id, 3)

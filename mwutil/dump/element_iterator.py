@@ -64,7 +64,7 @@ class ElementIterator:
 				
 				yield sub_iterator
 			
-				sub_iterator.complete()
+				sub_iterator.clear()
 		
 		self.done = True
 		
@@ -72,8 +72,13 @@ class ElementIterator:
 		
 		while not self.done and self.pointer.depth() > self.depth:
 			event, element = next(self.pointer)
+			if self.pointer.depth() > self.depth: element.clear()
 		
 		self.done = True
+	
+	def clear(self):
+		self.complete()
+		self.element.clear()
 		
 	def attr(self, key, alt=None):
 		return self.element.attrib.get(key, alt)

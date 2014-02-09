@@ -151,13 +151,21 @@ class Namespace:
 
 
 class Page:
-	__slots__ = ('id', 'title', 'namespace', 'redirect', 'revisions')
+	__slots__ = (
+		'id',
+		'title',
+		'namespace',
+		'redirect',
+		'restrictions',
+		'revisions'
+	)
 	
-	def __init__(self, id, title, namespace, redirect, revisions):
+	def __init__(self, id, title, namespace, redirect, restrictions, revisions):
 		self.id = none_or(id, int)
 		self.title = none_or(title, str)
 		self.namespace = none_or(namespace, int)
 		self.redirect = none_or(redirect, str)
+		self.restrictions = none_or(restrictions, str)
 		
 		# Should be a lazy generator
 		self.revisions = revisions
@@ -185,10 +193,11 @@ class Page:
 	
 	@classmethod
 	def from_element(cls, element):
-		title     = None
-		namespace = None
-		id        = None
-		redirect  = None
+		title        = None
+		namespace    = None
+		id           = None
+		redirect     = None
+		restrictions = None
 		
 		first_revision = None
 		
@@ -203,6 +212,8 @@ class Page:
 				id    = int(sub_element.text)
 			elif tag == "redirect":
 				redirect = sub_element.attr("title", None)
+			elif tag == "restrictions":
+				restrictions = sub_element.text
 			elif tag == "revision":
 				first_revision = sub_element
 				break
@@ -218,7 +229,7 @@ class Page:
 		revisions = cls.load_revisions(first_revision, element)
 		
 		
-		return cls(id, title, namespace, redirect, revisions)
+		return cls(id, title, namespace, redirect, restrictions, revisions)
 
 class Revision:
 	__slots__ = ('id', 'timestamp', 'contributor', 'minor', 'comment', 'text',
