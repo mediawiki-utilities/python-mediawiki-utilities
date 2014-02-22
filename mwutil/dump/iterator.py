@@ -102,7 +102,6 @@ class Iterator:
 		# Consume <siteinfo>
 		for sub_element in element:
 			tag = sub_element.tag
-			print(tag)
 			if tag == "siteinfo":
 				site_name, base, generator, case, namespaces = cls.load_site_info(sub_element)
 				break
