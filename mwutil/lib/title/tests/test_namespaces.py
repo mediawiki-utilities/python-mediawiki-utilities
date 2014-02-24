@@ -17,6 +17,8 @@ def test_namespace():
 	assert "Talk" in namespaces
 	assert "Usu\u00e1rio(a)" in namespaces
 	assert not "Foobar" in namespaces
+	
+	eq_((1, "Foo"), namespaces.parse("Discuss\u00e3o:Foo"))
 
 def test_from_site_info():
 	
@@ -51,3 +53,6 @@ def test_from_site_info():
 	assert "Talk" in namespaces
 	assert "Usu\u00e1rio(a)" in namespaces
 	assert not "Foobar" in namespaces
+	
+	eq_((1, "Foo"), namespaces.parse("Discuss\u00e3o:Foo"))
+	

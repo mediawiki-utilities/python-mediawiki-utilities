@@ -48,6 +48,24 @@ class NamespacesType:
 			return self.ids[int(id)]
 		else:
 			return self.names[normalize(name)]
+		
+	def parse(self, page_name):
+		parts = page_name.split(":", 1)
+		if len(parts) == 1:
+			ns_id = 0
+			title = normalize(page_name)
+		else:
+			ns_name, title = parts
+			ns_name, title = normalize(ns_name), normalize(title)
+			
+			if ns_name in self:
+				ns_id = self.get(name=ns_name).id
+			else:
+				ns_id = 0
+				title = normalize(page_name)
+			
+		
+		return ns_id, title
 	
 	@classmethod
 	def from_site_info(cls, si_doc):
