@@ -22,28 +22,26 @@ def test_from_site_info():
 	
 	namespaces = Namespaces.from_site_info(
 		{
-			"query": {
-				"namespaces": {
-					"0": {
-						"id": 0,
-						"case": "first-letter",
-						"*": "",
-						"content": ""
-					},
-					"1": {
-						"id": 1,
-						"case": "first-letter",
-						"*": "Discuss\u00e3o",
-						"subpages": "",
-						"canonical": "Talk"
-					},
-					"2": {
-						"id": 2,
-						"case": "first-letter",
-						"*": "Usu\u00e1rio(a)",
-						"subpages": "",
-						"canonical": "User"
-					}
+			"namespaces": {
+				"0": {
+					"id": 0,
+					"case": "first-letter",
+					"*": "",
+					"content": ""
+				},
+				"1": {
+					"id": 1,
+					"case": "first-letter",
+					"*": "Discuss\u00e3o",
+					"subpages": "",
+					"canonical": "Talk"
+				},
+				"2": {
+					"id": 2,
+					"case": "first-letter",
+					"*": "Usu\u00e1rio(a)",
+					"subpages": "",
+					"canonical": "User"
 				}
 			}
 		}

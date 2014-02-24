@@ -54,13 +54,13 @@ class NamespacesType:
 		
 		aliases = autovivifying.Dict(vivifier=lambda k:[])
 		# get aliases
-		if 'namespacealiases' in si_doc['query']:
-			for alias_doc in si_doc['query']['namespacealiases']:
+		if 'namespacealiases' in si_doc:
+			for alias_doc in si_doc['namespacealiases']:
 				aliases[alias_doc['id']].append(alias_doc['*'])
 			
 		
 		namespaces = []
-		for ns_doc in si_doc['query']['namespaces'].values():
+		for ns_doc in si_doc['namespaces'].values():
 			
 			names = [ns_doc['*']]
 			if 'canonical' in ns_doc: names.insert(0, ns_doc['canonical'])
