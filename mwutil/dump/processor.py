@@ -28,7 +28,7 @@ class Processor(Process):
 				dump = Iterator.from_file(open_file(path))
 				logger.info("Beginning to process {0}.".format(repr(path)))
 				try:
-					for out in self.process_dump(dump):
+					for out in self.process_dump(dump, path):
 						self.outputq.put(out)
 				except Exception as e:
 					logger.error(

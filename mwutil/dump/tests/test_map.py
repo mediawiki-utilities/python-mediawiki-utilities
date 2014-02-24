@@ -66,10 +66,10 @@ SAMPLE_XML = """
 def test_map():
 	f = io.StringIO(SAMPLE_XML)
 	
-	def process_dump(dump):
+	def process_dump(dump, path):
 		for page in dump:
 			count = 0
-			for rev in page.revisions:
+			for rev in page:
 				count += 1
 				
 			yield page.id, count

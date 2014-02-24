@@ -17,8 +17,7 @@ def consume_tags(tag_map, element):
 
 class Iterator:
 	"""
-	WikiFile dump processor.  This class constructs with a filepointer to a 
-	Wikipedia XML dump file.
+	XML Wiki Dump
 	"""
 	__slots__ = ('site_name', 'base', 'generator', 'case', 'namespaces', 
 	             'pages')
