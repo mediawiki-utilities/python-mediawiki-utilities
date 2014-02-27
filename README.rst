@@ -7,10 +7,12 @@ MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfake
 	from mwutil.api import API
 	from mwutil.lib import reverts
 	
+	# Gather a page's revisions from the API
 	api = API("https://en.wikipedia.org/w/api.php")
 	revs = api.revisions.query(titles=["User:EpochFail"])
 	rev_events = (rev['sha1'], rev for rev in revs)
 	
+	# Detect and print revert info
 	for revert in reverts.reverts(rev_events):
 		print("{0} reverted back to {1}".format(rev['revid'],
 		                                        revert.revert_to['revid'])
@@ -49,17 +51,58 @@ Libraries
 
 More examples
 =============
-::
+Sessions::
 
 	from mwutil.api import API
 	from mwutil.lib import sessions
 	
+	# Gather a user's revisions from the API
 	api = API("https://en.wikipedia.org/w/api.php")
 	revs = api.user_contribs.query(user="EpochFail")
 	rev_events = (rev['user'], rev['timestamp'], rev for rev in revs)
 	
+	# Extract and print sessions
 	for user, session in sessions.sessions(revs):
 		print("{0}'s session with {1} revisions".format(user, len(session))
+
+Titles::
+	
+	from mwutil.api import API
+	from mwutil.lib import title
+	
+	# Normalize titles
+	title.normalize("foo bar")
+	# > "Foo_bar"
+	
+	# Construct a namespace parser from the API
+	api = API("https://en.wikipedia.org/w/api.php")
+	si_doc = api.site_info.query(properties=['namespaces', 'namespacealiases'])
+	namespaces = title.Namespaces.from_site_info(si_doc)
+	
+	# Handles normalization
+	namespaces.parser("user:epochFail")
+	# > 2, "EpochFail"
+	
+	# Handles namespace aliases
+	namespaces.parser("WT:foobar")
+	# > 5, "Foobar"
+	
+Dump::
+	from mwutil import dump
+	
+	# Construct dump file iterator
+	dump_iterator = dump.Iterator.from_file(open("dump.xml"))
+	
+	# Iterate through pages
+	for page in dump_iterator:
+		
+		# Iterate through a page's revisions
+		for revision in page:
+			
+			print(revision.id)
+		
+	
+
 
 About the author
 ================
