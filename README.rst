@@ -9,8 +9,9 @@ MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfake
 	
 	api = API("https://en.wikipedia.org/w/api.php")
 	revs = api.revisions.query(titles=["User:EpochFail"])
+	rev_events = (rev['sha1'], rev for rev in revs)
 	
-	for revert in reverts.reverts(revs):
+	for revert in reverts.reverts(rev_events):
 		print("{0} reverted back to {1}".format(rev['revid'],
 		                                        revert.revert_to['revid'])
 	
@@ -46,10 +47,19 @@ Libraries
 	A set of utilities for normalizing and parsing page titles
 
 
-Scripts and examples
-====================
-Coming soon...
+More examples
+=============
+::
 
+	from mwutil.api import API
+	from mwutil.lib import sessions
+	
+	api = API("https://en.wikipedia.org/w/api.php")
+	revs = api.user_contribs.query(user="EpochFail")
+	rev_events = (rev['user'], rev['timestamp'], rev for rev in revs)
+	
+	for user, session in sessions.sessions(revs):
+		print("{0}'s session with {1} revisions".format(user, len(session))
 
 About the author
 ================
