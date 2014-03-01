@@ -6,9 +6,8 @@ class Type(object):
 	def __eq__(self, other):
 		if other == None: return False
 		try:
-			for key in self.__dict__:
-				if self.__dict__[key] == other.__dict__[key]: pass
-				else: return False
+			for key in self.keys():
+				if getattr(self, key) != getattr(other, key): return False
 			
 			return True
 		except KeyError:

@@ -165,3 +165,10 @@ def test_skipping():
 	eq_(revision.model, "wikitext")
 	eq_(revision.format, "text/x-wiki")
 	
+
+def test_serialization():
+	f = io.StringIO(SAMPLE_XML)
+	
+	dump = Dump.from_file(f)
+	
+	eq_(dump, Dump.deserialize(dump.serialize()))
