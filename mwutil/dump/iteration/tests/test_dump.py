@@ -1,9 +1,9 @@
 import io
 from nose.tools import eq_
 
-from ...types import Timestamp
+from ....types import Timestamp
 
-from ..iterator import Iterator
+from ..dump import Dump
 
 SAMPLE_XML = """
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http
@@ -64,6 +64,14 @@ SAMPLE_XML = """
       <model>wikitext</model>
       <format>text/x-wiki</format>
     </revision>
+    <revision>
+      <id>4</id>
+      <timestamp>2004-08-12T09:04:08Z</timestamp>
+      <text xml:space="preserve">Revision 4 text</text>
+      <sha1>6ixvq7o1yg75n9g9chqqg94myzq11c5</sha1>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+    </revision>
   </page>
 </mediawiki>"""
 
@@ -71,7 +79,7 @@ SAMPLE_XML = """
 def test_complete():
 	f = io.StringIO(SAMPLE_XML)
 	
-	dump = Iterator.from_file(f)
+	dump = Dump.from_file(f)
 	eq_([0,1], list(dump.namespaces.keys()))
 	
 	page = next(dump)
@@ -120,11 +128,21 @@ def test_complete():
 	eq_(revision.comment, None)
 	eq_(revision.model, "wikitext")
 	eq_(revision.format, "text/x-wiki")
+	
+	revision = next(page)
+	eq_(revision.id, 4)
+	eq_(revision.timestamp, Timestamp("2004-08-12T09:04:08Z"))
+	eq_(revision.contributor, None)
+	eq_(revision.text, "Revision 4 text")
+	eq_(revision.sha1, "6ixvq7o1yg75n9g9chqqg94myzq11c5")
+	eq_(revision.comment, None)
+	eq_(revision.model, "wikitext")
+	eq_(revision.format, "text/x-wiki")
 
 def test_skipping():
 	f = io.StringIO(SAMPLE_XML)
 	
-	dump = Iterator.from_file(f)
+	dump = Dump.from_file(f)
 	
 	page = next(dump)
 	eq_(page.title, "Foo")

@@ -1,5 +1,7 @@
 import time, datetime, calendar
 
+from . import serializable
+
 LONG_MW_TIME_STRING = '%Y-%m-%dT%H:%M:%SZ'
 """
 The longhand version of MediaWiki time strings.
@@ -16,10 +18,7 @@ def Timestamp(time_thing):
 	else:
 		return TimestampType(time_thing)
 	
-Timestamp.strptime = lambda string, format: \
-	TimestampType(time.strptime(string, format))
-	
-class TimestampType:
+class TimestampType(serializable.Type):
 	
 	def __init__(self, time_thing):
 		if isinstance(time_thing, time.struct_time):
@@ -51,7 +50,16 @@ class TimestampType:
 	
 	def long_format(self):
 		return time.strftime(LONG_MW_TIME_STRING, self.__time)
+	
+	def serialize(self):
+		return self.unix()
 		
+	@classmethod
+	def deserialize(cls, time_thing):
+		if isinstance(time_thing, cls):
+			return time_thing
+		else:
+			return TimestampType(time_thing)
 	
 	def __repr__(self):
 		return "{0}({1})".format(
@@ -102,4 +110,12 @@ class TimestampType:
 			return not self.__time == other.__time
 		except AttributeError:
 			return NotImplemented
-		
+	
+
+
+
+Timestamp.strptime = lambda string, format: \
+	TimestampType(time.strptime(string, format))
+
+Timestamp.serialize = TimestampType.serialize
+Timestamp.deserialize = TimestampType.deserialize

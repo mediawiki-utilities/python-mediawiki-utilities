@@ -1,8 +1,10 @@
+from itertools import chain
+
 
 class Type(object):
 	
-	
 	def __eq__(self, other):
+		if other == None: return False
 		try:
 			for key in self.__dict__:
 				if self.__dict__[key] == other.__dict__[key]: pass
@@ -21,14 +23,26 @@ class Type(object):
 		return "%s(%s)" % (
 			self.__class__.__name__,
 			", ".join(
-				"%s=%r" % (k, v) for k, v in self.__dict__.iteritems()
+				"%s=%r" % (k, v) for k, v in self.items()
 			)
+		)
+	
+	def items(self):
+		for key in self.keys():
+			yield key, getattr(self, key)
+		
+	def keys(self):
+		print(dir(self))
+		return (
+			key for key in 
+			chain(getattr(self, "__slots__", []), self.__dict__.keys())
+			if key[:2] != "__"
 		)
 		
 	def serialize(self):
 		return dict(
 			(k, self._serialize(v)) 
-			for k, v in self.__dict__.iteritems()
+			for k, v in self.items()
 		)
 	
 	def _serialize(self, value):
@@ -48,15 +62,28 @@ class Type(object):
 class Dict(dict, Type):
 	
 	def serialize(self):
-		return {k: self._serialize(v) for k, v in self.iteritems()}
+		return {k: self._serialize(v) for k, v in self.items()}
 	
 	@staticmethod
-	def deserialize(cls, d):
+	def deserialize(d, value_deserializer=lambda v:v):
 		
 		if isinstance(d, Dict):
 			return d
 		else:
-			return Dict((k, cls.deserialize(v)) for k, v in d.iteritems())
+			return Dict((k, value_deserializer(v)) for k, v in d.items())
+
+class Set(set, Type):
+	
+	def serialize(self):
+		return [self._serialize(v) for v in self]
+	
+	@staticmethod
+	def deserialize(s, value_deserializer=lambda v:v):
+		
+		if isinstance(s, Set):
+			return s
+		else:
+			return Set(value_deserializer(v) for v in s)
 
 
 class List(list, Type):
@@ -65,9 +92,9 @@ class List(list, Type):
 		return list(self._serialize(v) for v in self)
 	
 	@staticmethod
-	def deserialize(cls, l):
+	def deserialize(l, value_deserializer=lambda v:v):
 		
 		if isinstance(l, List):
 			return l
 		else:
-			return List(cls.deserialize(v) for v in l)
+			return List(value_deserializer(v) for v in l)

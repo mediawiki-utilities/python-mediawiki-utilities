@@ -43,3 +43,10 @@ def test_strptime():
 		),
 		Timestamp("2013-11-21T03:20:00Z")
 	)
+
+def test_serialization():
+	timestamp = Timestamp(1234567890)
+	eq_(
+		timestamp,
+		Timestamp.deserialize(timestamp.serialize())
+	)
