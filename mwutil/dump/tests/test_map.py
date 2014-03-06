@@ -72,10 +72,12 @@ def test_map():
 			for rev in page:
 				count += 1
 				
-			yield page.id, count
+			yield {'page_id': page.id, 'revisions': count}
 		
 	pages = 0
-	for page_id, revisions in map([f], process_dump):
+	for doc in map([f], process_dump):
+		page_id = doc['page_id']
+		revisions = doc['revisions']
 		if page_id == 1:
 			eq_(revisions, 2)
 		elif page_id == 2:
@@ -88,4 +90,7 @@ def test_map():
 	eq_(pages, 2)
 		
 	
+def test_dict_yield():
+	f = io.StringIO(SAMPLE_XML)
+		
 	

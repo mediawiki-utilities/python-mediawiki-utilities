@@ -9,6 +9,7 @@ setup(
 	          'mwutil.api', 
 	          'mwutil.database', 
 	          'mwutil.dump', 
+	          'mwutil.dump.iteration', 
 	          'mwutil.lib', 
 	          'mwutil.lib.persistence', 
 	          'mwutil.lib.reverts', 
