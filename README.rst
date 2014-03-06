@@ -51,7 +51,36 @@ Libraries
 
 More examples
 =============
-Sessions::
+Timestamp handling::
+	
+	from mwutil.types import Timestamp
+	
+	# Seconds since Unix Epoch
+	str(Timestamp(1234567890))
+	# > '20090213233130'
+	
+	# Database format
+	int(Timestamp("20090213233130"))
+	# > 1234567890
+	
+	# API format
+	int(Timestamp("2009-02-13T23:31:30Z"))
+	# > 1234567890
+	
+	# Difference in seconds
+	Timestamp("2009-02-13T23:31:31Z") - Timestamp(1234567890)
+	# > 1
+	
+	# strptime and strftime
+	Timestamp(1234567890).strftime("%Y foobar")
+	# > '2009 foobar'
+	
+	str(Timestamp.strptime("2009 derp 10", "%Y derp %m"))
+	# > '20091001000000'
+	
+	
+
+Session clustering::
 
 	from mwutil.api import API
 	from mwutil.lib import sessions
@@ -65,7 +94,7 @@ Sessions::
 	for user, session in sessions.sessions(revs):
 		print("{0}'s session with {1} revisions".format(user, len(session))
 
-Titles::
+Title normalization & parsing::
 	
 	from mwutil.api import API
 	from mwutil.lib import title
@@ -80,14 +109,14 @@ Titles::
 	namespaces = title.Namespaces.from_site_info(si_doc)
 	
 	# Handles normalization
-	namespaces.parser("user:epochFail")
+	namespaces.parse("user:epochFail")
 	# > 2, "EpochFail"
 	
 	# Handles namespace aliases
-	namespaces.parser("WT:foobar")
+	namespaces.parse("WT:foobar")
 	# > 5, "Foobar"
 	
-Dump::
+Dump iteration::
 	
 	from mwutil import dump
 	

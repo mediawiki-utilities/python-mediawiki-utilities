@@ -43,6 +43,17 @@ def test_strptime():
 		),
 		Timestamp("2013-11-21T03:20:00Z")
 	)
+	
+def test_strftime():
+	eq_(
+		Timestamp("2009-02-13T23:31:30Z").strftime(LONG_MW_TIME_STRING),
+		"2009-02-13T23:31:30Z"
+	)
+	
+	eq_(
+		Timestamp("2009-02-13T23:31:30Z").strftime("expires %H:%M, %d %B %Y (UTC)"),
+		"expires 23:31, 13 February 2009 (UTC)"
+	)
 
 def test_serialization():
 	timestamp = Timestamp(1234567890)

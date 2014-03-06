@@ -46,10 +46,10 @@ class TimestampType(serializable.Type):
 	def __str__(self): return self.short_format()
 	
 	def short_format(self):
-		return time.strftime(SHORT_MW_TIME_STRING, self.__time)
+		return self.strftime(SHORT_MW_TIME_STRING)
 	
 	def long_format(self):
-		return time.strftime(LONG_MW_TIME_STRING, self.__time)
+		return self.strftime(LONG_MW_TIME_STRING)
 	
 	def serialize(self):
 		return self.unix()
