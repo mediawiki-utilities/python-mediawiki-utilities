@@ -121,10 +121,10 @@ Dump iteration::
 	from mwutil import dump
 	
 	# Construct dump file iterator
-	dump_iterator = dump.Iterator.from_file(open("dump.xml"))
+	dump_processor = dump.Processor.from_file(open("dump.xml"))
 	
 	# Iterate through pages
-	for page in dump_iterator:
+	for page in dump_processor:
 		
 		# Iterate through a page's revisions
 		for revision in page:

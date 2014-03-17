@@ -47,22 +47,24 @@ class AllRevisions(RevisionLike):
 		
 	def query(self, *args, **kwargs):
 		
-		revisions = self.db.revisions(*args, **kwargs)
+		revisions = self.db.revisions.query(*args, **kwargs)
 		if 'include_page' in kwargs: del kwargs['include_page']
-		archives = self.db.archives(*args, **kwargs)
+		archives = self.db.archives.query(*args, **kwargs)
 		
 		if 'direction' in kwargs:
 			direction = kwargs['direction']
 			if direction == "newer":
 				collated_revisions = iteration.sequence(
-					[revisions, archives],
-					lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) <= \
+					revisions, 
+					archives,
+					compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) <= \
 					               (r2['rev_timestamp'], r2['rev_id'])
 				)
 			else: # direction == "older"
 				collated_revisions = iteration.sequence(
-					[revisions, archives],
-					lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) >= \
+					revisions, 
+					archives,
+					compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) >= \
 					               (r2['rev_timestamp'], r2['rev_id'])
 				)
 		else:
@@ -247,7 +249,7 @@ class Archives(Collection):
 			if direction not in self.DIRECTIONS: 
 				raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
 			
-			dir = ("ASC " if dir == "ASC" else "DESC ")
+			dir = ("ASC " if direction == "ASC" else "DESC ")
 			query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(dir)
 		if limit != None:
 			query += " LIMIT ? "
