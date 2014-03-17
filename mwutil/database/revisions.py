@@ -76,7 +76,7 @@ class AllRevisions(RevisionLike):
 		if 'limit' in kwargs:
 			limit = kwargs['limit']
 			
-			for i, rev in collated_revisions:
+			for i, rev in enumerate(collated_revisions):
 				yield rev 
 				if i >= limit: break
 			
