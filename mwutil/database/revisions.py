@@ -53,6 +53,9 @@ class AllRevisions(RevisionLike):
 		
 		if 'direction' in kwargs:
 			direction = kwargs['direction']
+			if direction not in self.DIRECTIONS: 
+				raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
+			
 			if direction == "newer":
 				collated_revisions = iteration.sequence(
 					revisions, 
@@ -249,7 +252,7 @@ class Archives(Collection):
 			if direction not in self.DIRECTIONS: 
 				raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
 			
-			dir = ("ASC " if direction == "ASC" else "DESC ")
+			dir = ("ASC " if direction == "newer" else "DESC ")
 			query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(dir)
 		if limit != None:
 			query += " LIMIT ? "
