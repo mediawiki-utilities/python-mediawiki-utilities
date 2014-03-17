@@ -230,7 +230,7 @@ class Archives(Collection):
 		values = []
 		
 		if page_id != None:
-			query += " AND ar_page = ? "
+			query += " AND ar_page_id = ? "
 			values.append(int(page_id))
 		if user_id != None:
 			query += " AND ar_user = ? "
@@ -252,8 +252,8 @@ class Archives(Collection):
 			if direction not in self.DIRECTIONS: 
 				raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
 			
-			dir = ("ASC " if direction == "newer" else "DESC ")
-			query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(dir)
+			direction = ("ASC " if direction == "newer" else "DESC ")
+			query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(direction)
 		if limit != None:
 			query += " LIMIT ? "
 			values.append(limit)
