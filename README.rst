@@ -23,19 +23,19 @@ MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfake
 		print("{0} reverted back to {1}".format(revert.reverting['revid'],
 		                                        revert.reverted_to['revid']))
 
-For more examples, see scripts inside `examples/`.
+For more examples, see scripts inside ``examples/``.
 
 Core modules
 ============
 ``api``
 	A set of utilities for interacting with MediaWiki's web API.
 	
-	* Session(...) -- Constructs an API session with a MediaWiki installation.  Contains convenience methods for accessing `prop=revisions`,  `list=usercontribs` `meta=siteinfo` and `list=recentchanges`.
+	* Session(...) -- Constructs an API session with a MediaWiki installation.  Contains convenience methods for accessing ``prop=revisions``,  ``list=usercontribs``, ``meta=siteinfo``, and ``list=recentchanges``.
 
 ``database``
 	A set of utilities for interacting with MediaWiki's database.
 	
-	* DB(...) -- Constructs a mysql database connector with convenience methods	for accessing `revision`, `archive`, `page`, `user` and `recentchanges`.
+	* DB(...) -- Constructs a mysql database connector with convenience methods	for accessing ``revision``, ``archive``, ``page``, ``user``, and ``recentchanges``.
 
 ``dump``
 	A set of utilities for interacting with MediaWiki's XML database dumps.
