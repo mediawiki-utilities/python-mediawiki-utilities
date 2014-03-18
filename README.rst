@@ -21,7 +21,7 @@ MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfake
 	# Detect and print reverts
 	for revert in reverts.detect(rev_events):
 		print("{0} reverted back to {1}".format(revert.reverting['revid'],
-												revert.reverted_to['revid']))
+		                                        revert.reverted_to['revid']))
 
 For more examples, see scripts inside `examples/`.
 
