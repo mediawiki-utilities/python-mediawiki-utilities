@@ -7,7 +7,7 @@ from .namespace import Namespace
 from .page import Page
 from .util import consume_tags
 
-class Dump(serializable.Type):
+class Iterator(serializable.Type):
 	__slots__ = ('site_name', 'base', 'generator', 'case', 'namespaces', '__pages')
 	
 	def __init__(self, site_name, base, generator, case, namespaces, pages=None):

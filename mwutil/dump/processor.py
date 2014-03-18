@@ -2,7 +2,7 @@ import logging
 from multiprocessing import Process
 from queue import Empty
 
-from .iteration import Dump
+from .iteration import Iterator
 from .functions import open_file
 
 logger = logging.getLogger("mw.dump.processor")
@@ -25,7 +25,7 @@ class Processor(Process):
 				foo = self.pathq.qsize() # This is done to force the queue to 
 				                         # reset and behave reasonably.  
 				path = self.pathq.get(block=False)
-				dump = Dump.from_file(open_file(path))
+				dump = Iterator.from_file(open_file(path))
 				logger.info("Beginning to process {0}.".format(repr(path)))
 				try:
 					for out in self.process_dump(dump, path):

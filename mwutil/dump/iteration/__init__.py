@@ -1,1 +1,1 @@
-from .dump import Dump
+from .iterator import Iterator

@@ -1,7 +1,6 @@
 """
 Prints the page_id, page_namespace, page_title of all pages in a set of dump
 files using as many cores as possible.
-"""
 
 import argparse
 
@@ -28,3 +27,4 @@ args = parser.parse_args()
 
 for page_id, page_namespace, page_title in dump.map(args.files, page_info)
 	print("\t".join(str(page_id), str(page_namespace), page_title))
+"""
