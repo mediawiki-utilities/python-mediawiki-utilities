@@ -1,30 +1,14 @@
-"""
-Write a TSV file of user_name, session_index, timestamp, revid
-"""
-from mw.lib import sessions
-from mw.api import API
-from mw.types import Timestamp
+from mwutil.api import Session
+from mwutil.lib import sessions
 
-api = API("http://en.wikipedia.org/w/api.php")
-
-revs = api.revisions.query(user="EpochFail", direction="newer")
-user_timestamp_events = (
-	(rev['user'], Timestamp(rev['timestamp']), rev)
-	for rev in revs
+# Gather a user's revisions from the API
+api_session = Session("https://en.wikipedia.org/w/api.php")
+revs = api_session.user_contribs.query(
+	user={"TestAccountForMWUtils"}, 
+	direction="newer"
 )
+rev_events = ((rev['user'], rev['timestamp'], rev) for rev in revs)
 
-for user_text, session in sessions.sessions(user_timestamp_events):
-	
-	for i, revision in enumerate(session):
-		rev = event.data
-		print(
-		  "\t".join([user_text, 
-		             str(i), 
-		             event.timestamp.short_format(), 
-		             str(rev['revid'])])
-		)
-	
-
-
-
-
+# Extract and print sessions
+for user, session in sessions.cluster(rev_events):
+	print("{0}'s session with {1} revisions".format(user, len(session)))

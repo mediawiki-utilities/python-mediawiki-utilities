@@ -1,0 +1,30 @@
+<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http
+://www.mediawiki.org/xml/export-0.8/ http://www.mediawiki.org/xml/export-0.8.xsd" version="0.8" xml:lang="en">
+  <siteinfo>
+    <sitename>Wikipedia</sitename>
+    <base>http://en.wikipedia.org/wiki/Main_Page</base>
+    <generator>MediaWiki 1.22wmf2</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="0" case="first-letter" />
+      <namespace key="1" case="first-letter">Talk</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Herp</title>
+    <ns>1</ns>
+    <id>2</id>
+    <revision>
+      <id>4</id>
+      <timestamp>2004-08-11T09:04:08Z</timestamp>
+      <contributor>
+        <id>10</id>
+        <name>FOobar!?</name>
+      </contributor>
+      <text xml:space="preserve">Revision 4 text</text>
+      <sha1>g9chqqg94myzq11c56ixvq7o1yg75n9</sha1>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+    </revision>
+  </page>
+</mediawiki>

@@ -81,6 +81,15 @@ class Parser:
 		return Parser(namespaces)
 	
 	@classmethod
+	def from_api(cls, session):
+		
+		si_doc = session.site_info.query(
+			properties={'namespaces', 'namespacealiases'}
+		)
+		
+		return cls.from_site_info(si_doc)
+	
+	@classmethod
 	def from_dump(cls, namespaces):
 		raise NotImplementedError
 	

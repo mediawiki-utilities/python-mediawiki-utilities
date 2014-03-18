@@ -1,14 +1,13 @@
 """
 Prints the rev_id of all revisions to User:EpochFail.
 """
-import sys;sys.path.append("../")
-from mw import api
+from mwutil import api
 
-api = api.Session("https://en.wikipedia.org/w/api.php")
+api_session = api.Session("https://en.wikipedia.org/w/api.php")
 
-revisions = api.revisions.query(
+revisions = api_session.revisions.query(
 	properties={'ids'},
-	titles={'User:EpochFail'}
+	titles={'User:TestAccountForMWUtils'}
 )
 
 for rev in revisions:

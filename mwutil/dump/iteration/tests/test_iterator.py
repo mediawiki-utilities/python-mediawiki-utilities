@@ -3,7 +3,7 @@ from nose.tools import eq_
 
 from ....types import Timestamp
 
-from ..dump import Dump
+from ..iterator import Iterator
 
 SAMPLE_XML = """
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http
@@ -79,7 +79,7 @@ SAMPLE_XML = """
 def test_complete():
 	f = io.StringIO(SAMPLE_XML)
 	
-	dump = Dump.from_file(f)
+	dump = Iterator.from_file(f)
 	eq_([0,1], list(dump.namespaces.keys()))
 	
 	page = next(dump)
@@ -142,7 +142,7 @@ def test_complete():
 def test_skipping():
 	f = io.StringIO(SAMPLE_XML)
 	
-	dump = Dump.from_file(f)
+	dump = Iterator.from_file(f)
 	
 	page = next(dump)
 	eq_(page.title, "Foo")
@@ -169,6 +169,6 @@ def test_skipping():
 def test_serialization():
 	f = io.StringIO(SAMPLE_XML)
 	
-	dump = Dump.from_file(f)
+	dump = Iterator.from_file(f)
 	
-	eq_(dump, Dump.deserialize(dump.serialize()))
+	eq_(dump, Iterator.deserialize(dump.serialize()))

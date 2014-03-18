@@ -53,13 +53,12 @@ class Revisions(Collection):
 		done = False
 		while not done and revisions_yielded <= limit:
 			rev_docs, rvcontinue = self._query(*args, **kwargs)
-			
-			if rvcontinue != None and len(rev_docs) > 0:
-				for doc in rev_docs:
-					yield doc
-					revisions_yielded += 1
-					if revisions_yielded >= limit: break
+			for doc in rev_docs:
+				yield doc
+				revisions_yielded += 1
+				if revisions_yielded >= limit: break
 				
+			if rvcontinue != None and len(rev_docs) > 0:
 				kwargs['rvcontinue'] = rvcontinue
 			else:
 				done = True
@@ -112,13 +111,17 @@ class Revisions(Collection):
 			
 			pages = doc['query']['pages'].values()
 			rev_docs = []
+			
 			for page_doc in pages:
-				page = {k: v for k, v in page_doc.items() if k != 'revisions'}
+				if 'missing' in page_doc: continue
 				
-				for rev_doc in page_doc['revisions']:
-					rev_doc['page'] = page
+				page_rev_docs = page_doc['revisions']
+				del page_doc['revisions']
 				
-				rev_docs.extend(page_doc['revisions'])
+				for rev_doc in page_rev_docs:
+					rev_doc['page'] = page_doc
+				
+				rev_docs.extend(page_rev_docs)
 			
 			return rev_docs, rvcontinue
 			

@@ -1,25 +1,23 @@
-from mw.lib import title
+"""
+Demonstrates title normalization and parsing.  
+"""
+from mwutil.api import Session
+from mwutil.lib import title
 
+# Normalize titles
+title.normalize("foo bar")
+# > "Foo_bar"
 
-# Normalization
-assert title.normalize("foo bar") == "Foo_bar"
+# Construct a title parser from the API
+api_session = Session("https://en.wikipedia.org/w/api.php")
+parser = title.Parser.from_api(api_session)
 
-# Parsing (namespace extration)
-parser = title.Parser([title.Namespace(1, ["Talk"])])
-assert parser.parse("Foo") == (0, "Foo")
-assert parser.parse("Talk:Foo") == (1, "Foo")
-assert parser.parse("Bar:Foo") == (0, "Bar:Foo") # Psuedo namespaces don't get split out
+# Handles normalization
+parser.parse("user:epochFail")
+# > 2, "EpochFail"
 
-# Configued from API
-from mw.api import API
-
-api = API("https://en.wikipedia.org/w/api.php")
-
-si_doc = api.siteinfo.query(properties={'namespaces'})
-parser = title.Parser.from_site_info(si_doc)
-assert(parser.parse("Wikipedia:Snuggle") == (4, "Snuggle")
-
-# Configured from dump
-from mw import dump
+# Handles namespace aliases
+parser.parse("WT:foobar")
+# > 5, "Foobar"
 
 

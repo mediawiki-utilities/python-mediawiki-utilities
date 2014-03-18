@@ -8,7 +8,7 @@ from . import defaults
 
 logger = logging.getLogger("mw.lib.sessions.functions")
 
-def sessions(events, cutoff=defaults.CUTOFF):
+def cluster(events, cutoff=defaults.CUTOFF):
 	
 	# Construct the session manager 
 	cache = Cache(cutoff)
@@ -22,3 +22,7 @@ def sessions(events, cutoff=defaults.CUTOFF):
 	# Yield the left-overs
 	for user, session in cache.get_active_sessions():
 		yield user, session
+	
+
+# For backwards compatibility
+sessions = cluster

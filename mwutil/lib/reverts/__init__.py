@@ -1,3 +1,3 @@
 from .detector import Detector
-from .functions import reverts
+from .functions import detect, reverts
 from . import defaults

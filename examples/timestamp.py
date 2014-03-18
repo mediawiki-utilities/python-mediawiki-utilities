@@ -1,25 +1,26 @@
-from mw.types import Timestamp
+from mwutil import Timestamp
 
-t = Timestamp('2009-02-13T23:31:30Z')
+# Seconds since Unix Epoch
+str(Timestamp(1234567890))
+# > '20090213233130'
 
-# Self casting
-assert t == Timestamp(t)
+# Database format
+int(Timestamp("20090213233130"))
+# > 1234567890
 
-# Unix timestamp (seconds since Jan. 1st 1970 GMT)
-assert int(t) == 1234567890
-assert t.unix() == 1234567890
-assert t == Timestamp(1234567890)
+# API format
+int(Timestamp("2009-02-13T23:31:30Z"))
+# > 1234567890
 
-# Database format %Y%m%d%H%M%S"
-assert str(t) == "20090213233130"
-assert t.short_format() == "20090213233130"
-assert t == Timestamp("20090213233130")
+# Difference in seconds
+Timestamp("2009-02-13T23:31:31Z") - Timestamp(1234567890)
+# > 1
 
-# API format %Y-%m-%dT%H:%M:%SZ
-assert t.long_format() == "2009-02-13T23:31:30Z"
-assert t == Timestamp("2009-02-13T23:31:30Z")
+# strptime and strftime
+Timestamp(1234567890).strftime("%Y foobar")
+# > '2009 foobar'
 
-# Simple math
-assert Timestamp(2) - Timestamp(1) == 1
+str(Timestamp.strptime("2009 derp 10", "%Y derp %m"))
+# > '20091001000000'
 
 
