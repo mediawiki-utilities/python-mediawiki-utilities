@@ -1,30 +1,32 @@
 from distutils.core import setup
+from setuptools import find_packages
 
 setup(
-	name='Mediawiki Utilities',
+	name='mediawiki-utilities',
 	version='0.2.0',
 	author='Aaron Halfaker',
 	author_email='aaron.halfaker@gmail.com',
-	packages=['mw', 
-	          'mw.api', 
-	          'mw.database', 
-	          'mw.xml_dump', 
-	          'mw.xml_dump.iteration', 
-	          'mw.lib', 
-	          'mw.lib.persistence', 
-	          'mw.lib.reverts', 
-	          'mw.lib.sessions',
-	          'mw.lib.title',
-	          'mw.types',
-	          'mw.util',
-	          'mw.util.iteration'],
+	packages=find_packages(),
 	scripts=[],
 	url='http://pypi.python.org/pypi/mediawiki-utilities',
 	license='LICENSE',
-	description='A set of utilities for working with MediaWiki data.',
+	description='A set of utilities for extracting and processing MediaWiki data.',
 	long_description=open('README.rst').read(),
 	install_requires=[
 	    "argparse >= 1.1",
 	    "requests >= 2.0.1"],
-	test_suite = 'nose.collector'
+	test_suite = 'nose.collector',
+	classifiers = [
+	"Programming Language :: Python",
+	"Programming Language :: Python :: 3",
+	"Environment :: Other Environment",
+	"Intended Audience :: Developers",
+	"License :: OSI Approved :: MIT License",
+	"Operating System :: OS Independent",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Topic :: Text Processing :: Linguistic",
+	"Topic :: Text Processing :: General",
+	"Topic :: Utilities",
+	"Topic :: Scientific/Engineering"
+	],
 )

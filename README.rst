@@ -2,10 +2,14 @@
 MW Utilities
 ============
 
-MW Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting data from MediaWiki installations and performing some interesting computations.  A typical usage looks like this::
+MediaWiki Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting and processing data from MediaWiki installations, slave databses and xml dumps.
 
-	from mwutil.api import Session
-	from mwutil.lib import reverts
+This library requires Python 3 or later.
+
+A typical usage looks like this::
+
+	from mw.api import Session
+	from mw.lib import reverts
 	
 	# Gather a page's revisions from the API
 	api_session = Session("https://en.wikipedia.org/w/api.php")
