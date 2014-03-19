@@ -37,17 +37,16 @@ Core modules
 	
 	* DB(...) -- Constructs a mysql database connector with convenience methods	for accessing ``revision``, ``archive``, ``page``, ``user``, and ``recentchanges``.
 
-``dump``
-	A set of utilities for interacting with MediaWiki's XML database dumps.
-	
-	* Iterator(..) -- Constructs an iterator over a standard XML dump.  Dumps contain site_info and pages.  Pages contain metadata and revisions.  Revisions contain metadata and text.  This is probably why you are here.
-	* map(..) -- Applies a function to a set of dump files using the multiprocessing module and aggregates the output.
-
 ``types``
 	A set of types for working with MediaWiki data.
 	
 	* Timestamp(...) -- Constructs a robust datatype for dealing with MediaWikis common timestamp formats
 
+``xml_dump``
+	A set of utilities for iteratively processing with MediaWiki's XML database dumps.
+	
+	* Iterator(..) -- Constructs an iterator over a standard XML dump.  Dumps contain site_info and pages.  Pages contain metadata and revisions.  Revisions contain metadata and text.  This is probably why you are here.
+	* map(..) -- Applies a function to a set of dump files (``Iterators``) using the multiprocessing module and aggregates the output.
 
 Libraries
 =========
