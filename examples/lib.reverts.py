@@ -1,5 +1,5 @@
-from mwutil.api import Session
-from mwutil.lib import reverts
+from mw.api import Session
+from mw.lib import reverts
 
 # Gather a page's revisions from the API
 api_session = Session("https://en.wikipedia.org/w/api.php")

@@ -1,6 +1,6 @@
 import sys; sys.path.insert(0, "../")
 
-from mwutil.dump import Iterator
+from mw.xml_dump import Iterator
 
 # Construct dump file iterator
 dump = Iterator.from_file(open("examples/dump.xml"))

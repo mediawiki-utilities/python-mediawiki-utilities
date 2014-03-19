@@ -1,14 +1,16 @@
+2014-03-18
+	Refactoring!  I've got a user.  He immediately found problems.  So I'm fixing them aggressively.  I just renames the library back to "mw".  I also renamed the dump processing module to "xml_dump".  I hope that these name changes will make more sense. 
+	
+	I also moved the revert detection functionality out of the database module and into the lib.reverts module.  I think that this makes more sense.  If it is a core functionality, it should live in code.  If it is a library, it should only have other libraries depend on it.  If I need to write a magical DB abstractor in lib, so be it. 
 
-2013-02-08
+2014-02-08
 	It's time to kill `mw.lib.changes`.  I just don't see that working as a core 
 	part of this library.  It might make sense to return build up another library 
 	to handle changes.  I'll have to get back to that at some other time.
 
 2013-12-23
 	Still hacking on `mw.lib.changes`.  It's the same set of issues described in 
-	the last log.  I'm making progress building a params parser.  I think that my 
-	strategy is going to be to let the user handle params parsing themselves with 
-	a new `types.Protection` type.
+	the last log.  I'm making progress building a params parser.  I think that my strategy is going to be to let the user handle params parsing themselves with 	a new `types.Protection` type.
 	
 	Oh! And I did get `types.TimestampType` extended to have a `strptime` method.  
 	That's all nice and tested.  
@@ -27,16 +29,12 @@
 2013-12-18
 	Tests passing.  HistoricalMap was fine.  Will be code-complete once lib.changes is done.  Still need to figure out how I'm going to configure a title parser and pass it into the change constructor.  Also, I rediscovered how stupid the recentchanges table is.
 	
-	OK.. New lame thing.  So, when you "protect" a page, the log keeps the 
-	following type of value in log_params:
+	OK.. New lame thing.  So, when you "protect" a page, the log keeps the following type of value in log_params:
 	``\u200e[edit=autoconfirmed] (expires 03:20, 21 November 2013 (UTC))``
 	
-	That date format... It's not the long or short format for `Timestamp`. 
-	I think it is a custom format that changes on a wiki-to-wiki basis.
+	That date format... It's not the long or short format for `Timestamp`. I think it is a custom format that changes on a wiki-to-wiki basis.
 	
-	I feel sad.  This made my day worse.  It's important to remind myself of 
-	the fact that MediaWiki was not designed to allow me to reverse engineer it.
-	-halfak
-
+	I feel sad.  This made my day worse.  It's important to remind myself of the fact that MediaWiki was not designed to allow me to reverse engineer it. 
+	
 2013-12-17
 	Test on revert detector failing since simplifying restructure.  I'm not sure what the issue is, but I suspect that I broke something in util.ordered.HistoricalMap. -halfak

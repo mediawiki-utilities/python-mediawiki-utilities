@@ -8,35 +8,8 @@ from ..util import iteration
 from .collection import Collection
 
 logger = logging.getLogger("mw.database.revisions")
-
-class RevisionLike(Collection):
 	
-	def revert(self, rev, radius=15, before=None):
-		
-		# Load history
-		past_revs = reversed(list(self.query(
-			page_id=rev['page_id'],
-			limit=radius,
-			before_id=rev['rev_id'],
-			direction="older"
-		)))
-		future_revs = self.query(
-			page_id=rev['page_id'],
-			limit=radius,
-			after_id=rev['rev_id'],
-			before=before,
-			direction="newer"
-		)
-		checksum_revisions = ((rev['rev_sha1'], rev)
-		                      for rev in chain(past_revs, [rev], future_revs))
-		
-		for reverting, reverteds, reverted_to in reverts.reverts(checksum_revisions, radius=radius):
-			if rev['rev_id'] in {r['rev_id'] for r in reverteds}:
-				return (reverting, reverteds, reverted_to)
-			
-		return None
-	
-class AllRevisions(RevisionLike):
+class AllRevisions:
 	
 	def get(self, rev_ids, include_page=False):
 		rev_ids = set(int(id) for id in rev_ids)
@@ -84,7 +57,7 @@ class AllRevisions(RevisionLike):
 			for rev in collated_revisions:
 				yield rev
 
-class Revisions(RevisionLike):
+class Revisions:
 	
 	def get(self, rev_ids, include_page=False):
 		query = """

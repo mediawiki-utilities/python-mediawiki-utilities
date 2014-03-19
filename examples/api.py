@@ -1,7 +1,7 @@
 """
 Prints the rev_id of all revisions to User:EpochFail.
 """
-from mwutil import api
+from mw import api
 
 api_session = api.Session("https://en.wikipedia.org/w/api.php")
 

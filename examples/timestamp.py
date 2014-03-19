@@ -1,4 +1,4 @@
-from mwutil import Timestamp
+from mw import Timestamp
 
 # Seconds since Unix Epoch
 str(Timestamp(1234567890))

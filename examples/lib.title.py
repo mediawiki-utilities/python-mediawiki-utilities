@@ -1,8 +1,8 @@
 """
 Demonstrates title normalization and parsing.  
 """
-from mwutil.api import Session
-from mwutil.lib import title
+from mw.api import Session
+from mw.lib import title
 
 # Normalize titles
 title.normalize("foo bar")
