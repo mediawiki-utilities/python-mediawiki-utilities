@@ -32,26 +32,28 @@ class DB:
 	def __str__(self): return self.__repr__()
 	
 	@classmethod
-	def add_args(cls, parser):
+	def add_args(cls, parser, defaults=None):
+		defaults = defaults if defaults != None else defaults
+		
 		parser.add_argument(
 			'--host', '-h',
 			help="MySQL database host to connect to (defaults to db1047.eqiad.wmnet)",
-			default="db1047.eqiad.wmnet"
+			default=defaults.get('host', "localhost")
 		)
 		parser.add_argument(
 			'--database', '-d',
 			help="MySQL database name to connect to (defaults to enwiki)",
-			default="enwiki"
+			default=defaults.get('database', getpass.getuser())
 		)
 		parser.add_argument(
 			'--defaults-file',
 			help="MySQL defaults file (defaults to ~/.my.cnf)",
-			default=os.path.expanduser("~/.my.cnf")
+			default=defaults.get('defaults-file', os.path.expanduser("~/.my.cnf"))
 		)
 		parser.add_argument(
 			'--user', '-u',
 			help="MySQL user (defaults to %s)" % getpass.getuser(),
-			default=getpass.getuser()
+			default=defaults.get('user', getpass.getuser())
 		)
 		return parser
 	

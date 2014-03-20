@@ -1,3 +1,7 @@
+2014-03-20
+	Just a quick update today.  I realized that database.DB.add_args was setting
+	default values that won't make sense for anyone but me personally.  I cleared that up and added a way to set your own defaults.  
+
 2014-03-18
 	Refactoring!  I've got a user.  He immediately found problems.  So I'm fixing them aggressively.  I just renames the library back to "mw".  I also renamed the dump processing module to "xml_dump".  I hope that these name changes will make more sense. 
 	
