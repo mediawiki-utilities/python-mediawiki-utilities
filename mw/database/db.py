@@ -37,22 +37,22 @@ class DB:
 		
 		parser.add_argument(
 			'--host', '-h',
-			help="MySQL database host to connect to (defaults to db1047.eqiad.wmnet)",
+			help="MySQL database host to connect to (defaults to {0})".format(defaults.get('host', "localhost")),
 			default=defaults.get('host', "localhost")
 		)
 		parser.add_argument(
 			'--database', '-d',
-			help="MySQL database name to connect to (defaults to enwiki)",
+			help="MySQL database name to connect to (defaults to  {0})".format(defaults.get('database', getpass.getuser())),
 			default=defaults.get('database', getpass.getuser())
 		)
 		parser.add_argument(
 			'--defaults-file',
-			help="MySQL defaults file (defaults to ~/.my.cnf)",
+			help="MySQL defaults file (defaults to {0})".format(defaults.get('defaults-file', os.path.expanduser("~/.my.cnf"))),
 			default=defaults.get('defaults-file', os.path.expanduser("~/.my.cnf"))
 		)
 		parser.add_argument(
 			'--user', '-u',
-			help="MySQL user (defaults to %s)" % getpass.getuser(),
+			help="MySQL user (defaults to %s)".format(defaults.get('user', getpass.getuser())),
 			default=defaults.get('user', getpass.getuser())
 		)
 		return parser
