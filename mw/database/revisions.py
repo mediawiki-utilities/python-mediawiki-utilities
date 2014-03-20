@@ -9,7 +9,7 @@ from .collection import Collection
 
 logger = logging.getLogger("mw.database.revisions")
 	
-class AllRevisions:
+class AllRevisions(Collection):
 	
 	def get(self, rev_ids, include_page=False):
 		rev_ids = set(int(id) for id in rev_ids)
@@ -57,7 +57,7 @@ class AllRevisions:
 			for rev in collated_revisions:
 				yield rev
 
-class Revisions:
+class Revisions(Collection):
 	
 	def get(self, rev_ids, include_page=False):
 		query = """
