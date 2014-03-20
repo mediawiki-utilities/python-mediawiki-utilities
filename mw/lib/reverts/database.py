@@ -9,7 +9,7 @@ def check(db, rev_id, radius=15, sha1=None, page_id=None, check_archive=False, b
 		raise TypeError("db wrong type.  Expected a mw.database.DB.")
 	
 	rev_id = int(rev_id)
-	radius = int(redius)
+	radius = int(radius)
 	sha1 = none_or(sha1, str)
 	page_id = none_or(page_id, int)
 	check_archive = bool(check_archive)
@@ -44,7 +44,7 @@ def check(db, rev_id, radius=15, sha1=None, page_id=None, check_archive=False, b
 	)
 	
 	for reverting, reverteds, reverted_to in detect(checksum_revisions, radius=radius):
-		if rev_id in {reverteds}:
+		if len(reverteds) <= 15 and rev_id in {rev['rev_id'] for rev in reverteds}:
 			return (reverting, reverteds, reverted_to)
 		
 	return None
