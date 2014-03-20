@@ -3,6 +3,8 @@ from itertools import chain
 from ...types import Timestamp
 from ...util import none_or
 
+from .functions import detect
+
 def check(db, rev_id, radius=15, sha1=None, page_id=None, check_archive=False, before=None):
 	
 	if not hasattr(db, "revisions") and hasattr(db, "all_revisions"):
@@ -15,12 +17,12 @@ def check(db, rev_id, radius=15, sha1=None, page_id=None, check_archive=False, b
 	check_archive = bool(check_archive)
 	before = none_or(before, Timestamp)
 	
-	if check_archive: dbrevs = db.revisions
-	else: dbrevs = db.all_revisions
+	if check_archive: dbrevs = db.all_revisions
+	else: dbrevs = db.revisions
 	
-	if checksum == None or page_id == None:
+	if sha1 == None or page_id == None:
 		row = dbrevs.get(id=rev_id)
-		checksum = row['sha1']
+		sha1 = row['sha1']
 		page_id = row['rev_page']
 		
 	# Load history
@@ -30,7 +32,7 @@ def check(db, rev_id, radius=15, sha1=None, page_id=None, check_archive=False, b
 		before_id=rev_id,
 		direction="older"
 	)))
-	future_revs = self.query(
+	future_revs = dbrevs.query(
 		page_id=page_id,
 		limit=radius,
 		after_id=rev_id,
