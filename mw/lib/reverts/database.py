@@ -38,9 +38,9 @@ def check(db, rev_id, radius=15, sha1=None, page_id=None, check_archive=False, b
 		direction="newer"
 	)
 	checksum_revisions = chain(
-		((rev['rev_sha1'], rev['rev_id']) for rev in past_revs),
-		[(sha1, rev_id)],
-		((rev['rev_sha1'], rev['rev_id']) for rev in future_revs)
+		((rev['rev_sha1'], rev) for rev in past_revs),
+		[(sha1, {'rev_id': rev_id})],
+		((rev['rev_sha1'], rev) for rev in future_revs)
 	)
 	
 	for reverting, reverteds, reverted_to in detect(checksum_revisions, radius=radius):
