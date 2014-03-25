@@ -86,4 +86,4 @@ Aaron Halfaker (aaron.halfaker@gmail.com) -- http://halfaker.info -- http://en.w
 
 Contributors
 ============
-None yet.  See http://bitbucket.org/halfak/mediawiki-utilities
+None yet.  See http://github.com/halfak/mediawiki-utilities
