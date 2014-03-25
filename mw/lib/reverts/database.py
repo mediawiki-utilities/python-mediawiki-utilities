@@ -5,7 +5,7 @@ from ...util import none_or
 
 from .functions import detect
 
-def check(db, rev_id, radius=15, sha1=None, page_id=None, check_archive=False, before=None):
+def check(db, rev_id, sha1=None, page_id=None, radius=15, check_archive=False, before=None):
 	
 	if not hasattr(db, "revisions") and hasattr(db, "all_revisions"):
 		raise TypeError("db wrong type.  Expected a mw.database.DB.")
