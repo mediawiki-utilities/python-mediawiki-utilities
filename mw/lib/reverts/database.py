@@ -32,7 +32,7 @@ def check_row(db, rev_row, **kwargs):
 	else: raise TypeError("rev_row must have 'rev_sha1'")
 	if 'page_id' in rev_row: page_id = rev_row['page_id']
 	elif 'rev_page' in rev_row: page_id = rev_row['rev_page']
-	raise TypeError("rev_row must have 'page_id' or 'rev_page'")
+	else: raise TypeError("rev_row must have 'page_id' or 'rev_page'")
 	
 	# run the regular check
 	return check(db, rev_id, sha1=sha1, page_id=page_id, **kwargs)
