@@ -1,9 +1,14 @@
+2014-03-27
+	I just fixed up the structure for lib.reverts.database.check() and check_row().  You can give check_row() a database row or check() a rev_id and page_id.  The functions should then either return None or the first reverting revision they encounter.  
+	
+	I like this pattern.  Lib gets to reference core, but not vice versa.  I need to talk to the Wikimetrics people about implementing some of the metrics within a new lib.  Yet, one of the cool things about libs is that they don't necessarily need to be packaged with core.  So you could write something that makes use of core and other libs as a standalone package first and incorporate it later.  :D
+
 2014-03-20
 	Just a quick update today.  I realized that database.DB.add_args was setting
 	default values that won't make sense for anyone but me personally.  I cleared that up and added a way to set your own defaults.  
 
 2014-03-18
-	Refactoring!  I've got a user.  He immediately found problems.  So I'm fixing them aggressively.  I just renames the library back to "mw".  I also renamed the dump processing module to "xml_dump".  I hope that these name changes will make more sense. 
+	Refactoring!  I've got a user.  He immediately found problems.  So I'm fixing them aggressively.  I just renamed the library back to "mw".  I also renamed the dump processing module to "xml_dump".  I hope that these name changes will make more sense. 
 	
 	I also moved the revert detection functionality out of the database module and into the lib.reverts module.  I think that this makes more sense.  If it is a core functionality, it should live in code.  If it is a library, it should only have other libraries depend on it.  If I need to write a magical DB abstractor in lib, so be it. 
 
