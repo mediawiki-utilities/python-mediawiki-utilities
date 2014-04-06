@@ -5,7 +5,7 @@ from ..util import none_or
 from .collection import Collection
 from .errors import MalformedResponse
 
-logger = logging.getLogger("mwlib.api.user_contribs")
+logger = logging.getLogger("mw.api.user_contribs")
 
 class UserContribs(Collection):
 	

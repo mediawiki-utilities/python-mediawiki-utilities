@@ -3,11 +3,15 @@ from requests.exceptions import HTTPError, ConnectionError, Timeout
 from requests.exceptions import TooManyRedirects
 
 from ..util import none_or, api
+
+from .errors import MalformedResponse, AuthenticationError
 from .pages import Pages
 from .recent_changes import RecentChanges
 from .revisions import Revisions
 from .site_info import SiteInfo
 from .user_contribs import UserContribs
+from .deleted_revs import DeletedRevs
+
 
 class Session(api.Session):
 	
@@ -20,12 +24,13 @@ class Session(api.Session):
 		self.pages = Pages(self)
 		self.site_info = SiteInfo(self)
 		self.user_contribs = UserContribs(self)
+		self.deleted_revs = DeletedRevs(self)
 	
 	def login(self, username, password):
+		
 		#get token
 		doc = self.post(
-			self.uri,
-			params={
+			{
 				'action': "login",
 				'lgname': username,
 				'lgpassword': password,
@@ -43,11 +48,11 @@ class Session(api.Session):
 		
 		#try again
 		doc = self.post(
-			self.uri,
 			{
 				'action': "login",
 				'lgname': username,
-				'lgpassword': password
+				'lgpassword': password,
+				'lgtoken': token
 			}
 		)
 		

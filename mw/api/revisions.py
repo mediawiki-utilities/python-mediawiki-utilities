@@ -4,7 +4,7 @@ from ..util import none_or
 from .collection import Collection
 from .errors import MalformedResponse
 
-logger = logging.getLogger("mwlib.api.revisions")
+logger = logging.getLogger("mw.api.revisions")
 
 class Revisions(Collection):
 	
@@ -65,11 +65,11 @@ class Revisions(Collection):
 			
 	
 	def _query(self, revids=None, titles=None, pageids=None, properties=None, 
-	                limit=None, startid=None, endid=None, start=None, end=None, 
-	                direction=None, user=None, excludeuser=None, 
-	                tag=None, expandtemplates=None, generatexml=None, 
-	                parse=None, section=None, token=None, rvcontinue=None, 
-	                diffto=None, difftotext=None, contentformat=None):
+	                 limit=None, startid=None, endid=None, start=None, end=None, 
+	                 direction=None, user=None, excludeuser=None, 
+	                 tag=None, expandtemplates=None, generatexml=None, 
+	                 parse=None, section=None, token=None, rvcontinue=None, 
+	                 diffto=None, difftotext=None, contentformat=None):
 		
 		params = {
 			'action': "query",

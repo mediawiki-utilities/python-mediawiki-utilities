@@ -3,7 +3,7 @@ import re, logging
 from .collection import Collection
 from .errors import MalformedResponse
 
-logger = logging.getLogger("mwlib.api.recent_changes")
+logger = logging.getLogger("mw.api.recent_changes")
 
 class RecentChanges(Collection):
 	

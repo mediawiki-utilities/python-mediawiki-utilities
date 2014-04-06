@@ -3,7 +3,7 @@ import re, logging
 from .collection import Collection
 from .errors import MalformedResponse
 
-logger = logging.getLogger("mwlib.api.pages")
+logger = logging.getLogger("mw.api.pages")
 
 class Pages(Collection):
 	
