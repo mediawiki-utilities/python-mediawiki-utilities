@@ -34,7 +34,7 @@ Core modules
 ``api``
 	A set of utilities for interacting with MediaWiki's web API.
 	
-	* Session(...) -- Constructs an API session with a MediaWiki installation.  Contains convenience methods for accessing ``prop=revisions``,  ``list=usercontribs``, ``meta=siteinfo``, and ``list=recentchanges``.
+	* Session(...) -- Constructs an API session with a MediaWiki installation.  Contains convenience methods for accessing ``prop=revisions``,  ``list=usercontribs``, ``meta=siteinfo``, ``list=deletedrevs`` and ``list=recentchanges``.
 
 ``database``
 	A set of utilities for interacting with MediaWiki's database.

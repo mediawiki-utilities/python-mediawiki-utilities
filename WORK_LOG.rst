@@ -1,3 +1,11 @@
+2014-04-08
+	I've been extending the API.  I added list=deletedrevs and tested (fixed) the api.Session.login() method.  It all seems to work now.  I also did some minor cleanup on  lib.title.Parser to make the method names more explicit.
+	
+	I'd like to start tracking changes so that I can build changelists to go with new versions.  For now, I'll keep track of substantial changes here. 
+	
+	* Released 0.2.1
+	* Added list=deletedrevs to api module
+
 2014-03-27
 	I just fixed up the structure for lib.reverts.database.check() and check_row().  You can give check_row() a database row or check() a rev_id and page_id.  The functions should then either return None or the first reverting revision they encounter.  
 	
