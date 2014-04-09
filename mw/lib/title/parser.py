@@ -13,9 +13,9 @@ class Parser:
 		
 		if namespaces != None:
 			for namespace in namespaces:
-				self.add(namespace)
+				self.add_namespace(namespace)
 	
-	def add(self, namespace):
+	def add_namespace(self, namespace):
 		self.ids[namespace.id] = namespace
 		self.names[namespace.name] = namespace
 		
