@@ -1,14 +1,28 @@
 import re
 
 class Collection:
-	
+	"""
+	Represents a collection of items that can be queried via the API.  This is
+	an abstract base class that should be extended
+	"""
 	
 	TIMESTAMP = re.compile(r"[0-9]{4}-?[0-9]{2}-?[0-9]{2}T?" + 
 	                       r"[0-9]{2}:?[0-9]{2}:?[0-9]{2}Z?")
+	"""
+	A regular expression for matching the API's timestamp format.
+	"""
 	
 	DIRECTIONS = {'newer', 'older'}
+	"""
+	A set of potential direction names.
+	"""
 	
 	def __init__(self, session):
+		"""
+		:Parameters:
+			session : `mw.api.Session`
+				An api session to use for post & get.
+		"""
 		self.session = session
 	
 	def _check_direction(self, direction):

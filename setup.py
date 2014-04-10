@@ -9,7 +9,7 @@ setup(
 	packages=find_packages(),
 	scripts=[],
 	url='http://pypi.python.org/pypi/mediawiki-utilities',
-	license=open('LICENSE.rst').read(),
+	license=open('LICENSE').read(),
 	description='A set of utilities for extracting and processing MediaWiki data.',
 	long_description=open('README.rst').read(),
 	install_requires=[
