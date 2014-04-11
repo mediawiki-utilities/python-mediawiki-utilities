@@ -16,18 +16,15 @@ class Timestamp(serializable.Type):
 	"""
 	An immutable type for working with MediaWiki timestamps in their various 
 	forms.
+	
+	:Parameters:
+		time_thing : :class:`Timestamp` | :py:class:`~time.time_struct` | :py:class:`~datetime.datetime` | :py:class:`str` | :py:class:`int` | :py:class:`float`
+			The timestamp type from which to construct the timestamp class.
+		
+	:Returns:
+		:class:`Timestamp`
 	"""
 	def __new__(cls, time_thing):
-		"""
-		Constructs a new Timestamp.  This function will do it's best to handle
-		any legitimate time format.
-		
-		Args:
-			time_thing (:class:`Timestamp`|:class:`time.time_struct`|:class:`datetime.datetime`|str|int|float): The time thing from which to construct the timestamp class.
-		
-		Returns:
-			:class:`Timestamp`
-		"""
 		if isinstance(time_thing, cls):
 			return time_thing
 		elif isinstance(time_thing, time.struct_time):
@@ -39,7 +36,17 @@ class Timestamp(serializable.Type):
 		else:
 			return cls.from_string(time_thing)
 		
-	def __init__(self, *args, **kwargs): 
+	def __init__(self, time_thing):
+		"""
+		Constructs a new Timestamp.  This function will do it's best to handle
+		any legitimate time format.
+		
+		Args:
+			time_thing (:class:`Timestamp`|:class:`time.time_struct`|:class:`datetime.datetime`|str|int|float): The time thing from which to construct the timestamp class.
+		
+		Returns:
+			:class:`Timestamp`
+		"""
 		# Important that this does nothing
 		pass
 	

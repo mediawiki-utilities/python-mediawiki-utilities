@@ -1,0 +1,2 @@
+.. autoclass:: mw.Timestamp
+   :members:
