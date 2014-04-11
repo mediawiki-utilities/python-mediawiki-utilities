@@ -13,8 +13,21 @@ The shorthand version of MediaWiki time strings.
 """
 
 class Timestamp(serializable.Type):
-	
+	"""
+	An immutable type for working with MediaWiki timestamps in their various 
+	forms.
+	"""
 	def __new__(cls, time_thing):
+		"""
+		Constructs a new Timestamp.  This function will do it's best to handle
+		any legitimate time format.
+		
+		Args:
+			time_thing (:class:`Timestamp`|:class:`time.time_struct`|:class:`datetime.datetime`|str|int|float): The time thing from which to construct the timestamp class.
+		
+		Returns:
+			:class:`Timestamp`
+		"""
 		if isinstance(time_thing, cls):
 			return time_thing
 		elif isinstance(time_thing, time.struct_time):
