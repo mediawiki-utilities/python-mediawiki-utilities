@@ -12,33 +12,68 @@ SHORT_MW_TIME_STRING = '%Y%m%d%H%M%S'
 The shorthand version of MediaWiki time strings.
 """
 
-def Timestamp(time_thing):
-	if isinstance(time_thing, TimestampType):
-		return time_thing
-	else:
-		return TimestampType(time_thing)
+class Timestamp(serializable.Type):
 	
-class TimestampType(serializable.Type):
-	
-	def __init__(self, time_thing):
-		if isinstance(time_thing, time.struct_time):
-			self.__time = time_thing
+	def __new__(cls, time_thing):
+		if isinstance(time_thing, cls):
+			return time_thing
+		elif isinstance(time_thing, time.struct_time):
+			return cls.from_time_struct(time_thing)
+		elif isinstance(time_thing, datetime.datetime):
+			return cls.from_datetime(time_thing)
 		elif type(time_thing) in (int, float):
-			self.__time = datetime.datetime.utcfromtimestamp(time_thing).timetuple()
+			return cls.from_unix(time_thing)
 		else:
-			if type(time_thing) == bytes:
-				time_string = str(time_thing, 'utf8')
-			else:
-				time_string = str(time_thing)
-			
+			return cls.from_string(time_thing)
+		
+	def __init__(self, *args, **kwargs): 
+		# Important that this does nothing
+		pass
+	
+	def initialize(self, time_struct):
+		self.__time = time_struct
+	
+	@classmethod
+	def from_time_struct(cls, struct):
+		instance = super().__new__(cls)
+		instance.initialize(struct)
+		return instance
+	
+	@classmethod
+	def from_datetime(cls, dt):
+		time_struct = dt.timetuple()
+		return cls.from_time_struct(time_struct)
+		
+	@classmethod
+	def from_unix(cls, seconds):
+		time_struct = datetime.datetime.utcfromtimestamp(seconds).timetuple()
+		return cls.from_time_struct(time_struct)
+	
+	@classmethod
+	def from_string(cls, string):
+		if type(string) == bytes:
+			string = str(string, 'utf8')
+		else:
+			string = str(string)
+		
+		try:
+			return cls.strptime(string, SHORT_MW_TIME_STRING)
+		except ValueError as e:
 			try:
-				self.__time = time.strptime(time_string, LONG_MW_TIME_STRING)
+				return cls.strptime(string, LONG_MW_TIME_STRING)
 			except ValueError as e:
-				try:
-					self.__time = time.strptime(time_string, SHORT_MW_TIME_STRING)
-				except ValueError as e:
-					raise ValueError("'%s' is not a valid Wikipedia date format" % time_string)
+				raise ValueError(
+					"{0} is not a valid Wikipedia date format".format(
+						repr(time_string)
+					)
+				)
 			
+		return cls.from_time_struct(time_struct)
+		
+	@classmethod
+	def strptime(cls, string, format):
+		return cls.from_time_struct(time.strptime(string, format))
+	
 	def strftime(self, format): return self.__format__(format)
 	def __format__(self, format):
 		return time.strftime(format, self.__time)
@@ -56,10 +91,7 @@ class TimestampType(serializable.Type):
 		
 	@classmethod
 	def deserialize(cls, time_thing):
-		if isinstance(time_thing, cls):
-			return time_thing
-		else:
-			return TimestampType(time_thing)
+		return Timestamp(time_thing)
 	
 	def __repr__(self):
 		return "{0}({1})".format(
@@ -68,12 +100,16 @@ class TimestampType(serializable.Type):
 		)
 	
 	def __int__(self): return self.unix()
+	def __float__(self): return float(self.unix())
 	
 	def unix(self):
 		return int(calendar.timegm(self.__time))
 		
 	def __sub__(self, other):
 		return self.unix() - other.unix()
+		
+	def __add__(self, seconds):
+		return Timestamp(self.unix() + seconds)
 	
 	def __eq__(self, other):
 		try:
@@ -111,11 +147,3 @@ class TimestampType(serializable.Type):
 		except AttributeError:
 			return NotImplemented
 	
-
-
-
-Timestamp.strptime = lambda string, format: \
-	TimestampType(time.strptime(string, format))
-
-Timestamp.serialize = TimestampType.serialize
-Timestamp.deserialize = TimestampType.deserialize

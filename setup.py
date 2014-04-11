@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
 	name='mediawiki-utilities',
-	version='0.2.1',
+	version=open('LICENSE').read(),
 	author='Aaron Halfaker',
 	author_email='aaron.halfaker@gmail.com',
 	packages=find_packages(),
