@@ -11,6 +11,18 @@ MediaWiki Utilities is an open source (MIT Licensed) library developed by Aaron 
 
 **Note:** *Use of this library requires Python 3 or later.*
 
+.. toctree::
+   :maxdepth: 1
+   
+   types
+   core/api
+   core/database
+   core/xml_dump
+   lib/persistence
+   lib/reverts
+   lib/sessions
+   lib/title
+
 Types
 =====
 :ref:`mw.Timestamp <mw.types>`

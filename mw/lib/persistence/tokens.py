@@ -5,17 +5,48 @@ class Token:
 	"""
 	__slots__ = ('text', 'revisions')
 	
-	def __init__(self, text):
+	def __init__(self, text, revisions=None):
 		self.text = text
-		self.revisions = []
+		"""
+		The text of the token.
+		"""
+		
+		self.revisions = revisions if revisions != None else []
+		"""
+		The meta data for the revisions that the token has appeared within.
+		"""
 		
 	def persist(self, revision):
 		self.revisions.append(revision)
 	
+	def __repr__(self):
+		return "{0}({1})".format(
+			self.__class__.__name__,
+			", ".join([
+				"text={0}".format(repr(self.text)),
+				"revisions={0}".format(repr(self.revisions))
+			])
+		)
+	
 
 class Tokens(list):
 	"""
-	Represents a list of `Tokens` with some cool helper functions.
+	Represents a :class:`list` of :class:`~mw.lib.persistence.Token` with some 
+	useful helper functions.
+	
+	:Example:
+	
+		>>> from mw.lib.persistence import Token, Tokens
+		>>> 
+		>>> tokens = Tokens()
+		>>> tokens.append(Token("foo"))
+		>>> tokens.extend([Token(" "), Token("bar")])
+		>>> 
+		>>> tokens[0]
+		Token(text='foo', revisions=[])
+		>>> 
+		>>> "".join(tokens.texts())
+		'foo bar'
 	"""
 	
 	def __init__(self, *args, **kwargs):

@@ -1,7 +1,7 @@
 .. _mw.lib.reverts:
 
 =============================================
-mw.lib.reverts -- utilities detecting reverts
+mw.lib.reverts -- detecting reverts
 =============================================
 
 .. autofunction:: mw.lib.reverts.detect

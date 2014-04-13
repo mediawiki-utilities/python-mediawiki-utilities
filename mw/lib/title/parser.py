@@ -22,7 +22,7 @@ class Parser:
 		...     [
 		...             Namespace(0, "", case="first-letter"),
 		...             Namespace(1, "Discuss\u00e3o", canonical="Talk", case="first-letter"),
-		...             Namespace(2, "Usu\u00e1rio(a)", canonical="User", aliases={"U"} case="first-letter")
+		...             Namespace(2, "Usu\u00e1rio(a)", canonical="User", aliases={"U"}, case="first-letter")
 		...     ]
 		... )
 		>>> 

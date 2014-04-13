@@ -1,10 +1,8 @@
 .. _mw.lib.sessions:
 
-============================================================
-mw.lib.sessions -- utilities clustering events into sessions
-============================================================
-
-
+===================================
+mw.lib.sessions -- event clustering
+===================================
 
 .. autofunction:: mw.lib.sessions.cluster
 
