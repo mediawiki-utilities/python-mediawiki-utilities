@@ -86,6 +86,7 @@ class RecentChanges(Collection):
 			limit : int
 				limit the number of records returned
 		"""
+		direction = none_or(direction, levels=self.DIRECTIONS)
 		
 		query = """
 			SELECT * FROM recentchanges
@@ -116,9 +117,6 @@ class RecentChanges(Collection):
 		
 		
 		if direction != None:
-			if direction not in self.DIRECTIONS: 
-				raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
-			
 			direction = ("ASC " if direction == "newer" else "DESC ")
 			query += " ORDER BY rc_timestamp {0}, rc_id {0}".format(dir)
 		

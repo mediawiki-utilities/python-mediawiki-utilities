@@ -107,7 +107,9 @@ class DB:
 		)
 		return cls(connection)
 	
+	@classmethod
 	def from_params(cls, *args, **kwargs):
+		kwargs['default_cursor'] = oursql.DictCursor
 		connection = oursql.connect(*args, **kwargs)
 		return cls(connection)
 	

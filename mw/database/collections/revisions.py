@@ -2,7 +2,7 @@ import time, logging
 from itertools import chain
 
 from ...types import Timestamp
-from ...util import iteration
+from ...util import iteration, none_or
 
 from .collection import Collection
 
@@ -175,8 +175,7 @@ class Revisions(Collection):
 		after = none_or(after, Timestamp)
 		before_id = none_or(before_id, int)
 		after_id = none_or(after_id, int)
-		if direction not in self.DIRECTIONS: 
-			raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
+		direction = none_or(direction, levels=self.DIRECTIONS)
 		include_page = none_or(include_page, bool)
 		
 		start_time = time.time()
