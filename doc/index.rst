@@ -11,18 +11,6 @@ MediaWiki Utilities is an open source (MIT Licensed) library developed by Aaron 
 
 **Note:** *Use of this library requires Python 3 or later.*
 
-.. toctree::
-   :maxdepth: 1
-   
-   types
-   core/api
-   core/database
-   core/xml_dump
-   lib/persistence
-   lib/reverts
-   lib/sessions
-   lib/title
-
 Types
 =====
 :ref:`mw.Timestamp <mw.types>`
@@ -42,10 +30,10 @@ Core modules
 	* :class:`~mw.database.DB` -- Constructs a mysql database connector with convenience methods for accessing ``revision``, ``archive``, ``page``, ``user``, and ``recentchanges``.
 
 :ref:`mw.xml_dump <mw.xml_dump>`
-	A set of utilities for iteratively processing with MediaWiki's XML database dumps.
+	A set of utilities for processing MediaWiki's XML database dumps quickly and without dealing with streaming XML. 
 	
+	* :func:`~mw.xml_dump.map` -- Applies a function to a set of dump files (:class:`~mw.xml_dump.Iterator`) using :class:`multiprocessing` and aggregates the output.
 	* :class:`~mw.xml_dump.Iterator` -- Constructs an iterator over a standard XML dump.  Dumps contain site_info and pages.  Pages contain metadata and revisions.  Revisions contain metadata and text.  This is probably why you are here.
-	* :func:`~mw.xml_dump.map` -- Applies a function to a set of dump files (:class:`~mw.xml_dump.Iterator`) using `multiprocessing` and aggregates the output.
 
 Libraries
 =========
@@ -91,6 +79,18 @@ None yet.  See http://github.com/halfak/mediawiki-utilities.  Pull requests are 
 
 Indices and tables
 ==================
+
+.. toctree::
+   :maxdepth: 2
+   
+   types
+   core/api
+   core/database
+   core/xml_dump
+   lib/persistence
+   lib/reverts
+   lib/sessions
+   lib/title
 
 * :ref:`genindex`
 * :ref:`modindex`

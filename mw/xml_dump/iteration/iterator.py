@@ -10,13 +10,13 @@ from .util import consume_tags
 class Iterator(serializable.Type):
 	"""
 	XML Dump Iterator. Dump file meta data and a 
-	:class:`mw.xml_dump.Page` iterator.  Instances of this class can be 
-	called as iterators directly.  E.g.::
+	:class:`~mw.xml_dump.Page` iterator.  Instances of this class can be 
+	called as an iterator directly.  E.g.::
 	
 		from mw.xml_dump import Iterator
 		
 		# Construct dump file iterator
-		dump = Iterator.from_file(open("examples/dump.xml"))
+		dump = Iterator.from_file(open("example/dump.xml"))
 		
 		# Iterate through pages
 		for page in dump:

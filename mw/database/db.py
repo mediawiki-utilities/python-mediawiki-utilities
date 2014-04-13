@@ -107,5 +107,9 @@ class DB:
 		)
 		return cls(connection)
 	
+	def from_params(cls, *args, **kwargs):
+		connection = oursql.connect(*args, **kwargs)
+		return cls(connection)
+	
 	
 

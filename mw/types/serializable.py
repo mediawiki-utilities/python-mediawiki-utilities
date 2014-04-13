@@ -1,7 +1,7 @@
 from itertools import chain
 
 
-class Type(object):
+class Type: 
 	
 	def __eq__(self, other):
 		if other == None: return False
@@ -31,7 +31,6 @@ class Type(object):
 			yield key, getattr(self, key)
 		
 	def keys(self):
-		print(dir(self))
 		return (
 			key for key in 
 			chain(getattr(self, "__slots__", []), self.__dict__.keys())

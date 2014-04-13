@@ -39,7 +39,7 @@ class Revision(serializable.Type):
 		
 		self.contributor = none_or(contributor, Contributor.deserialize)
 		"""
-		Contributor meta data : :class:`mw.xml_dump.Contributor` | None
+		Contributor meta data : :class:`~mw.xml_dump.Contributor` | `None`
 		"""
 		
 		self.minor       = False or none_or(minor, bool)
@@ -69,7 +69,7 @@ class Revision(serializable.Type):
 		
 		self.parent_id   = none_or(parent_id, int)
 		"""
-		Revision ID of preceding revision : int | None
+		Revision ID of preceding revision : int | `None`
 		"""
 		
 		self.model       = none_or(model, str)

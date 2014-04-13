@@ -5,13 +5,15 @@ from .revision import Revision
 
 class Page(serializable.Type):
 	"""
-	Page meta data and a :class:`mw.xml_dump.Revision` iterator.  Instances of 
-	this class can be called as iterators directly.  E.g.::
+	Page meta data and a :class:`~mw.xml_dump.Revision` iterator.  Instances of 
+	this class can be called as iterators directly.  E.g.
 	
+	.. code-block:: python
+		
 		page = mw.xml_dump.Page( ... )
 		
-		for revisions in page:
-			# Do things with revision and/or page
+		for revision in page:
+			print("{0} {1}".format(revision.id, page_id))
 		
 	"""
 	__slots__ = (
