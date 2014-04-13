@@ -92,6 +92,7 @@ class DB:
 	@classmethod
 	def from_arguments(cls, args):
 		"""
+		Constructs a :class:`~mw.database.DB`.  
 		Consumes :class:`argparse.ArgumentParser` arguments given by 
 		:meth:`add_arguments` in order to create a :class:`DB`.
 		
@@ -109,6 +110,14 @@ class DB:
 	
 	@classmethod
 	def from_params(cls, *args, **kwargs):
+		"""
+		Constructs a :class:`~mw.database.DB`.  Passes `*args` and `**kwargs` 
+		to :meth:`oursql.connect` and configures the connection.
+		
+		:Parameters:
+			args : :class:`argparse.Namespace`
+				A collection of argument values returned by :class:`argparse.ArgumentParser`'s :meth:`parse_args()`
+		"""
 		kwargs['default_cursor'] = oursql.DictCursor
 		connection = oursql.connect(*args, **kwargs)
 		return cls(connection)
