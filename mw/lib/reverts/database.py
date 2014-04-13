@@ -16,6 +16,7 @@ def check_row(db, rev_row, **kwargs):
 	
 	:Parameters:
 		db : :class:`mw.database.DB` 
+			A database connection to make use of. 
 		rev_row : dict
 			a revision row containing 'rev_id' and 'rev_page' or 'page_id'
 		radius : int
@@ -44,7 +45,8 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
 	of Revert(reverting, reverteds, reverted_to).
 	
 	:Parameters:
-		db : `mw.database.DB` 
+		db : `mw.database.DB`
+			A database connection to make use of. 
 		rev_id : int
 			the ID of the revision to check
 		page_id : int

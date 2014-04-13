@@ -9,7 +9,7 @@ MediaWiki Utilities
 
 MediaWiki Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting and processing data from MediaWiki installations, slave databses and xml dumps.
 
-This library requires Python 3 or later.
+**Note:** *Use of this library requires Python 3 or later.*
 
 Types
 =====
@@ -39,38 +39,42 @@ Libraries
 =========
 
 :ref:`mw.lib.persistence <mw.lib.persistence>`
-	A set of utilities for tracking the persistence of content between revisions
+	A set of utilities for tracking the persistence of content between revisions.
 	
-	* State(...) -- Constructs an object that represents the current content persistence state of a page.  Reports useful details about content when updated.
+	* :class:`~mw.lib.persistence.State` -- Constructs an object that represents the current content persistence state of a page.  Reports useful details about the persistence of content when updated.
 
 :ref:`mw.lib.reverts <mw.lib.reverts>`
 	A set of utilities for performing revert detection
 	
-	* Detector(...) -- Constructs an identity revert detector that can be updated manually over the history of a page. 
-	* detect(...) -- Detects reverts in a sequence of revision events.
+	* :func:`~mw.lib.reverts.detect` -- Detects reverts in a sequence of revision events.
+	* :class:`~mw.lib.reverts.Detector` -- Constructs an identity revert detector that can be updated manually over the history of a page. 
 
 :ref:`mw.lib.sessions <mw.lib.sessions>`
 	A set of utilities for grouping revisions and other events into sessions
 	
-	* Cache(...) -- Constructs a cache of recent user actions that can be updated manually in order to detect sessions.
-	* cluster(...) -- Clusters a sequence of user actions into sessions.
+	* :func:`~mw.lib.sessions.cluster` -- Clusters a sequence of user actions into sessions.
+	* :class:`~mw.lib.sessions.Cache` -- Constructs a cache of recent user actions that can be updated manually in order to detect sessions.
 
 :ref:`mw.lib.title <mw.lib.title>`
 	A set of utilities for normalizing and parsing page titles
 	
-	* Parser(...) -- Constructs a parser with a set of namespaces that can be used to parse and normalize page titles. 
-	* normalize(...) -- Normalizes a page title.  
-
-
+	* :func:`~mw.lib.title.normalize` -- Normalizes a page title.  
+	* :class:`~mw.lib.title.Parser` -- Constructs a parser with a set of namespaces that can be used to parse and normalize page titles. 
 
 About the author
 ================
-Aaron Halfaker (aaron.halfaker@gmail.com) -- http://halfaker.info -- http://en.wikipedia.org/User:EpochFail
+:name: 
+	Aaron Halfaker
+:email:
+	aaron.halfaker@gmail.com
+:website:
+	http://halfaker.info --
+	http://en.wikipedia.org/Wiki/User:EpochFail
 
 
 Contributors
 ============
-None yet.  See http://github.com/halfak/mediawiki-utilities
+None yet.  See http://github.com/halfak/mediawiki-utilities.  Pull requests are encouraged.
 
 
 Indices and tables

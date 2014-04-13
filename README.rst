@@ -81,7 +81,7 @@ Libraries
 
 About the author
 ================
-Aaron Halfaker (aaron.halfaker@gmail.com) -- http://halfaker.info -- http://en.wikipedia.org/User:EpochFail
+Aaron Halfaker (aaron.halfaker@gmail.com) -- http://halfaker.info -- http://en.wikipedia.org/wiki/User:EpochFail
 
 
 Contributors

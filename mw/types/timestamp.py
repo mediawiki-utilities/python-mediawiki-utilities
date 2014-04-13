@@ -18,11 +18,56 @@ class Timestamp(serializable.Type):
 	forms.
 	
 	:Parameters:
-		time_thing : :class:`Timestamp` | :py:class:`~time.time_struct` | :py:class:`~datetime.datetime` | :py:class:`str` | :py:class:`int` | :py:class:`float`
+		time_thing : :class:`mw.Timestamp` | :py:class:`~time.time_struct` | :py:class:`~datetime.datetime` | :py:class:`str` | :py:class:`int` | :py:class:`float`
 			The timestamp type from which to construct the timestamp class.
-		
+	
 	:Returns:
 		:class:`mw.Timestamp`
+	
+	You can make use of a lot of different *time things* to initialize a 
+	:class:`mw.Timestamp`.
+	
+	* If a :py:class:`~time.time_struct` or :py:class:`~datetime.datetime` are provided, a `Timestamp` will be constructed from their values.
+	* If an `int` or `float` are provided, they will be assumed to a unix timestamp in seconds since Jan. 1st, 1970 UTC.
+	* If a `str` is provided, it will be be checked against known MediaWiki timestamp formats.  E.g., ``%Y%m%d%H%M%S`` and ``%Y-%m-%dT%H:%M:%SZ``.
+	* If a :class:`mw.Timestamp` is provided, the same `Timestamp` will be returned.
+	
+	For example::
+	
+		>>> import datetime, time
+		>>> from mw import Timestamp
+		>>> Timestamp(1234567890)
+		Timestamp('2009-02-13T23:31:30Z')
+		>>> Timestamp(1234567890) == Timestamp("2009-02-13T23:31:30Z")
+		True
+		>>> Timestamp(1234567890) == Timestamp("20090213233130")
+		True
+		>>> Timestamp(1234567890) == Timestamp(datetime.datetime.utcfromtimestamp(1234567890))
+		True
+		>>> Timestamp(1234567890) == Timestamp(time.strptime("2009-02-13T23:31:30Z", "%Y-%m-%dT%H:%M:%SZ"))
+		True
+		>>> Timestamp(1234567890) == Timestamp(Timestamp(1234567890))
+		True
+	
+	
+	You can also do math and comparisons of timestamps.::
+		
+		>>> from mw import Timestamp
+		>>> t = Timestamp(1234567890)
+		>>> t
+		Timestamp('2009-02-13T23:31:30Z')
+		>>> t2 = t + 10
+		>>> t2
+		Timestamp('2009-02-13T23:31:40Z')
+		>>> t += 1
+		>>> t
+		Timestamp('2009-02-13T23:31:31Z')
+		>>> t2 - t
+		9
+		>>> t < t2
+		True
+	
+	
 	"""
 	def __new__(cls, time_thing):
 		if isinstance(time_thing, cls):
@@ -50,6 +95,7 @@ class Timestamp(serializable.Type):
 		
 		:Parameters:
 			time_struct : :class:`time.time_struct`
+				A time structure
 		
 		:Returns:
 			:class:`mw.Timestamp`
@@ -60,16 +106,50 @@ class Timestamp(serializable.Type):
 	
 	@classmethod
 	def from_datetime(cls, dt):
+		"""
+		Constructs a :class:`mw.Timestamp` from a :class:`datetime.datetime`.
+		
+		:Parameters:
+			dt : :class:`datetime.datetime``
+				A datetime.
+		
+		:Returns:
+			:class:`mw.Timestamp`
+		"""
 		time_struct = dt.timetuple()
 		return cls.from_time_struct(time_struct)
 		
 	@classmethod
 	def from_unix(cls, seconds):
+		"""
+		Constructs a :class:`mw.Timestamp` from a unix timestamp (in seconds 
+		since Jan. 1st, 1970 UTC).
+		
+		:Parameters:
+			seconds : int
+				A unix timestamp
+		
+		:Returns:
+			:class:`mw.Timestamp`
+		"""
 		time_struct = datetime.datetime.utcfromtimestamp(seconds).timetuple()
 		return cls.from_time_struct(time_struct)
 	
 	@classmethod
 	def from_string(cls, string):
+		"""
+		Constructs a :class:`mw.Timestamp` from a MediaWiki formatted string.  
+		This method is provides a convenient way to construct from common 
+		MediaWiki timestamp formats. E.g., ``%Y%m%d%H%M%S`` and 
+		``%Y-%m-%dT%H:%M:%SZ``.
+		
+		:Parameters:
+			string : str
+				A formatted timestamp
+		
+		:Returns:
+			:class:`mw.Timestamp`
+		"""
 		if type(string) == bytes:
 			string = str(string, 'utf8')
 		else:
@@ -83,7 +163,7 @@ class Timestamp(serializable.Type):
 			except ValueError as e:
 				raise ValueError(
 					"{0} is not a valid Wikipedia date format".format(
-						repr(time_string)
+						repr(string)
 					)
 				)
 			
@@ -91,18 +171,70 @@ class Timestamp(serializable.Type):
 		
 	@classmethod
 	def strptime(cls, string, format):
+		"""
+		Constructs a :class:`mw.Timestamp` from an explicitly formatted string.
+		See `<https://docs.python.org/3/library/time.html#time.strftime>`_ for a
+		discussion for potential formats.
+		
+		:Parameters:
+			string : str
+				A formatted timestamp
+			format : str
+				The string format 
+		
+		:Returns:
+			:class:`mw.Timestamp`
+		"""
 		return cls.from_time_struct(time.strptime(string, format))
 	
-	def strftime(self, format): return self.__format__(format)
-	def __format__(self, format):
+	def strftime(self, format):
+		"""
+		Constructs a formatted string. 
+		See `<https://docs.python.org/3/library/time.html#time.strftime>`_ for a
+		discussion for potential formats.
+		
+		:Parameters:
+			format : str
+				The string format 
+		
+		:Returns:
+			A formatted string
+		"""
 		return time.strftime(format, self.__time)
+		
+	def __format__(self, format):
+		return self.strftime(format)
 	
 	def __str__(self): return self.short_format()
 	
 	def short_format(self):
+		"""
+		Constructs a long, ``%Y%m%dT%H%M%SZ`` formatted string common to the 
+		database. This method is roughly equivalent to calling 
+		``strftime("%Y-%m-%dT%H:%M:%SZ")``.
+		
+		:Parameters:
+			format : str
+				The string format 
+		
+		:Returns:
+			A formatted string
+		"""
 		return self.strftime(SHORT_MW_TIME_STRING)
 	
 	def long_format(self):
+		"""
+		Constructs a long, ``%Y%m%dT%H%M%SZ`` formatted string common to the 
+		API. This method is roughly equivalent to calling 
+		``strftime("%Y%m%dT%H%M%SZ")``.
+		
+		:Parameters:
+			format : str
+				The string format 
+		
+		:Returns:
+			A formatted string
+		"""
 		return self.strftime(LONG_MW_TIME_STRING)
 	
 	def serialize(self):
@@ -122,6 +254,11 @@ class Timestamp(serializable.Type):
 	def __float__(self): return float(self.unix())
 	
 	def unix(self):
+		"""
+		:Returns:
+			the number of seconds since Jan. 1st, 1970 UTC that the 
+			`Timestamp` represents.
+		"""
 		return int(calendar.timegm(self.__time))
 		
 	def __sub__(self, other):
@@ -166,3 +303,4 @@ class Timestamp(serializable.Type):
 		except AttributeError:
 			return NotImplemented
 	
+

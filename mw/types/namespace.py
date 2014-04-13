@@ -12,3 +12,5 @@ class Namespace(serializable.Type):
 		self.aliases = serializable.Set.deserialize(aliases or [], str)
 		self.case = none_or(case, str)
 		self.canonical = none_or(canonical, str)
+	
+	def __hash__(self): return self.id

@@ -4,16 +4,35 @@ from . import defaults
 
 def detect(checksum_revisions, radius=defaults.RADIUS):
 	"""
-	Detects identity reverts that occur in a sequence of revisions based on 
-	matching checksums and limited by a radius -- the maximum distance that a
-	revert can span.
+	Detects reverts that occur in a sequence of revisions.  Note that, 
+	`revision` data will simply be returned in the case of a revert.
+	
+	This function serves as a convenience wrapper around calls to
+	:class:`~mw.lib.reverts.Detector`'s :meth:`~mw.lib.reverts.Detector.process`
+	method.
 	
 	:Parameters:
-		checksum_revisions : iterable
-			an iterable of checksums and revisions 
+		checksum_revisions : iter( ( checksum : str, revision : `mixed` ) )
+			an iterable over tuples of checksum and revision data
+		radius : int
+			the maximum revision distance that a revert can span.
 	
 	:Return:
-		a generator of (reverting, reverteds, reverted_to) for each reverting revision
+		a iterator over :class:`~mw.lib.reverts.Revert`
+	
+	:Example:
+		>>> from mw.lib import reverts
+		>>> 
+		>>> checksum_revisions = [
+		...     ("aaa", {'rev_id': 1}),
+		...     ("bbb", {'rev_id': 2}),
+		...     ("aaa", {'rev_id': 3}),
+		...     ("ccc", {'rev_id': 4})
+		... ]
+		>>> 
+		>>> list(reverts.detect(checksum_revisions))
+		[Revert(reverting={'rev_id': 3}, reverteds=[{'rev_id': 2}], reverted_to={'rev_id': 1})]
+		
 	"""
 	
 	revert_detector = Detector(radius)
@@ -24,5 +43,4 @@ def detect(checksum_revisions, radius=defaults.RADIUS):
 		
 # For backwards compatibility
 reverts = detect
-
 

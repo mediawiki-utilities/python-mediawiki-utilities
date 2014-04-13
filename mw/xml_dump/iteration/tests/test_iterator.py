@@ -80,7 +80,7 @@ def test_complete():
 	f = io.StringIO(SAMPLE_XML)
 	
 	dump = Iterator.from_file(f)
-	eq_([0,1], list(dump.namespaces.keys()))
+	eq_([0,1], list(ns.id for ns in dump.namespaces))
 	
 	page = next(dump)
 	eq_(page.title, "Foo")
