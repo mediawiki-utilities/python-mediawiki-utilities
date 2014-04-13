@@ -5,6 +5,9 @@ from .contributor import Contributor
 from .util import consume_tags
 
 class Revision(serializable.Type):
+	"""
+	Revision meta data.
+	"""
 	__slots__ = ('id', 'timestamp', 'contributor', 'minor', 'comment', 'text',
 	             'bytes', 'sha1', 'parent_id', 'model', 'format')
 	
@@ -21,20 +24,63 @@ class Revision(serializable.Type):
 		'format':      lambda e: str(e.text)
 	}
 	
-	def __init__(self, id, timestamp, contributor, minor, comment, text, bytes,
-	                   sha1, parent_id, model, format):
-	
+	def __init__(self, id, timestamp, contributor=None, minor=None, 
+	             comment=None, text=None, bytes=None, sha1=None, 
+	             parent_id=None, model=None, format=None):
 		self.id          = int(id)
+		"""
+		Revision ID : int
+		"""
+		
 		self.timestamp   = Timestamp(timestamp)
+		"""
+		Revision timestamp : :class:`mw.Timestamp`
+		"""
+		
 		self.contributor = none_or(contributor, Contributor.deserialize)
-		self.minor       = False or minor
+		"""
+		Contributor meta data : :class:`mw.xml_dump.Contributor` | None
+		"""
+		
+		self.minor       = False or none_or(minor, bool)
+		"""
+		Is revision a minor change? : bool
+		"""
+		
 		self.comment     = none_or(comment, str)
+		"""
+		Comment left with revision : str
+		"""
+		
 		self.text        = none_or(text, str)
+		"""
+		Content of revision : str
+		"""
+		
 		self.bytes       = none_or(bytes, int)
+		"""
+		Number of bytes of content
+		"""
+		
 		self.sha1        = none_or(sha1, str)
+		"""
+		sha1 hash of the content
+		"""
+		
 		self.parent_id   = none_or(parent_id, int)
+		"""
+		Revision ID of preceding revision : int | None
+		"""
+		
 		self.model       = none_or(model, str)
+		"""
+		TODO: ??? : str
+		"""
+		
 		self.format      = none_or(format, str)
+		"""
+		TODO: ??? : str
+		"""
 	
 	@classmethod
 	def from_element(cls, element):

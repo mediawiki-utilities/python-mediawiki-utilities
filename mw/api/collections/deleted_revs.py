@@ -1,10 +1,12 @@
 import re, logging, sys
 
-from ..util import none_or
-from .collection import Collection
-from .errors import MalformedResponse
+from ...util import none_or
 
-logger = logging.getLogger("mw.api.deletedrevs")
+from ..errors import MalformedResponse
+
+from .collection import Collection
+
+logger = logging.getLogger("mw.api.collections.deletedrevs")
 
 class DeletedRevs(Collection):
 	
@@ -18,6 +20,55 @@ class DeletedRevs(Collection):
 	MAX_REVISIONS = 500
 	
 	def query(self, *args, limit=sys.maxsize, **kwargs):
+		"""
+		Queries deleted revisions.  
+		See https://www.mediawiki.org/wiki/API:Deletedrevs
+		
+		:Parameters:
+			titles : set(str)
+				A set of page names to query (note that namespace prefix is expected)
+			start : :class:`mw.Timestamp`
+				A timestamp to start querying from
+			end : :class:`mw.Timestamp`
+				A timestamp to end querying
+			from_title : str
+				A title from which to start querying (alphabetically)
+			to_title : str
+				A title from which to stop querying (alphabetically)
+			prefix : str
+				A title prefix to match on
+			drcontinue : str
+				When more results are available, use this to continue (3) Note: may only work if drdir is set to newer.
+			unique : bool
+				List only one revision for each page
+			tag : str
+				Only list revision tagged with this tag
+			user : str
+				Only list revisions saved by this user_text
+			excludeuser : str
+				Do not list revision saved by this user_text
+			namespace : int
+				Only list pages in this namespace (id)
+			limit : int
+				Limit the number of results
+			direction : str
+				"newer" or "older"
+			properties : set(str)
+				A list of properties to include in the results:
+				
+				* revid          - Adds the revision ID of the deleted revision
+				* parentid       - Adds the revision ID of the previous revision to the page
+				* user           - Adds the user who made the revision
+				* userid         - Adds the user ID whom made the revision
+				* comment        - Adds the comment of the revision
+				* parsedcomment  - Adds the parsed comment of the revision
+				* minor          - Tags if the revision is minor
+				* len            - Adds the length (bytes) of the revision
+				* sha1           - Adds the SHA-1 (base 16) of the revision
+				* content        - Adds the content of the revision
+				* token          - Gives the edit token
+				* tags           - Tags for the revision
+		"""
 		# `limit` means something diffent here
 		kwargs['limit'] = min(limit, self.MAX_REVISIONS)
 		revisions_yielded = 0
@@ -53,8 +104,8 @@ class DeletedRevs(Collection):
 		
 		params['drprop'] = self._items(properties, levels=self.PROPERTIES)
 		params['drlimit'] = none_or(limit, int)
-		params['drstart'] = self._check_timestamp(start)
-		params['drend'] = self._check_timestamp(end)
+		params['drstart'] = str(Timestamp(start))
+		params['drend'] = str(Timestamp(end))
 		
 		params['drdir'] = self._check_direction(direction)
 		params['druser'] = none_or(user, str)

@@ -62,7 +62,7 @@ class Collection:
 				
 				assert len(items - levels) == 0, \
 					"items {0} not in levels {1}".format(
-						levels - items, levels)
+						items - levels, levels)
 				
 			
 			return "|".join(items)

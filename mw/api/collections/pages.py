@@ -1,11 +1,17 @@
 import re, logging
 
-from .collection import Collection
-from .errors import MalformedResponse
+from ...util import none_or
 
-logger = logging.getLogger("mw.api.pages")
+from ..errors import MalformedResponse
+
+from .collection import Collection
+
+logger = logging.getLogger("mw.api.collections.pages")
 
 class Pages(Collection):
+	"""
+	TODO
+	"""
 	
 	def _edit(self, title=None, pageid=None, section=None, sectiontitle=None,
 	                text=None, token=None, summary=None, minor=None,

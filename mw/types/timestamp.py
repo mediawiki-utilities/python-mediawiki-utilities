@@ -22,7 +22,7 @@ class Timestamp(serializable.Type):
 			The timestamp type from which to construct the timestamp class.
 		
 	:Returns:
-		:class:`Timestamp`
+		:class:`mw.Timestamp`
 	"""
 	def __new__(cls, time_thing):
 		if isinstance(time_thing, cls):
@@ -37,16 +37,6 @@ class Timestamp(serializable.Type):
 			return cls.from_string(time_thing)
 		
 	def __init__(self, time_thing):
-		"""
-		Constructs a new Timestamp.  This function will do it's best to handle
-		any legitimate time format.
-		
-		Args:
-			time_thing (:class:`Timestamp`|:class:`time.time_struct`|:class:`datetime.datetime`|str|int|float): The time thing from which to construct the timestamp class.
-		
-		Returns:
-			:class:`Timestamp`
-		"""
 		# Important that this does nothing
 		pass
 	
@@ -54,9 +44,18 @@ class Timestamp(serializable.Type):
 		self.__time = time_struct
 	
 	@classmethod
-	def from_time_struct(cls, struct):
+	def from_time_struct(cls, time_struct):
+		"""
+		Constructs a :class:`mw.Timestamp` from a :class:`time.time_struct`.
+		
+		:Parameters:
+			time_struct : :class:`time.time_struct`
+		
+		:Returns:
+			:class:`mw.Timestamp`
+		"""
 		instance = super().__new__(cls)
-		instance.initialize(struct)
+		instance.initialize(time_struct)
 		return instance
 	
 	@classmethod

@@ -4,6 +4,16 @@ from ...util import none_or
 from .revision import Revision
 
 class Page(serializable.Type):
+	"""
+	Page meta data and a :class:`mw.xml_dump.Revision` iterator.  Instances of 
+	this class can be called as iterators directly.  E.g.::
+	
+		page = mw.xml_dump.Page( ... )
+		
+		for revisions in page:
+			# Do things with revision and/or page
+		
+	"""
 	__slots__ = (
 		'id',
 		'title',
@@ -15,10 +25,29 @@ class Page(serializable.Type):
 	
 	def __init__(self, id, title, namespace, redirect, restrictions, revisions):
 		self.id = none_or(id, int)
+		"""
+		Page ID : int
+		"""
+		
 		self.title = none_or(title, str)
+		"""
+		Page title (namespace excluded) : str
+		"""
+		
 		self.namespace = none_or(namespace, int)
+		"""
+		Namespace ID : int
+		"""
+		
 		self.redirect = none_or(redirect, str)
+		"""
+		Page is currently redirect? : bool
+		"""
+		
 		self.restrictions = none_or(restrictions, str)
+		"""
+		TODO: ??? : str
+		"""
 		
 		# Should be a lazy generator
 		self.__revisions = revisions

@@ -3,85 +3,59 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-============
+===================
 MediaWiki Utilities
-============
+===================
 
 MediaWiki Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting and processing data from MediaWiki installations, slave databses and xml dumps.
 
 This library requires Python 3 or later.
 
-A typical usage looks like this::
-
-	from mw.api import Session
-	from mw.lib import reverts
-	
-	# Gather a page's revisions from the API
-	api_session = Session("https://en.wikipedia.org/w/api.php")
-	revs = api_session.revisions.query(
-		titles={"User:EpochFail"}, 
-		properties={'ids', 'sha1'},
-		direction="newer"
-	)
-	
-	# Creates a revsion event iterator
-	rev_events = ((rev['sha1'], rev) for rev in revs)
-	
-	# Detect and print reverts
-	for revert in reverts.detect(rev_events):
-		print("{0} reverted back to {1}".format(revert.reverting['revid'],
-		                                        revert.reverted_to['revid']))
-
-For more examples, see scripts inside ``examples/``.
-
 Types
 =====
-``Timestamp``
+:ref:`mw.Timestamp <mw.types>`
 	A simple datatype for handling MediaWiki's various time formats.
 
 Core modules
 ============
-:ref:`mw.api <core.api>`
+
+:ref:`mw.api <mw.api>`
 	A set of utilities for interacting with MediaWiki's web API.
 	
-	* Session(...) -- Constructs an API session with a MediaWiki installation.  Contains convenience methods for accessing ``prop=revisions``,  ``list=usercontribs``, ``meta=siteinfo``, ``list=deletedrevs`` and ``list=recentchanges``.
+	* :class:`~mw.api.Session` -- Constructs an API session with a MediaWiki installation.  Contains convenience methods for accessing ``prop=revisions``,  ``list=usercontribs``, ``meta=siteinfo``, ``list=deletedrevs`` and ``list=recentchanges``.
 
-``database``
+:ref:`mw.database <mw.database>`
 	A set of utilities for interacting with MediaWiki's database.
 	
-	* DB(...) -- Constructs a mysql database connector with convenience methods	for accessing ``revision``, ``archive``, ``page``, ``user``, and ``recentchanges``.
+	* :class:`~mw.database.DB` -- Constructs a mysql database connector with convenience methods for accessing ``revision``, ``archive``, ``page``, ``user``, and ``recentchanges``.
 
-``types``
-	A set of types for working with MediaWiki data.
-	
-	* Timestamp(...) -- Constructs a robust datatype for dealing with MediaWikis common timestamp formats
-
-``xml_dump``
+:ref:`mw.xml_dump <mw.xml_dump>`
 	A set of utilities for iteratively processing with MediaWiki's XML database dumps.
 	
-	* Iterator(..) -- Constructs an iterator over a standard XML dump.  Dumps contain site_info and pages.  Pages contain metadata and revisions.  Revisions contain metadata and text.  This is probably why you are here.
-	* map(..) -- Applies a function to a set of dump files (``Iterators``) using the multiprocessing module and aggregates the output.
+	* :class:`~mw.xml_dump.Iterator` -- Constructs an iterator over a standard XML dump.  Dumps contain site_info and pages.  Pages contain metadata and revisions.  Revisions contain metadata and text.  This is probably why you are here.
+	* :func:`~mw.xml_dump.map` -- Applies a function to a set of dump files (:class:`~mw.xml_dump.Iterator`) using `multiprocessing` and aggregates the output.
 
 Libraries
 =========
-``lib.persistence``
+
+:ref:`mw.lib.persistence <mw.lib.persistence>`
 	A set of utilities for tracking the persistence of content between revisions
 	
 	* State(...) -- Constructs an object that represents the current content persistence state of a page.  Reports useful details about content when updated.
 
-``lib.reverts``
+:ref:`mw.lib.reverts <mw.lib.reverts>`
 	A set of utilities for performing revert detection
 	
 	* Detector(...) -- Constructs an identity revert detector that can be updated manually over the history of a page. 
 	* detect(...) -- Detects reverts in a sequence of revision events.
 
-``lib.sessions``
+:ref:`mw.lib.sessions <mw.lib.sessions>`
 	A set of utilities for grouping revisions and other events into sessions
 	
 	* Cache(...) -- Constructs a cache of recent user actions that can be updated manually in order to detect sessions.
 	* cluster(...) -- Clusters a sequence of user actions into sessions.
 
-``lib.titles``
+:ref:`mw.lib.title <mw.lib.title>`
 	A set of utilities for normalizing and parsing page titles
 	
 	* Parser(...) -- Constructs a parser with a set of namespaces that can be used to parse and normalize page titles. 

@@ -1,3 +1,4 @@
 #from . import errors
-from .collection import Collection
 from .db import DB
+from .collections import Pages, RecentChanges, Revisions, Archives, \
+                         AllRevisions, Users

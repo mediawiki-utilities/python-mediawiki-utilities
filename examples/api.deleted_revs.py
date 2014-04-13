@@ -1,5 +1,6 @@
+import sys,os;sys.path.insert(0, os.path.abspath(os.getcwd()))
 """
-Prints the rev_id of all revisions to User:EpochFail.
+Prints the rev_id, characters and hash of all revisions to Willy_on_Wheels.
 """
 import getpass, hashlib
 from mw import api

@@ -3,6 +3,7 @@ from itertools import chain
 from ...types import Timestamp
 from ...util import none_or
 
+from . import defaults
 from .functions import detect
 
 """
@@ -14,7 +15,7 @@ def check_row(db, rev_row, **kwargs):
 	a named tuple of Revert(reverting, reverteds, reverted_to).
 	
 	:Parameters:
-		db : `mw.database.DB` 
+		db : :class:`mw.database.DB` 
 		rev_row : dict
 			a revision row containing 'rev_id' and 'rev_page' or 'page_id'
 		radius : int
@@ -37,7 +38,7 @@ def check_row(db, rev_row, **kwargs):
 	
 
 
-def check(db, rev_id, page_id=None, radius=15, check_archive=False, before=None):
+def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False, before=None):
 	"""
 	Checks whether a revision was reverted (identity) and returns a named tuple
 	of Revert(reverting, reverteds, reverted_to).

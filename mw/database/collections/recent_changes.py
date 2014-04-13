@@ -1,9 +1,9 @@
 import logging 
 
-from ..types import Timestamp
+from ...types import Timestamp
 from .collection import Collection
 
-logger = logging.getLogger("mw.database.pages")
+logger = logging.getLogger("mw.database.collections.pages")
 
 class RecentChanges(Collection):
 	
@@ -27,10 +27,13 @@ class RecentChanges(Collection):
 		:Parameters:
 			last : dict
 				a recentchanges row to pick up after
-			types : set
+			types : set ( str )
 				a set of recentchanges types to filter for
 			max_wait : float
 				the maximum number of seconds to wait between repeated queries
+			
+		:Returns:
+			A never-ending iterator over change rows. 
 		"""
 		while True:
 			if last != None:
@@ -56,7 +59,32 @@ class RecentChanges(Collection):
 	def query(self, before=None, after=None, before_id=None, after_id=None, 
 	                types=None, direction=None, limit=None):
 		"""
+		Queries the ``recentchanges`` table.  See 
+		`<https://www.mediawiki.org/wiki/Manual:Recentchanges_table>`_
 		
+		:Parameters:
+			before : :class:`mw.Timestamp`
+				The maximum timestamp
+			after : :class:`mw.Timestamp`
+				The minimum timestamp
+			before_id : int
+				The minimum ``rc_id``
+			after_id : int
+				The maximum ``rc_id``
+			types : set ( str )
+				Which types of changes to return?
+				
+				* ``edit`` -- Edits to existing pages
+				* ``new`` -- Edits that create new pages
+				* ``move`` -- (obsolete)
+				* ``log`` -- Log actions (introduced in MediaWiki 1.2)
+				* ``move_over_redirect`` -- (obsolete)
+				* ``external`` -- An external recent change. Primarily used by Wikidata
+			
+			direction : str
+				"older" or "newer"
+			limit : int
+				limit the number of records returned
 		"""
 		
 		query = """
@@ -91,7 +119,7 @@ class RecentChanges(Collection):
 			if direction not in self.DIRECTIONS: 
 				raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
 			
-			dir = ("ASC " if dir == "ASC" else "DESC ")
+			direction = ("ASC " if direction == "newer" else "DESC ")
 			query += " ORDER BY rc_timestamp {0}, rc_id {0}".format(dir)
 		
 		if limit != None:

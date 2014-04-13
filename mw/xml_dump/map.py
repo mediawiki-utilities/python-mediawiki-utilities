@@ -9,12 +9,21 @@ logger = logging.getLogger("mw.dump.map")
 
 def map(paths, process_dump, threads=cpu_count(), output_buffer=100):
 	"""
-	Maps a function across all of the pages in a set of dump files and returns
-	an (order not guaranteed) iterator over the output.  Increasing the 
-	`output_buffer` size will allow more mapplications to happen before the 
-	output is read, but will consume memory to do so.  Big output buffers 
-	are benefitial when the resulting iterator from this map will be read in
-	bursts.
+	Maps a function across a set of dump files and returns
+	an (order not guaranteed) iterator over the output.  E.g.::
+	
+		from mw import xml_dump
+	
+		files = ["examples/dump.xml", "examples/dump2.xml"]
+		
+		def page_info(dump, path):
+			for page in dump:
+				
+				yield page.id, page.namespace, page.title
+				
+		
+		for page_id, page_namespace, page_title in xml_dump.map(files, page_info):
+			print("\t".join([str(page_id), str(page_namespace), page_title]))
 	
 	The `process_dump` function must return an iterable object (such as a 
 	generator).  If your process_dump function does not need to produce 
@@ -22,14 +31,17 @@ def map(paths, process_dump, threads=cpu_count(), output_buffer=100):
 	list).
 	
 	:Parameters:
-		dumps : `list`
+		paths : iter( str )
 			a list of paths to dump files to process
-		process_dump : `function`
-			a function to run on every 'dump.Iterator'
-		threads : `int`
+		process_dump : function( dump : :class:`~mw.xml_dump.Iterator`, path : str)
+			a function to run on every :class:`~mw.xml_dump.Iterator`
+		threads : int
 			the number of individual processing threads to spool up
-		output_buffer : `int`
-			the maximum number of output values to buffer. 
+		output_buffer : int
+			the maximum number of output values to buffer.
+		
+	:Returns:
+		An iterator over values yielded by calls to `process_dump()`
 	"""
 	pathsq  = queue_files(paths)
 	outputq = Queue(maxsize=output_buffer)

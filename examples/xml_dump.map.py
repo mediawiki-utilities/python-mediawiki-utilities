@@ -1,3 +1,4 @@
+import sys,os;sys.path.insert(0, os.path.abspath(os.getcwd()))
 from mw import xml_dump
 
 files = ["examples/dump.xml", "examples/dump2.xml"]

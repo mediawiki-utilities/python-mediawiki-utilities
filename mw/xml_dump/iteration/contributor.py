@@ -4,6 +4,9 @@ from ...util import none_or
 from .util import consume_tags
 
 class Contributor(serializable.Type):
+	"""
+	Contributor meta data. 
+	"""
 	__slots__ = ('id', 'user_text')
 	
 	TAG_MAP = {
@@ -14,7 +17,14 @@ class Contributor(serializable.Type):
 	
 	def __init__(self, id, user_text):
 		self.id = none_or(id, int)
+		"""
+		User ID : int | None
+		"""
+		
 		self.user_text = none_or(user_text, str)
+		"""
+		User name or IP address : str
+		"""
 	
 	@classmethod
 	def from_element(cls, element):

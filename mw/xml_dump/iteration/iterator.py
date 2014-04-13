@@ -8,15 +8,54 @@ from .page import Page
 from .util import consume_tags
 
 class Iterator(serializable.Type):
+	"""
+	XML Dump Iterator. Dump file meta data and a 
+	:class:`mw.xml_dump.Page` iterator.  Instances of this class can be 
+	called as iterators directly.  E.g.::
+	
+		from mw.xml_dump import Iterator
+		
+		# Construct dump file iterator
+		dump = Iterator.from_file(open("examples/dump.xml"))
+		
+		# Iterate through pages
+		for page in dump:
+		
+			# Iterate through a page's revisions
+			for revision in page:
+		
+				print(revision.id)
+	
+	"""
 	__slots__ = ('site_name', 'base', 'generator', 'case', 'namespaces', '__pages')
 	
-	def __init__(self, site_name, base, generator, case, namespaces, pages=None):
+	def __init__(self, site_name=None, base=None, generator=None, case=None, 
+	             namespaces=None, pages=None):
 		
 		self.site_name  = none_or(site_name, str)
+		"""
+		The name of the site. : str
+		"""
+		
 		self.base       = none_or(base, str)
+		"""
+		TODO: ??? : str
+		"""
+		
 		self.generator  = none_or(generator, str)
+		"""
+		TODO: ??? : str
+		"""
+		
 		self.case       = none_or(case, str)
-		self.namespaces = none_or(namespaces, dict)
+		"""
+		TODO: ??? : str
+		"""
+		
+		self.namespaces = none_or(namespaces, list)
+		"""
+		A list of :class:`mw.Namespace`
+		"""
 		
 		# Should be a lazy generator of page info
 		self.__pages = pages
@@ -29,13 +68,13 @@ class Iterator(serializable.Type):
 	
 	@classmethod
 	def load_namespaces(cls, element):
-		namespaces = {}
+		namespaces = []
 		for sub_element in element:
 			tag = sub_element.tag
 			
 			if tag == "namespace":
 				namespace = Namespace.from_element(sub_element)
-				namespaces[namespace.id] = namespace
+				namespaces.append(namespace)
 			else:
 				assert False, "This should never happen"
 			

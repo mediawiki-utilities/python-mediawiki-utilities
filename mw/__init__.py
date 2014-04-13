@@ -1,1 +1,1 @@
-from .types import Timestamp
+from .types import Timestamp, Namespace

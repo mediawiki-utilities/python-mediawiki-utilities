@@ -1,4 +1,4 @@
-import sys; sys.path.insert(0, "../")
+import sys,os;sys.path.insert(0, os.path.abspath(os.getcwd()))
 
 from mw.xml_dump import Iterator
 

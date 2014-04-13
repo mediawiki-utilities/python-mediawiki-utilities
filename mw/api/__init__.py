@@ -1,3 +1,5 @@
 from . import errors
-from .collection import Collection
 from .session import Session
+
+from .collections import Pages, RecentChanges, Revisions, SiteInfo, \
+                         UserContribs, DeletedRevs
