@@ -1,5 +1,8 @@
 import logging, time
 
+from ...util import none_or
+from ...types import Timestamp
+
 from .collection import Collection
 
 logger = logging.getLogger("mw.database.collections.users")
@@ -58,7 +61,7 @@ class Users(Collection):
 		raise KeyError(user_id if user_id != None else user_name)
 	
 	def query(self, registered_before=None, registered_after=None, 
-	                before_id=None, after_id=None, 
+	                before_id=None, after_id=None, limit=None,
 	                direction=None, self_created_only=False):
 		"""
 		Queries users based on various filtering parameters.
@@ -74,6 +77,8 @@ class Users(Collection):
 				A user_ud to search after (inclusive)
 			direction : str
 				"newer" or "older"
+			limit : int
+				Limit the results to at most this number
 			self_creations_only : bool
 				limit results to self_created user accounts
 			
@@ -87,6 +92,7 @@ class Users(Collection):
 		before_id = none_or(before_id, str)
 		after_id = none_or(after_id, str)
 		direction = none_or(direction, levels=self.DIRECTIONS)
+		limit = none_or(limit, int)
 		self_created_only = bool(self_created_only)
 		
 		query = """
@@ -107,10 +113,10 @@ class Users(Collection):
 		
 		if registered_before != None:
 			query += "AND user_registration <= ? "
-			values.append(before)
+			values.append(registered_before.short_format())
 		if registered_after != None:
 			query += "AND user_registration >= ? "
-			values.append(after)
+			values.append(registered_after.short_format())
 		if before_id != None:
 			query += "AND user_id <= ? "
 			values.append(before_id)
@@ -118,13 +124,18 @@ class Users(Collection):
 			query += "AND user_id >= ? "
 			values.append(after_id)
 		
+		query += "GROUP BY user_id " # In case of duplicate log events
+		
 		if direction != None:
-			if direction == "newer"
+			if direction == "newer":
 				query += "ORDER BY user_id ASC "
 			else:
 				query += "ORDER BY user_id DESC "
 		
-		query += "GROUP BY user_id " # In case of duplicate log events
+		
+		if limit != None:
+			query += "LIMIT ? "
+			values.append(limit)
 		
 		cursor = self.db.shared_connection.cursor()
 		cursor.execute(query, values)

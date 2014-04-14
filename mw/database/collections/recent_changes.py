@@ -86,7 +86,13 @@ class RecentChanges(Collection):
 			limit : int
 				limit the number of records returned
 		"""
+		before = none_or(before, Timestamp)
+		after = none_or(after, Timestamp)
+		before_id = none_or(before_id, int)
+		after_id = none_or(after_id, int)
+		types = none_or(types, levels=self.TYPES)
 		direction = none_or(direction, levels=self.DIRECTIONS)
+		limit = none_or(limit, int)
 		
 		query = """
 			SELECT * FROM recentchanges
@@ -96,21 +102,17 @@ class RecentChanges(Collection):
 		
 		if before != None:
 			query += " AND rc_timestamp < ? "
-			values.append(Timestamp(before).short_format())
+			values.append(before.short_format())
 		if after != None:
 			query += " AND rc_timestamp < ? "
-			values.append(Timestamp(after).short_format())
+			values.append(after.short_format())
 		if before_id != None:
 			query += " AND rc_id < ? "
-			values.append(int(before_id))
+			values.append(before_id)
 		if after_id != None:
 			query += " AND rc_id < ? "
-			values.append(int(after_id))
+			values.append(after_id)
 		if types != None:
-			types = set(str(t) for t in types)
-			non_types = types - self.TYPES.keys()
-			if len(non_types) > 0:
-				raise TypeError("types must be a set of values from {0}".format(self.KEYS))
 			query += " AND rc_type IN ({0}) ".format(
 				",".join(self.TYPES[t] for t in types)
 			)

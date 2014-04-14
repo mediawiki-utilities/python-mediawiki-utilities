@@ -177,7 +177,7 @@ class Revisions(Collection):
 		before_id = none_or(before_id, int)
 		after_id = none_or(after_id, int)
 		direction = none_or(direction, levels=self.DIRECTIONS)
-		include_page = none_or(include_page, bool)
+		include_page = bool(include_page)
 		
 		query = """
 			SELECT *, FALSE AS archived FROM revision
@@ -204,10 +204,10 @@ class Revisions(Collection):
 			values.append(user_text)
 		if before != None:
 			query += " AND rev_timestamp < ? "
-			values.append(before)
+			values.append(before.short_format())
 		if after != None:
 			query += " AND rev_timestamp > ? "
-			values.append(after)
+			values.append(after.short_format())
 		if before_id != None:
 			query += " AND rev_id < ? "
 			values.append(before_id)
@@ -285,7 +285,7 @@ class Archives(Collection):
 	
 	def query(self, page_id=None, user_id=None, user_text=None,
 	          before=None, after=None, before_id=None, after_id=None, 
-	          direction=None, limit=None, include_page=None):
+	          direction=None, limit=None, include_page=True):
 		"""
 		Queries archived revisions (revisions of deleted pages)
 		
@@ -316,6 +316,15 @@ class Archives(Collection):
 		:Returns:
 			An iterator over revision rows. 
 		"""
+		page_id = none_or(page_id, int)
+		user_id = none_or(user_id, int)
+		before = none_or(before, Timestamp)
+		after = none_or(after, Timestamp)
+		before_id = none_or(before_id, int)
+		after_id = none_or(after_id, int)
+		direction = none_or(direction, levels=self.DIRECTIONS)
+		limit = none_or(limit, int)
+		
 		start_time = time.time()
 		cursor = self.db.shared_connection.cursor()
 		
@@ -357,10 +366,10 @@ class Archives(Collection):
 			values.append(user_text)
 		if before != None:
 			query += " AND ar_timestamp < ? "
-			values.append(before)
+			values.append(before.short_format())
 		if after != None:
 			query += " AND ar_timestamp > ? "
-			values.append(after)
+			values.append(after.short_format())
 		if before_id != None:
 			query += " AND ar_rev_id < ? "
 			values.append(before_id)
