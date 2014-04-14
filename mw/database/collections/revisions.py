@@ -167,6 +167,7 @@ class Revisions(Collection):
 		:Returns:
 			An iterator over revision rows.
 		"""
+		start_time = time.time()
 		
 		page_id = none_or(page_id, int)
 		user_id = none_or(user_id, int)
@@ -177,9 +178,6 @@ class Revisions(Collection):
 		after_id = none_or(after_id, int)
 		direction = none_or(direction, levels=self.DIRECTIONS)
 		include_page = none_or(include_page, bool)
-		
-		start_time = time.time()
-		cursor = self.db.shared_connection.cursor()
 		
 		query = """
 			SELECT *, FALSE AS archived FROM revision
@@ -227,6 +225,7 @@ class Revisions(Collection):
 			query += " LIMIT ? "
 			values.append(limit)
 		
+		cursor = self.db.shared_connection.cursor()
 		cursor.execute(query, values)
 		count = 0
 		for row in cursor:
