@@ -1,7 +1,7 @@
 ===================
 MediaWiki Utilities
 ===================
-
+ 
 MediaWiki Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting and processing data from MediaWiki installations, slave databases and xml dumps.
 
 **Instal with pip:** ``pip install mediawiki-utilities``
