@@ -87,7 +87,7 @@ def test_complete():
 	eq_(page.namespace, 0)
 	eq_(page.id, 1)
 	eq_(page.redirect, None)
-	eq_(page.restrictions, None)
+	eq_(page.restrictions, [])
 	
 	revision = next(page)
 	eq_(revision.id, 1)
@@ -115,8 +115,8 @@ def test_complete():
 	eq_(page.title, "Bar")
 	eq_(page.namespace, 1)
 	eq_(page.id, 2)
-	eq_(page.redirect, "Computer accessibility")
-	eq_(page.restrictions, "edit=sysop:move=sysop")
+	eq_(page.redirect.title, "Computer accessibility")
+	eq_(page.restrictions, ["edit=sysop:move=sysop"])
 	
 	revision = next(page)
 	eq_(revision.id, 3)

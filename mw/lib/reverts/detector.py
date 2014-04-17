@@ -61,7 +61,7 @@ class Detector(ordered.HistoricalMap):
 			checksum : str
 				Any identity-machable string-based hash of revision content
 			revision : `mixed`
-				Revision data.  Note that any data will just be returned in the
+				Revision meta data.  Note that any data will just be returned in the
 				case of a revert.
 		
 		:Returns:

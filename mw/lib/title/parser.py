@@ -171,7 +171,9 @@ class Parser:
 	@classmethod
 	def from_dump(cls, dump):
 		"""
-		Constructs a parser from a :class:`mw.xml_dump.Iterator` 
+		Constructs a parser from a :class:`mw.xml_dump.Iterator`.  Note that 
+		XML database dumps do not include namespace aliases or cannonical names
+		so the parser that will be constructed will only work in common cases. 
 		
 		:Parameters:
 			dump : :class:`mw.xml_dump.Iterator`

@@ -1,24 +1,24 @@
 
-from .detector import Detector
+from .detector import Detector, Revert
 from . import defaults
 
 def detect(checksum_revisions, radius=defaults.RADIUS):
 	"""
 	Detects reverts that occur in a sequence of revisions.  Note that, 
-	`revision` data will simply be returned in the case of a revert.
+	`revision` data meta will simply be returned in the case of a revert.
 	
 	This function serves as a convenience wrapper around calls to
-	:class:`~mw.lib.reverts.Detector`'s :meth:`~mw.lib.reverts.Detector.process`
+	:class:`Detector`'s :meth:`~Detector.process`
 	method.
 	
 	:Parameters:
 		checksum_revisions : iter( ( checksum : str, revision : `mixed` ) )
-			an iterable over tuples of checksum and revision data
+			an iterable over tuples of checksum and revision meta data
 		radius : int
 			the maximum revision distance that a revert can span.
 	
 	:Return:
-		a iterator over :class:`~mw.lib.reverts.Revert`
+		a iterator over :class:`Revert`
 	
 	:Example:
 		>>> from mw.lib import reverts

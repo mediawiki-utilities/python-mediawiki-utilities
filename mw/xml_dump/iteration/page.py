@@ -2,6 +2,7 @@ from ...types import serializable
 from ...util import none_or
 
 from .revision import Revision
+from .redirect import Redirect
 
 class Page(serializable.Type):
 	"""
@@ -28,27 +29,27 @@ class Page(serializable.Type):
 	def __init__(self, id, title, namespace, redirect, restrictions, revisions):
 		self.id = none_or(id, int)
 		"""
-		Page ID : int
+		Page ID : `int`
 		"""
 		
 		self.title = none_or(title, str)
 		"""
-		Page title (namespace excluded) : str
+		Page title (namespace excluded) : `str`
 		"""
 		
 		self.namespace = none_or(namespace, int)
 		"""
-		Namespace ID : int
+		Namespace ID : `int`
 		"""
 		
-		self.redirect = none_or(redirect, str)
+		self.redirect = none_or(redirect, Redirect)
 		"""
-		Page is currently redirect? : bool
+		Page is currently redirect? : :class:`~mw.xml_dump.Redirect` | `None`
 		"""
 		
-		self.restrictions = none_or(restrictions, str)
+		self.restrictions = list(restrictions)
 		"""
-		TODO: ??? : str
+		A list of page editing restrictions (empty unless restrictions are specified) : list( `str` )
 		"""
 		
 		# Should be a lazy generator
@@ -81,7 +82,7 @@ class Page(serializable.Type):
 		namespace    = None
 		id           = None
 		redirect     = None
-		restrictions = None
+		restrictions = []
 		
 		first_revision = None
 		
@@ -95,9 +96,9 @@ class Page(serializable.Type):
 			elif tag == "id":
 				id    = int(sub_element.text)
 			elif tag == "redirect":
-				redirect = sub_element.attr("title", None)
+				redirect = Redirect.from_element(sub_element)
 			elif tag == "restrictions":
-				restrictions = sub_element.text
+				restrictions.append(sub_element.text)
 			elif tag == "revision":
 				first_revision = sub_element
 				break

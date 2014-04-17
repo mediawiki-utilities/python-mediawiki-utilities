@@ -29,7 +29,7 @@ class Timestamp(serializable.Type):
 	
 	* If a :py:class:`~time.time_struct` or :py:class:`~datetime.datetime` are provided, a `Timestamp` will be constructed from their values.
 	* If an `int` or `float` are provided, they will be assumed to a unix timestamp in seconds since Jan. 1st, 1970 UTC.
-	* If a `str` is provided, it will be be checked against known MediaWiki timestamp formats.  E.g., ``%Y%m%d%H%M%S`` and ``%Y-%m-%dT%H:%M:%SZ``.
+	* If a `str` is provided, it will be be checked against known MediaWiki timestamp formats.  E.g., ``'%Y%m%d%H%M%S'`` and ``'%Y-%m-%dT%H:%M:%SZ'``.
 	* If a :class:`mw.Timestamp` is provided, the same `Timestamp` will be returned.
 	
 	For example::
@@ -69,6 +69,7 @@ class Timestamp(serializable.Type):
 	
 	
 	"""
+	
 	def __new__(cls, time_thing):
 		if isinstance(time_thing, cls):
 			return time_thing
@@ -82,11 +83,76 @@ class Timestamp(serializable.Type):
 			return cls.from_string(time_thing)
 		
 	def __init__(self, time_thing):
-		# Important that this does nothing
+		# Important that this does nothing in order to allow __new__ to behave 
+		# as expected.  User `initialize()` instead.  
 		pass
 	
 	def initialize(self, time_struct):
 		self.__time = time_struct
+	
+	
+	def short_format(self):
+		"""
+		Constructs a long, ``'%Y%m%d%H%M%S'`` formatted string common to the 
+		database. This method is roughly equivalent to calling 
+		``strftime('%Y%m%d%H%M%S')``.
+		
+		:Parameters:
+			format : str
+				The string format 
+		
+		:Returns:
+			A formatted string
+		"""
+		return self.strftime(SHORT_MW_TIME_STRING)
+	
+	def long_format(self):
+		"""
+		Constructs a long, ``'%Y-%m-%dT%H:%M:%SZ'`` formatted string common to the 
+		API. This method is roughly equivalent to calling 
+		``strftime('%Y-%m-%dT%H:%M:%SZ')``.
+		
+		:Parameters:
+			format : str
+				The string format 
+		
+		:Returns:
+			A formatted string
+		"""
+		return self.strftime(LONG_MW_TIME_STRING)
+	
+	def strftime(self, format):
+		"""
+		Constructs a formatted string. 
+		See `<https://docs.python.org/3/library/time.html#time.strftime>`_ for a
+		discussion of formats descriptors.
+		
+		:Parameters:
+			format : str
+				The format description
+		
+		:Returns:
+			A formatted string
+		"""
+		return time.strftime(format, self.__time)
+		
+	@classmethod
+	def strptime(cls, string, format):
+		"""
+		Constructs a :class:`mw.Timestamp` from an explicitly formatted string.
+		See `<https://docs.python.org/3/library/time.html#time.strftime>`_ for a
+		discussion of formats descriptors.
+		
+		:Parameters:
+			string : str
+				A formatted timestamp
+			format : str
+				The format description
+		
+		:Returns:
+			:class:`mw.Timestamp`
+		"""
+		return cls.from_time_struct(time.strptime(string, format))
 	
 	@classmethod
 	def from_time_struct(cls, time_struct):
@@ -169,73 +235,10 @@ class Timestamp(serializable.Type):
 			
 		return cls.from_time_struct(time_struct)
 		
-	@classmethod
-	def strptime(cls, string, format):
-		"""
-		Constructs a :class:`mw.Timestamp` from an explicitly formatted string.
-		See `<https://docs.python.org/3/library/time.html#time.strftime>`_ for a
-		discussion for potential formats.
-		
-		:Parameters:
-			string : str
-				A formatted timestamp
-			format : str
-				The string format 
-		
-		:Returns:
-			:class:`mw.Timestamp`
-		"""
-		return cls.from_time_struct(time.strptime(string, format))
-	
-	def strftime(self, format):
-		"""
-		Constructs a formatted string. 
-		See `<https://docs.python.org/3/library/time.html#time.strftime>`_ for a
-		discussion for potential formats.
-		
-		:Parameters:
-			format : str
-				The string format 
-		
-		:Returns:
-			A formatted string
-		"""
-		return time.strftime(format, self.__time)
-		
 	def __format__(self, format):
 		return self.strftime(format)
 	
 	def __str__(self): return self.short_format()
-	
-	def short_format(self):
-		"""
-		Constructs a long, ``%Y%m%dT%H%M%SZ`` formatted string common to the 
-		database. This method is roughly equivalent to calling 
-		``strftime("%Y-%m-%dT%H:%M:%SZ")``.
-		
-		:Parameters:
-			format : str
-				The string format 
-		
-		:Returns:
-			A formatted string
-		"""
-		return self.strftime(SHORT_MW_TIME_STRING)
-	
-	def long_format(self):
-		"""
-		Constructs a long, ``%Y%m%dT%H%M%SZ`` formatted string common to the 
-		API. This method is roughly equivalent to calling 
-		``strftime("%Y%m%dT%H%M%SZ")``.
-		
-		:Parameters:
-			format : str
-				The string format 
-		
-		:Returns:
-			A formatted string
-		"""
-		return self.strftime(LONG_MW_TIME_STRING)
 	
 	def serialize(self):
 		return self.unix()
@@ -256,8 +259,7 @@ class Timestamp(serializable.Type):
 	def unix(self):
 		"""
 		:Returns:
-			the number of seconds since Jan. 1st, 1970 UTC that the 
-			`Timestamp` represents.
+			the number of seconds since Jan. 1st, 1970 UTC.
 		"""
 		return int(calendar.timegm(self.__time))
 		

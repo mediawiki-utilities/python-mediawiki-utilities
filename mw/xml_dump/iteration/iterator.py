@@ -34,27 +34,27 @@ class Iterator(serializable.Type):
 		
 		self.site_name  = none_or(site_name, str)
 		"""
-		The name of the site. : str
+		The name of the site. : str | `None` (if not specified in the XML)
 		"""
 		
 		self.base       = none_or(base, str)
 		"""
-		TODO: ??? : str
+		TODO: ??? : str | `None` (if not specified in the XML)
 		"""
 		
 		self.generator  = none_or(generator, str)
 		"""
-		TODO: ??? : str
+		TODO: ??? : str | `None` (if not specified in the XML)
 		"""
 		
 		self.case       = none_or(case, str)
 		"""
-		TODO: ??? : str
+		TODO: ??? : str | `None` (if not specified in the XML)
 		"""
 		
 		self.namespaces = none_or(namespaces, list)
 		"""
-		A list of :class:`mw.Namespace`
+		A list of :class:`mw.Namespace` | `None` (if not specified in the XML)
 		"""
 		
 		# Should be a lazy generator of page info

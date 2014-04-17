@@ -18,12 +18,12 @@ class Contributor(serializable.Type):
 	def __init__(self, id, user_text):
 		self.id = none_or(id, int)
 		"""
-		User ID : int | `None`
+		User ID : int | `None` (if not specified in the XML)
 		"""
 		
 		self.user_text = none_or(user_text, str)
 		"""
-		User name or IP address : str
+		User name or IP address : str | `None` (if not specified in the XML)
 		"""
 	
 	@classmethod
