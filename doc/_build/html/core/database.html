@@ -1,0 +1,678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mw.database – MySQL database abstraction &mdash; mediawiki-utilities 0.2.4
+ documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.4
+',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mediawiki-utilities 0.2.4
+ documentation" href="../index.html" />
+    <link rel="next" title="mw.xml_dump – XML dump processing" href="xml_dump.html" />
+    <link rel="prev" title="mw.api – MediaWiki API abstraction" href="api.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="xml_dump.html" title="mw.xml_dump – XML dump processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="mw.api – MediaWiki API abstraction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mw-database-mysql-database-abstraction">
+<span id="mw-database"></span><h1>mw.database &#8211; MySQL database abstraction<a class="headerlink" href="#mw-database-mysql-database-abstraction" title="Permalink to this headline">¶</a></h1>
+<p>This module contains a set of utilities for interacting with MediaWiki databases.</p>
+<p>Here&#8217;s an example of a common usage pattern:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">mw</span> <span class="kn">import</span> <span class="n">database</span>
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">DB</span><span class="o">.</span><span class="n">from_params</span><span class="p">(</span>
+        <span class="n">host</span><span class="o">=</span><span class="s">&quot;s1-analytics-slave.eqiad.wmnet&quot;</span><span class="p">,</span>
+        <span class="n">read_default_file</span><span class="o">=</span><span class="s">&quot;~/.my.cnf&quot;</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="s">&quot;research&quot;</span><span class="p">,</span>
+        <span class="n">db</span><span class="o">=</span><span class="s">&quot;enwiki&quot;</span>
+<span class="p">)</span>
+<span class="n">revisions</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">revisions</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">9133062</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">rev_row</span> <span class="ow">in</span> <span class="n">revisions</span><span class="p">:</span>
+        <span class="n">rev_row</span><span class="p">[</span><span class="s">&#39;rev_id&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="db">
+<h2>DB<a class="headerlink" href="#db" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mw.database.DB">
+<em class="property">class </em><tt class="descclassname">mw.database.</tt><tt class="descname">DB</tt><big>(</big><em>connection</em><big>)</big><a class="headerlink" href="#mw.database.DB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a connection to a MySQL database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt>connection = <tt class="xref py py-class docutils literal"><span class="pre">oursql.Connection</span></tt></dt>
+<dd><p class="first last">A connection to a MediaWiki database</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="mw.database.DB.revisions">
+<tt class="descname">revisions</tt><em class="property"> = None</em><a class="headerlink" href="#mw.database.DB.revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.database.Revisions" title="mw.database.Revisions"><tt class="xref py py-class docutils literal"><span class="pre">mw.database.Revisions</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.database.DB.archives">
+<tt class="descname">archives</tt><em class="property"> = None</em><a class="headerlink" href="#mw.database.DB.archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.database.Archives" title="mw.database.Archives"><tt class="xref py py-class docutils literal"><span class="pre">mw.database.Archives</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.database.DB.all_revisions">
+<tt class="descname">all_revisions</tt><em class="property"> = None</em><a class="headerlink" href="#mw.database.DB.all_revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.database.AllRevisions" title="mw.database.AllRevisions"><tt class="xref py py-class docutils literal"><span class="pre">mw.database.AllRevisions</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.database.DB.pages">
+<tt class="descname">pages</tt><em class="property"> = None</em><a class="headerlink" href="#mw.database.DB.pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.database.Pages" title="mw.database.Pages"><tt class="xref py py-class docutils literal"><span class="pre">mw.database.Pages</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.database.DB.users">
+<tt class="descname">users</tt><em class="property"> = None</em><a class="headerlink" href="#mw.database.DB.users" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.database.Users" title="mw.database.Users"><tt class="xref py py-class docutils literal"><span class="pre">mw.database.Users</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="mw.database.DB.add_arguments">
+<em class="property">classmethod </em><tt class="descname">add_arguments</tt><big>(</big><em>parser</em>, <em>defaults=None</em><big>)</big><a class="headerlink" href="#mw.database.DB.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the arguments to an <tt class="xref py py-class docutils literal"><span class="pre">argparse.ArgumentParser</span></tt> in order to 
+create a database connection.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="mw.database.DB.from_arguments">
+<em class="property">classmethod </em><tt class="descname">from_arguments</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#mw.database.DB.from_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a <a class="reference internal" href="#mw.database.DB" title="mw.database.DB"><tt class="xref py py-class docutils literal"><span class="pre">DB</span></tt></a>.  
+Consumes <tt class="xref py py-class docutils literal"><span class="pre">argparse.ArgumentParser</span></tt> arguments given by 
+<tt class="xref py py-meth docutils literal"><span class="pre">add_arguments()</span></tt> in order to create a <tt class="xref py py-class docutils literal"><span class="pre">DB</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="xref py py-class docutils literal"><span class="pre">argparse.Namespace</span></tt></span></dt>
+<dd><p class="first last">A collection of argument values returned by <tt class="xref py py-class docutils literal"><span class="pre">argparse.ArgumentParser</span></tt>&#8216;s <tt class="xref py py-meth docutils literal"><span class="pre">parse_args()</span></tt></p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="mw.database.DB.from_params">
+<em class="property">classmethod </em><tt class="descname">from_params</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.database.DB.from_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a <a class="reference internal" href="#mw.database.DB" title="mw.database.DB"><tt class="xref py py-class docutils literal"><span class="pre">DB</span></tt></a>.  Passes <cite>*args</cite> and <cite>**kwargs</cite> 
+to <tt class="xref py py-meth docutils literal"><span class="pre">oursql.connect()</span></tt> and configures the connection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier"><tt class="xref py py-class docutils literal"><span class="pre">argparse.Namespace</span></tt></span></dt>
+<dd><p class="first last">A collection of argument values returned by <tt class="xref py py-class docutils literal"><span class="pre">argparse.ArgumentParser</span></tt>&#8216;s <tt class="xref py py-meth docutils literal"><span class="pre">parse_args()</span></tt></p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="collections">
+<h2>Collections<a class="headerlink" href="#collections" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mw.database.Archives">
+<em class="property">class </em><tt class="descclassname">mw.database.</tt><tt class="descname">Archives</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#mw.database.Archives" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mw.database.Archives.get">
+<tt class="descname">get</tt><big>(</big><em>rev_id</em><big>)</big><a class="headerlink" href="#mw.database.Archives.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a single revisions by ID.  Checks the <tt class="docutils literal"><span class="pre">archive</span></tt> table. This 
+method throws a <tt class="xref py py-class docutils literal"><span class="pre">KeyError</span></tt> if a revision cannot be found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>rev_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Revision ID</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A revision row</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.database.Archives.query">
+<tt class="descname">query</tt><big>(</big><em>page_id=None</em>, <em>user_id=None</em>, <em>user_text=None</em>, <em>before=None</em>, <em>after=None</em>, <em>before_id=None</em>, <em>after_id=None</em>, <em>direction=None</em>, <em>limit=None</em>, <em>include_page=True</em><big>)</big><a class="headerlink" href="#mw.database.Archives.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries archived revisions (revisions of deleted pages)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>page_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Page identifier.  Filter revisions to this page.</p>
+</dd>
+<dt>user_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">User identifier.  Filter revisions to those made by this user.</p>
+</dd>
+<dt>user_text <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">User text (user_name or IP address).  Filter revisions to those
+made by this user.</p>
+</dd>
+<dt>before <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">Filter revisions to those made before this timestamp.</p>
+</dd>
+<dt>after <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">Filter revisions to those made after this timestamp.</p>
+</dd>
+<dt>before_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Filter revisions to those with an ID before this ID</p>
+</dd>
+<dt>after_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Filter revisions to those with an ID after this ID</p>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;newer&#8221; or &#8220;older&#8221;</p>
+</dd>
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Limit the number of results</p>
+</dd>
+<dt>include_page <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">This field is ignored.  It&#8217;s only here for compatibility with 
+<tt class="xref py py-class docutils literal"><span class="pre">mw.database.Revision</span></tt>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An iterator over revision rows.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.database.AllRevisions">
+<em class="property">class </em><tt class="descclassname">mw.database.</tt><tt class="descname">AllRevisions</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#mw.database.AllRevisions" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mw.database.AllRevisions.get">
+<tt class="descname">get</tt><big>(</big><em>rev_id</em>, <em>include_page=False</em><big>)</big><a class="headerlink" href="#mw.database.AllRevisions.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a single revisions by ID.  Checks both the <tt class="docutils literal"><span class="pre">revision</span></tt> and 
+<tt class="docutils literal"><span class="pre">archive</span></tt> tables.  This method throws a <tt class="xref py py-class docutils literal"><span class="pre">KeyError</span></tt> if a 
+revision cannot be found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>rev_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Revision ID</p>
+</dd>
+<dt>include_page <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Join revision returned against <tt class="docutils literal"><span class="pre">page</span></tt></p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A revision row</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.database.AllRevisions.query">
+<tt class="descname">query</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.database.AllRevisions.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries revisions (excludes revisions to deleted pages)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>page_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Page identifier.  Filter revisions to this page.</p>
+</dd>
+<dt>user_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">User identifier.  Filter revisions to those made by this user.</p>
+</dd>
+<dt>user_text <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">User text (user_name or IP address).  Filter revisions to those
+made by this user.</p>
+</dd>
+<dt>before <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">Filter revisions to those made before this timestamp.</p>
+</dd>
+<dt>after <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">Filter revisions to those made after this timestamp.</p>
+</dd>
+<dt>before_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Filter revisions to those with an ID before this ID</p>
+</dd>
+<dt>after_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Filter revisions to those with an ID after this ID</p>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;newer&#8221; or &#8220;older&#8221;</p>
+</dd>
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Limit the number of results</p>
+</dd>
+<dt>include_page <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Join revisions returned against <tt class="docutils literal"><span class="pre">page</span></tt></p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An iterator over revision rows.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.database.Pages">
+<em class="property">class </em><tt class="descclassname">mw.database.</tt><tt class="descname">Pages</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#mw.database.Pages" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mw.database.Pages.get">
+<tt class="descname">get</tt><big>(</big><em>page_id=None</em>, <em>namespace_title=None</em>, <em>rev_id=None</em><big>)</big><a class="headerlink" href="#mw.database.Pages.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a single page based on a legitimate identifier of the page.  Note 
+that namespace_title expects a tuple of namespace ID and title.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>page_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Page ID</p>
+</dd>
+<dt>namespace_title <span class="classifier-delimiter">:</span> <span class="classifier">( int, str )</span></dt>
+<dd><p class="first last">the page&#8217;s namespace ID and title</p>
+</dd>
+<dt>rev_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">a revision ID included in the page&#8217;s history</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">iterator over result rows</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.database.RecentChanges">
+<em class="property">class </em><tt class="descclassname">mw.database.</tt><tt class="descname">RecentChanges</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#mw.database.RecentChanges" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mw.database.RecentChanges.listen">
+<tt class="descname">listen</tt><big>(</big><em>last=None</em>, <em>types=None</em>, <em>max_wait=5</em><big>)</big><a class="headerlink" href="#mw.database.RecentChanges.listen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Listens to the recent changes table.  Given no parameters, this function
+will return an iterator over the entire recentchanges table and then 
+continue to &#8220;listen&#8221; for new changes to come in every 5 seconds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>last <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">a recentchanges row to pick up after</p>
+</dd>
+<dt>types <span class="classifier-delimiter">:</span> <span class="classifier">set ( str )</span></dt>
+<dd><p class="first last">a set of recentchanges types to filter for</p>
+</dd>
+<dt>max_wait <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">the maximum number of seconds to wait between repeated queries</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A never-ending iterator over change rows.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.database.RecentChanges.query">
+<tt class="descname">query</tt><big>(</big><em>before=None</em>, <em>after=None</em>, <em>before_id=None</em>, <em>after_id=None</em>, <em>types=None</em>, <em>direction=None</em>, <em>limit=None</em><big>)</big><a class="headerlink" href="#mw.database.RecentChanges.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the <tt class="docutils literal"><span class="pre">recentchanges</span></tt> table.  See 
+<a class="reference external" href="https://www.mediawiki.org/wiki/Manual:Recentchanges_table">https://www.mediawiki.org/wiki/Manual:Recentchanges_table</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt>before <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">The maximum timestamp</p>
+</dd>
+<dt>after <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">The minimum timestamp</p>
+</dd>
+<dt>before_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The minimum <tt class="docutils literal"><span class="pre">rc_id</span></tt></p>
+</dd>
+<dt>after_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The maximum <tt class="docutils literal"><span class="pre">rc_id</span></tt></p>
+</dd>
+<dt>types <span class="classifier-delimiter">:</span> <span class="classifier">set ( str )</span></dt>
+<dd><p class="first">Which types of changes to return?</p>
+<ul class="last simple">
+<li><tt class="docutils literal"><span class="pre">edit</span></tt> &#8211; Edits to existing pages</li>
+<li><tt class="docutils literal"><span class="pre">new</span></tt> &#8211; Edits that create new pages</li>
+<li><tt class="docutils literal"><span class="pre">move</span></tt> &#8211; (obsolete)</li>
+<li><tt class="docutils literal"><span class="pre">log</span></tt> &#8211; Log actions (introduced in MediaWiki 1.2)</li>
+<li><tt class="docutils literal"><span class="pre">move_over_redirect</span></tt> &#8211; (obsolete)</li>
+<li><tt class="docutils literal"><span class="pre">external</span></tt> &#8211; An external recent change. Primarily used by Wikidata</li>
+</ul>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;older&#8221; or &#8220;newer&#8221;</p>
+</dd>
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">limit the number of records returned</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.database.Revisions">
+<em class="property">class </em><tt class="descclassname">mw.database.</tt><tt class="descname">Revisions</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#mw.database.Revisions" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mw.database.Revisions.get">
+<tt class="descname">get</tt><big>(</big><em>rev_id</em>, <em>include_page=False</em><big>)</big><a class="headerlink" href="#mw.database.Revisions.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a single revisions by ID.  Checks the <tt class="docutils literal"><span class="pre">revision</span></tt> table.   This 
+method throws a <tt class="xref py py-class docutils literal"><span class="pre">KeyError</span></tt> if a revision cannot be found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>rev_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Revision ID</p>
+</dd>
+<dt>include_page <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Join revision returned against <tt class="docutils literal"><span class="pre">page</span></tt></p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A revision row</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.database.Revisions.query">
+<tt class="descname">query</tt><big>(</big><em>page_id=None</em>, <em>user_id=None</em>, <em>user_text=None</em>, <em>before=None</em>, <em>after=None</em>, <em>before_id=None</em>, <em>after_id=None</em>, <em>direction=None</em>, <em>limit=None</em>, <em>include_page=False</em><big>)</big><a class="headerlink" href="#mw.database.Revisions.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries revisions (excludes revisions to deleted pages)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>page_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Page identifier.  Filter revisions to this page.</p>
+</dd>
+<dt>user_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">User identifier.  Filter revisions to those made by this user.</p>
+</dd>
+<dt>user_text <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">User text (user_name or IP address).  Filter revisions to those
+made by this user.</p>
+</dd>
+<dt>before <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">Filter revisions to those made before this timestamp.</p>
+</dd>
+<dt>after <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">Filter revisions to those made after this timestamp.</p>
+</dd>
+<dt>before_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Filter revisions to those with an ID before this ID</p>
+</dd>
+<dt>after_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Filter revisions to those with an ID after this ID</p>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;newer&#8221; or &#8220;older&#8221;</p>
+</dd>
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Limit the number of results</p>
+</dd>
+<dt>include_page <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Join revisions returned against <tt class="docutils literal"><span class="pre">page</span></tt></p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An iterator over revision rows.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.database.Users">
+<em class="property">class </em><tt class="descclassname">mw.database.</tt><tt class="descname">Users</tt><big>(</big><em>db</em><big>)</big><a class="headerlink" href="#mw.database.Users" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mw.database.Users.get">
+<tt class="descname">get</tt><big>(</big><em>user_id=None</em>, <em>user_name=None</em><big>)</big><a class="headerlink" href="#mw.database.Users.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a single user row from the database.  Raises a <tt class="xref py py-class docutils literal"><span class="pre">KeyError</span></tt>
+if a user cannot be found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>user_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">User ID</p>
+</dd>
+<dt>user_name <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">User&#8217;s name</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A user row.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.database.Users.query">
+<tt class="descname">query</tt><big>(</big><em>registered_before=None</em>, <em>registered_after=None</em>, <em>before_id=None</em>, <em>after_id=None</em>, <em>limit=None</em>, <em>direction=None</em>, <em>self_created_only=False</em><big>)</big><a class="headerlink" href="#mw.database.Users.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries users based on various filtering parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>registered_before <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">A timestamp to search before (inclusive)</p>
+</dd>
+<dt>registered_after <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">A timestamp to search after (inclusive)</p>
+</dd>
+<dt>before_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">A user_id to search before (inclusive)</p>
+</dd>
+<dt>after_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">A user_ud to search after (inclusive)</p>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;newer&#8221; or &#8220;older&#8221;</p>
+</dd>
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Limit the results to at most this number</p>
+</dd>
+<dt>self_creations_only <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">limit results to self_created user accounts</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an iterator over <tt class="docutils literal"><span class="pre">user</span></tt> table rows</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mw.database &#8211; MySQL database abstraction</a><ul>
+<li><a class="reference internal" href="#db">DB</a></li>
+<li><a class="reference internal" href="#collections">Collections</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="previous chapter">mw.api &#8211; MediaWiki API abstraction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="xml_dump.html"
+                        title="next chapter">mw.xml_dump &#8211; XML dump processing</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/core/database.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="xml_dump.html" title="mw.xml_dump – XML dump processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="mw.api – MediaWiki API abstraction"
+             >previous</a> |</li>
+        <li><a href="../index.html">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Aaron Halfaker.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

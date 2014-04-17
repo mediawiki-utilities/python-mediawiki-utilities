@@ -1,0 +1,767 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mw.api – MediaWiki API abstraction &mdash; mediawiki-utilities 0.2.4
+ documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.4
+',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mediawiki-utilities 0.2.4
+ documentation" href="../index.html" />
+    <link rel="next" title="mw.database – MySQL database abstraction" href="database.html" />
+    <link rel="prev" title="mw.types – common types" href="../types.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="database.html" title="mw.database – MySQL database abstraction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../types.html" title="mw.types – common types"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mw-api-mediawiki-api-abstraction">
+<span id="mw-api"></span><h1>mw.api &#8211; MediaWiki API abstraction<a class="headerlink" href="#mw-api-mediawiki-api-abstraction" title="Permalink to this headline">¶</a></h1>
+<p>This module contains a set of utilities for interacting with the MediaWiki API.</p>
+<p>Here&#8217;s an example of a common usage pattern:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mw</span> <span class="kn">import</span> <span class="n">api</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="s">&quot;https://en.wikipedia.org/w/api.php&quot;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">revisions</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">revisions</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;ids&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="n">titles</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;User:EpochFail&quot;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="n">direction</span><span class="o">=</span><span class="s">&quot;newer&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">limit</span><span class="o">=</span><span class="mi">3</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">rev</span> <span class="ow">in</span> <span class="n">revisions</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="s">&quot;rev_id={0}, length={1} characters&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+<span class="gp">... </span>                    <span class="n">rev</span><span class="p">[</span><span class="s">&#39;revid&#39;</span><span class="p">],</span>
+<span class="gp">... </span>                    <span class="nb">len</span><span class="p">(</span><span class="n">rev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;*&#39;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">))</span>
+<span class="gp">... </span>            <span class="p">)</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">rev_id=190055192, length=124 characters</span>
+<span class="go">rev_id=276121340, length=132 characters</span>
+<span class="go">rev_id=276121389, length=124 characters</span>
+</pre></div>
+</div>
+<div class="section" id="session">
+<h2>Session<a class="headerlink" href="#session" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mw.api.Session">
+<em class="property">class </em><tt class="descclassname">mw.api.</tt><tt class="descname">Session</tt><big>(</big><em>uri</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.api.Session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a connection to a MediaWiki API.</p>
+<p>Cookies and other session information is preserved.</p>
+<dl class="attribute">
+<dt id="mw.api.Session.pages">
+<tt class="descname">pages</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.Session.pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.api.Pages" title="mw.api.Pages"><tt class="xref py py-class docutils literal"><span class="pre">mw.api.Pages</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.api.Session.revisions">
+<tt class="descname">revisions</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.Session.revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.api.Revisions" title="mw.api.Revisions"><tt class="xref py py-class docutils literal"><span class="pre">mw.api.Revisions</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.api.Session.recent_changes">
+<tt class="descname">recent_changes</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.Session.recent_changes" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.api.RecentChanges" title="mw.api.RecentChanges"><tt class="xref py py-class docutils literal"><span class="pre">mw.api.RecentChanges</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.api.Session.site_info">
+<tt class="descname">site_info</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.Session.site_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.api.SiteInfo" title="mw.api.SiteInfo"><tt class="xref py py-class docutils literal"><span class="pre">mw.api.SiteInfo</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.api.Session.user_contribs">
+<tt class="descname">user_contribs</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.Session.user_contribs" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.api.UserContribs" title="mw.api.UserContribs"><tt class="xref py py-class docutils literal"><span class="pre">mw.api.UserContribs</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.api.Session.deleted_revs">
+<tt class="descname">deleted_revs</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.Session.deleted_revs" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#mw.api.DeletedRevs" title="mw.api.DeletedRevs"><tt class="xref py py-class docutils literal"><span class="pre">mw.api.DeletedRevs</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.api.Session.login">
+<tt class="descname">login</tt><big>(</big><em>username</em>, <em>password</em>, <em>token=None</em><big>)</big><a class="headerlink" href="#mw.api.Session.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a login operation.  This method usually makes two requests to 
+API &#8211; one to get a token and one to use the token to log in.  If 
+authentication fails, this method will throw an 
+<a class="reference internal" href="#mw.api.errors.AuthenticationError" title="mw.api.errors.AuthenticationError"><tt class="xref py py-class docutils literal"><span class="pre">errors.AuthenticationError</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>username <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Your username</p>
+</dd>
+<dt>password <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Your password</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The response in a json <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="collections">
+<h2>Collections<a class="headerlink" href="#collections" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mw.api.DeletedRevs">
+<em class="property">class </em><tt class="descclassname">mw.api.</tt><tt class="descname">DeletedRevs</tt><big>(</big><em>session</em><big>)</big><a class="headerlink" href="#mw.api.DeletedRevs" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mw.api.DeletedRevs.query">
+<tt class="descname">query</tt><big>(</big><em>*args</em>, <em>limit=9223372036854775807</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.api.DeletedRevs.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries deleted revisions.  
+See <a class="reference external" href="https://www.mediawiki.org/wiki/API:Deletedrevs">https://www.mediawiki.org/wiki/API:Deletedrevs</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt>titles <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first last">A set of page names to query (note that namespace prefix is expected)</p>
+</dd>
+<dt>start <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">A timestamp to start querying from</p>
+</dd>
+<dt>end <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">A timestamp to end querying</p>
+</dd>
+<dt>from_title <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">A title from which to start querying (alphabetically)</p>
+</dd>
+<dt>to_title <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">A title from which to stop querying (alphabetically)</p>
+</dd>
+<dt>prefix <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">A title prefix to match on</p>
+</dd>
+<dt>drcontinue <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">When more results are available, use this to continue (3) Note: may only work if drdir is set to newer.</p>
+</dd>
+<dt>unique <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">List only one revision for each page</p>
+</dd>
+<dt>tag <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Only list revision tagged with this tag</p>
+</dd>
+<dt>user <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Only list revisions saved by this user_text</p>
+</dd>
+<dt>excludeuser <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Do not list revision saved by this user_text</p>
+</dd>
+<dt>namespace <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Only list pages in this namespace (id)</p>
+</dd>
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Limit the number of results</p>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;newer&#8221; or &#8220;older&#8221;</p>
+</dd>
+<dt>properties <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first">A list of properties to include in the results:</p>
+<ul class="last simple">
+<li>revid          - Adds the revision ID of the deleted revision</li>
+<li>parentid       - Adds the revision ID of the previous revision to the page</li>
+<li>user           - Adds the user who made the revision</li>
+<li>userid         - Adds the user ID whom made the revision</li>
+<li>comment        - Adds the comment of the revision</li>
+<li>parsedcomment  - Adds the parsed comment of the revision</li>
+<li>minor          - Tags if the revision is minor</li>
+<li>len            - Adds the length (bytes) of the revision</li>
+<li>sha1           - Adds the SHA-1 (base 16) of the revision</li>
+<li>content        - Adds the content of the revision</li>
+<li>token          - Gives the edit token</li>
+<li>tags           - Tags for the revision</li>
+</ul>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.api.Pages">
+<em class="property">class </em><tt class="descclassname">mw.api.</tt><tt class="descname">Pages</tt><big>(</big><em>session</em><big>)</big><a class="headerlink" href="#mw.api.Pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.api.RecentChanges">
+<em class="property">class </em><tt class="descclassname">mw.api.</tt><tt class="descname">RecentChanges</tt><big>(</big><em>session</em><big>)</big><a class="headerlink" href="#mw.api.RecentChanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recent changes (revisions, page creations, registrations, moves, etc.)</p>
+<dl class="method">
+<dt id="mw.api.RecentChanges.query">
+<tt class="descname">query</tt><big>(</big><em>*args</em>, <em>limit=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.api.RecentChanges.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumerate recent changes.
+See <a class="reference external" href="https://www.mediawiki.org/wiki/API:Recentchanges">https://www.mediawiki.org/wiki/API:Recentchanges</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt>start <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">The timestamp to start enumerating from</p>
+</dd>
+<dt>end <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">The timestamp to end enumerating</p>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd><p class="first last">&#8220;newer&#8221; or &#8220;older&#8221;</p>
+</dd>
+<dt>namespace <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Filter log entries to only this namespace(s)</p>
+</dd>
+<dt>user <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Only list changes by this user</p>
+</dd>
+<dt>excludeuser <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Don&#8217;t list changes by this user</p>
+</dd>
+<dt>tag <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Only list changes tagged with this tag</p>
+</dd>
+<dt>properties <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first">Include additional pieces of information</p>
+<ul class="last simple">
+<li>user           - Adds the user responsible for the edit and tags if they are an IP</li>
+<li>userid         - Adds the user id responsible for the edit</li>
+<li>comment        - Adds the comment for the edit</li>
+<li>parsedcomment  - Adds the parsed comment for the edit</li>
+<li>flags          - Adds flags for the edit</li>
+<li>timestamp      - Adds timestamp of the edit</li>
+<li>title          - Adds the page title of the edit</li>
+<li>ids            - Adds the page ID, recent changes ID and the new and old revision ID</li>
+<li>sizes          - Adds the new and old page length in bytes</li>
+<li>redirect       - Tags edit if page is a redirect</li>
+<li>patrolled      - Tags patrollable edits as being patrolled or unpatrolled</li>
+<li>loginfo        - Adds log information (logid, logtype, etc) to log entries</li>
+<li>tags           - Lists tags for the entry</li>
+<li>sha1           - Adds the content checksum for entries associated with a revision</li>
+</ul>
+</dd>
+<dt>token <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first">Which tokens to obtain for each change</p>
+<ul class="last simple">
+<li>patrol</li>
+</ul>
+</dd>
+<dt>show <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first">Show only items that meet this criteria. For example, to see 
+only minor edits done by logged-in users, set 
+show={&#8216;minor&#8217;, &#8216;!anon&#8217;}.</p>
+<ul class="last simple">
+<li>minor</li>
+<li>!minor</li>
+<li>bot</li>
+<li>!bot</li>
+<li>anon</li>
+<li>!anon</li>
+<li>redirect</li>
+<li>!redirect</li>
+<li>patrolled</li>
+<li>!patrolled</li>
+<li>unpatrolled</li>
+</ul>
+</dd>
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">How many total changes to return</p>
+</dd>
+<dt>type <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first">Which types of changes to show</p>
+<ul class="last simple">
+<li>edit</li>
+<li>external</li>
+<li>new</li>
+<li>log</li>
+</ul>
+</dd>
+<dt>toponly <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Only list changes which are the latest revision</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.api.Revisions">
+<em class="property">class </em><tt class="descclassname">mw.api.</tt><tt class="descname">Revisions</tt><big>(</big><em>session</em><big>)</big><a class="headerlink" href="#mw.api.Revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A collection of revisions indexes by title, page_id and user_text.  
+Note that revisions of deleted pages are queriable via 
+<a class="reference internal" href="#mw.api.DeletedRevs" title="mw.api.DeletedRevs"><tt class="xref py py-class docutils literal"><span class="pre">mw.api.DeletedRevs</span></tt></a>.</p>
+<dl class="method">
+<dt id="mw.api.Revisions.get">
+<tt class="descname">get</tt><big>(</big><em>rev_id</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.api.Revisions.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a single revision based on it&#8217;s ID.  Throws a <tt class="xref py py-class docutils literal"><span class="pre">KeyError</span></tt>
+if the rev_id cannot be found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>rev_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Revision ID</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">**kwargs</span></tt></dt>
+<dd><p class="first last">Passed to <tt class="xref py py-meth docutils literal"><span class="pre">query()</span></tt></p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A single rev dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.api.Revisions.query">
+<tt class="descname">query</tt><big>(</big><em>*args</em>, <em>limit=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.api.Revisions.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get revision information.  
+See <a class="reference external" href="https://www.mediawiki.org/wiki/API:Properties#revisions_.2F_rv">https://www.mediawiki.org/wiki/API:Properties#revisions_.2F_rv</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>properties <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first">Which properties to get for each revision:</p>
+<ul class="last simple">
+<li>ids            - The ID of the revision</li>
+<li>flags          - Revision flags (minor)</li>
+<li>timestamp      - The timestamp of the revision</li>
+<li>user           - User that made the revision</li>
+<li>userid         - User id of revision creator</li>
+<li>size           - Length (bytes) of the revision</li>
+<li>sha1           - SHA-1 (base 16) of the revision</li>
+<li>contentmodel   - Content model id</li>
+<li>comment        - Comment by the user for revision</li>
+<li>parsedcomment  - Parsed comment by the user for the revision</li>
+<li>content        - Text of the revision</li>
+<li>tags           - Tags for the revision</li>
+</ul>
+</dd>
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Limit how many revisions will be returned
+No more than 500 (5000 for bots) allowed</p>
+</dd>
+<dt>start_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">From which revision id to start enumeration (enum)</p>
+</dd>
+<dt>end_id <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Stop revision enumeration on this revid</p>
+</dd>
+<dt>start <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">From which revision timestamp to start enumeration (enum)</p>
+</dd>
+<dt>end <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">Enumerate up to this timestamp</p>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;newer&#8221; or &#8220;older&#8221;</p>
+</dd>
+<dt>user <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Only include revisions made by user_text</p>
+</dd>
+<dt>excludeuser <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Exclude revisions made by user</p>
+</dd>
+<dt>tag <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Only list revisions tagged with this tag</p>
+</dd>
+<dt>expandtemplates <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Expand templates in revision content (requires &#8220;content&#8221; propery)</p>
+</dd>
+<dt>generatexml <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Generate XML parse tree for revision content (requires &#8220;content&#8221; propery)</p>
+</dd>
+<dt>parse <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Parse revision content (requires &#8220;content&#8221; propery)</p>
+</dd>
+<dt>section <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Only retrieve the content of this section number</p>
+</dd>
+<dt>token <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first">Which tokens to obtain for each revision</p>
+<ul class="last simple">
+<li>rollback - See <a class="reference external" href="https://www.mediawiki.org/wiki/API:Edit_-_Rollback#Token">https://www.mediawiki.org/wiki/API:Edit_-_Rollback#Token</a></li>
+</ul>
+</dd>
+<dt>rvcontinue <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">When more results are available, use this to continue</p>
+</dd>
+<dt>diffto <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Revision ID to diff each revision to. Use &#8220;prev&#8221;, &#8220;next&#8221; and 
+&#8220;cur&#8221; for the previous, next and current revision respectively</p>
+</dd>
+<dt>difftotext <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Text to diff each revision to. Only diffs a limited number of 
+revisions. Overrides diffto. If section is set, only that 
+section will be diffed against this text</p>
+</dd>
+<dt>contentformat <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first">Serialization format used for difftotext and expected for output of content</p>
+<ul class="last simple">
+<li>text/x-wiki</li>
+<li>text/javascript</li>
+<li>text/css</li>
+<li>text/plain</li>
+<li>application/json</li>
+</ul>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An iterator of rev dicts returned from the API.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.api.SiteInfo">
+<em class="property">class </em><tt class="descclassname">mw.api.</tt><tt class="descname">SiteInfo</tt><big>(</big><em>session</em><big>)</big><a class="headerlink" href="#mw.api.SiteInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>General information about the site.</p>
+<dl class="method">
+<dt id="mw.api.SiteInfo.query">
+<tt class="descname">query</tt><big>(</big><em>properties=None</em>, <em>filteriw=None</em>, <em>showalldb=None</em>, <em>numberinggroup=None</em>, <em>inlanguagecode=None</em><big>)</big><a class="headerlink" href="#mw.api.SiteInfo.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>General information about the site.
+See <a class="reference external" href="https://www.mediawiki.org/wiki/API:Meta#siteinfo_.2F_si">https://www.mediawiki.org/wiki/API:Meta#siteinfo_.2F_si</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt>properties: set(str)</dt>
+<dd><p class="first">Which sysinfo properties to get:</p>
+<ul class="last simple">
+<li>general               - Overall system information</li>
+<li>namespaces            - List of registered namespaces and their canonical names</li>
+<li>namespacealiases      - List of registered namespace aliases</li>
+<li>specialpagealiases    - List of special page aliases</li>
+<li>magicwords            - List of magic words and their aliases</li>
+<li>statistics            - Returns site statistics</li>
+<li>interwikimap          - Returns interwiki map (optionally filtered, (optionally localised by using siinlanguagecode))</li>
+<li>dbrepllag             - Returns database server with the highest replication lag</li>
+<li>usergroups            - Returns user groups and the associated permissions</li>
+<li>extensions            - Returns extensions installed on the wiki</li>
+<li>fileextensions        - Returns list of file extensions allowed to be uploaded</li>
+<li>rightsinfo            - Returns wiki rights (license) information if available</li>
+<li>restrictions          - Returns information on available restriction (protection) types</li>
+<li>languages             - Returns a list of languages MediaWiki supports(optionally localised by using siinlanguagecode)</li>
+<li>skins                 - Returns a list of all enabled skins</li>
+<li>extensiontags         - Returns a list of parser extension tags</li>
+<li>functionhooks         - Returns a list of parser function hooks</li>
+<li>showhooks             - Returns a list of all subscribed hooks (contents of $wgHooks)</li>
+<li>variables             - Returns a list of variable IDs</li>
+<li>protocols             - Returns a list of protocols that are allowed in external links.</li>
+<li>defaultoptions        - Returns the default values for user preferences.</li>
+</ul>
+</dd>
+<dt>filteriw <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;local&#8221; or &#8221;!local&#8221; Return only local or only nonlocal entries of the interwiki map</p>
+</dd>
+<dt>showalldb <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">List all database servers, not just the one lagging the most</p>
+</dd>
+<dt>numberingroup <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Lists the number of users in user groups</p>
+</dd>
+<dt>inlanguagecode <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Language code for localised language names (best effort, use CLDR extension)</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.api.UserContribs">
+<em class="property">class </em><tt class="descclassname">mw.api.</tt><tt class="descname">UserContribs</tt><big>(</big><em>session</em><big>)</big><a class="headerlink" href="#mw.api.UserContribs" title="Permalink to this definition">¶</a></dt>
+<dd><p>A collection of revisions indexes by user.</p>
+<dl class="method">
+<dt id="mw.api.UserContribs.query">
+<tt class="descname">query</tt><big>(</big><em>*args</em>, <em>limit=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.api.UserContribs.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a user&#8217;s revisions.
+See <a class="reference external" href="https://www.mediawiki.org/wiki/API:Usercontribs">https://www.mediawiki.org/wiki/API:Usercontribs</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt>limit <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The maximum number of contributions to return.</p>
+</dd>
+<dt>start <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">The start timestamp to return from</p>
+</dd>
+<dt>end <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></span></dt>
+<dd><p class="first last">The end timestamp to return to</p>
+</dd>
+<dt>user <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first last">The users to retrieve contributions for.  Maximum number of values 50 (500 for bots)</p>
+</dd>
+<dt>userprefix <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first last">Retrieve contributions for all users whose names begin with this value.</p>
+</dd>
+<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">&#8220;newer&#8221; or &#8220;older&#8221;</p>
+</dd>
+<dt>namespace <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Only list contributions in these namespaces</p>
+</dd>
+<dt>properties <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd><p class="first">Include additional pieces of information</p>
+<ul class="last simple">
+<li>ids            - Adds the page ID and revision ID</li>
+<li>title          - Adds the title and namespace ID of the page</li>
+<li>timestamp      - Adds the timestamp of the edit</li>
+<li>comment        - Adds the comment of the edit</li>
+<li>parsedcomment  - Adds the parsed comment of the edit</li>
+<li>size           - Adds the new size of the edit</li>
+<li>sizediff       - Adds the size delta of the edit against its parent</li>
+<li>flags          - Adds flags of the edit</li>
+<li>patrolled      - Tags patrolled edits</li>
+<li>tags           - Lists tags for the edit</li>
+</ul>
+</dd>
+<dt>show <span class="classifier-delimiter">:</span> <span class="classifier">set(str)</span></dt>
+<dd><p class="first">Show only items that meet thse criteria, e.g. non minor edits only: ucshow=!minor.  
+NOTE: If ucshow=patrolled or ucshow=!patrolled is set, revisions older than
+$wgRCMaxAge (2592000) won&#8217;t be shown</p>
+<ul class="last simple">
+<li>minor</li>
+<li>!minor,</li>
+<li>patrolled,</li>
+<li>!patrolled,</li>
+<li>top,</li>
+<li>!top,</li>
+<li>new,</li>
+<li>!new</li>
+</ul>
+</dd>
+<dt>tag <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Only list revisions tagged with this tag</p>
+</dd>
+<dt>toponly <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">DEPRECATED! Only list changes which are the latest revision</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="errors">
+<h2>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mw.api.errors.APIError">
+<em class="property">class </em><tt class="descclassname">mw.api.errors.</tt><tt class="descname">APIError</tt><big>(</big><em>doc</em><big>)</big><a class="reference internal" href="../_modules/mw/api/errors.html#APIError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mw.api.errors.APIError" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="mw.api.errors.APIError.code">
+<tt class="descname">code</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.errors.APIError.code" title="Permalink to this definition">¶</a></dt>
+<dd><p>The error code returned by the api &#8211; if available.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.api.errors.APIError.message">
+<tt class="descname">message</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.errors.APIError.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>The error message returned by the api &#8211; if available.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.api.errors.APIError.with_traceback">
+<tt class="descname">with_traceback</tt><big>(</big><big>)</big><a class="headerlink" href="#mw.api.errors.APIError.with_traceback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception.with_traceback(tb) &#8211;
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.api.errors.AuthenticationError">
+<em class="property">class </em><tt class="descclassname">mw.api.errors.</tt><tt class="descname">AuthenticationError</tt><big>(</big><em>doc</em><big>)</big><a class="reference internal" href="../_modules/mw/api/errors.html#AuthenticationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mw.api.errors.AuthenticationError" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="mw.api.errors.AuthenticationError.result">
+<tt class="descname">result</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.errors.AuthenticationError.result" title="Permalink to this definition">¶</a></dt>
+<dd><p>The result code of an authentication attempt.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.api.errors.AuthenticationError.with_traceback">
+<tt class="descname">with_traceback</tt><big>(</big><big>)</big><a class="headerlink" href="#mw.api.errors.AuthenticationError.with_traceback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception.with_traceback(tb) &#8211;
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.api.errors.MalformedResponse">
+<em class="property">class </em><tt class="descclassname">mw.api.errors.</tt><tt class="descname">MalformedResponse</tt><big>(</big><em>key</em>, <em>doc</em><big>)</big><a class="reference internal" href="../_modules/mw/api/errors.html#MalformedResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mw.api.errors.MalformedResponse" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="mw.api.errors.MalformedResponse.key">
+<tt class="descname">key</tt><em class="property"> = None</em><a class="headerlink" href="#mw.api.errors.MalformedResponse.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The expected, but missing key from the API call.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mw.api.errors.MalformedResponse.with_traceback">
+<tt class="descname">with_traceback</tt><big>(</big><big>)</big><a class="headerlink" href="#mw.api.errors.MalformedResponse.with_traceback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception.with_traceback(tb) &#8211;
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mw.api &#8211; MediaWiki API abstraction</a><ul>
+<li><a class="reference internal" href="#session">Session</a></li>
+<li><a class="reference internal" href="#collections">Collections</a></li>
+<li><a class="reference internal" href="#errors">Errors</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../types.html"
+                        title="previous chapter">mw.types &#8211; common types</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="database.html"
+                        title="next chapter">mw.database &#8211; MySQL database abstraction</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/core/api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="database.html" title="mw.database – MySQL database abstraction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../types.html" title="mw.types – common types"
+             >previous</a> |</li>
+        <li><a href="../index.html">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Aaron Halfaker.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

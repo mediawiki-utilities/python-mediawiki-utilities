@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mw.xml_dump – XML dump processing &mdash; mediawiki-utilities 0.2.4
+ documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.4
+',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mediawiki-utilities 0.2.4
+ documentation" href="../index.html" />
+    <link rel="next" title="mw.lib.persistence – tracking content between revisions" href="../lib/persistence.html" />
+    <link rel="prev" title="mw.database – MySQL database abstraction" href="database.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../lib/persistence.html" title="mw.lib.persistence – tracking content between revisions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="database.html" title="mw.database – MySQL database abstraction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-mw.xml_dump">
+<span id="mw-xml-dump-xml-dump-processing"></span><span id="mw-xml-dump"></span><h1>mw.xml_dump &#8211; XML dump processing<a class="headerlink" href="#module-mw.xml_dump" title="Permalink to this headline">¶</a></h1>
+<p>This module is a collection of utilities for efficiently processing MediaWiki&#8217;s 
+XML database dumps.  There are two important concerns that this module intends 
+to address: <em>performance</em> and the <em>complexity</em> of streaming XML parsing.</p>
+<dl class="docutils">
+<dt>Performance</dt>
+<dd>Performance is a serious concern when processing large database XML dumps.  
+Regretfully, the Global Intepreter Lock prevents us from running threads on 
+multiple CPUs.  This library provides a <a class="reference internal" href="#mw.xml_dump.map" title="mw.xml_dump.map"><tt class="xref py py-func docutils literal"><span class="pre">map()</span></tt></a>, a function 
+that maps a dump processsing over a set of dump files using 
+<tt class="xref py py-class docutils literal"><span class="pre">multiprocessing</span></tt> to distribute the work over multiple CPUS</dd>
+<dt>Complexity</dt>
+<dd>Streaming XML parsing is gross.  XML dumps are (1) some site meta data, (2) 
+a collection of pages that contain (3) collections of revisions.  The 
+module allows you to think about dump files in this way and ignore the 
+fact that you&#8217;re streaming XML.  An <a class="reference internal" href="#mw.xml_dump.Iterator" title="mw.xml_dump.Iterator"><tt class="xref py py-class docutils literal"><span class="pre">Iterator</span></tt></a> contains 
+site meta data and an iterator of <a class="reference internal" href="#mw.xml_dump.Page" title="mw.xml_dump.Page"><tt class="xref py py-class docutils literal"><span class="pre">Page</span></tt></a>&#8216;s.  A 
+<a class="reference internal" href="#mw.xml_dump.Page" title="mw.xml_dump.Page"><tt class="xref py py-class docutils literal"><span class="pre">Page</span></tt></a> contains page meta data and an iterator of 
+<a class="reference internal" href="#mw.xml_dump.Revision" title="mw.xml_dump.Revision"><tt class="xref py py-class docutils literal"><span class="pre">Revision</span></tt></a>&#8216;s.  A <a class="reference internal" href="#mw.xml_dump.Revision" title="mw.xml_dump.Revision"><tt class="xref py py-class docutils literal"><span class="pre">Revision</span></tt></a> contains revision meta data 
+including a <a class="reference internal" href="#mw.xml_dump.Contributor" title="mw.xml_dump.Contributor"><tt class="xref py py-class docutils literal"><span class="pre">Contributor</span></tt></a> (if one a contributor was specified in the
+XML).</dd>
+</dl>
+<div class="section" id="the-map-function">
+<h2>The map() function<a class="headerlink" href="#the-map-function" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mw.xml_dump.map">
+<tt class="descclassname">mw.xml_dump.</tt><tt class="descname">map</tt><big>(</big><em>paths</em>, <em>process_dump</em>, <em>threads=4</em>, <em>output_buffer=100</em><big>)</big><a class="headerlink" href="#mw.xml_dump.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps a function across a set of dump files and returns
+an (order not guaranteed) iterator over the output.</p>
+<p>The <cite>process_dump</cite> function must return an iterable object (such as a 
+generator).  If your process_dump function does not need to produce 
+output, make it return an empty <cite>iterable</cite> upon completion (like an empty
+list).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt>paths <span class="classifier-delimiter">:</span> <span class="classifier">iter( str )</span></dt>
+<dd><p class="first last">a list of paths to dump files to process</p>
+</dd>
+<dt>process_dump <span class="classifier-delimiter">:</span> <span class="classifier">function( dump</span> <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="#mw.xml_dump.Iterator" title="mw.xml_dump.Iterator"><tt class="xref py py-class docutils literal"><span class="pre">Iterator</span></tt></a>, path</span> <span class="classifier-delimiter">:</span> <span class="classifier">str)</span></dt>
+<dd><p class="first last">a function to run on every <a class="reference internal" href="#mw.xml_dump.Iterator" title="mw.xml_dump.Iterator"><tt class="xref py py-class docutils literal"><span class="pre">Iterator</span></tt></a></p>
+</dd>
+<dt>threads <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">the number of individual processing threads to spool up</p>
+</dd>
+<dt>output_buffer <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">the maximum number of output values to buffer.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An iterator over values yielded by calls to <cite>process_dump()</cite></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><div class="first last highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">mw</span> <span class="kn">import</span> <span class="n">xml_dump</span>
+
+<span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;examples/dump.xml&quot;</span><span class="p">,</span> <span class="s">&quot;examples/dump2.xml&quot;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">page_info</span><span class="p">(</span><span class="n">dump</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">dump</span><span class="p">:</span>
+                
+                <span class="k">yield</span> <span class="n">page</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">page</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span> <span class="n">page</span><span class="o">.</span><span class="n">title</span>
+                
+        
+<span class="k">for</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">page_namespace</span><span class="p">,</span> <span class="n">page_title</span> <span class="ow">in</span> <span class="n">xml_dump</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">page_info</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">page_id</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">page_namespace</span><span class="p">),</span> <span class="n">page_title</span><span class="p">]))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mw.xml_dump.iteration">
+<span id="iteration"></span><h2>Iteration<a class="headerlink" href="#module-mw.xml_dump.iteration" title="Permalink to this headline">¶</a></h2>
+<p><em>... iteration ...</em></p>
+<dl class="class">
+<dt id="mw.xml_dump.Iterator">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.</tt><tt class="descname">Iterator</tt><big>(</big><em>site_name=None</em>, <em>base=None</em>, <em>generator=None</em>, <em>case=None</em>, <em>namespaces=None</em>, <em>pages=None</em><big>)</big><a class="headerlink" href="#mw.xml_dump.Iterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>XML Dump Iterator. Dump file meta data and a 
+<a class="reference internal" href="#mw.xml_dump.Page" title="mw.xml_dump.Page"><tt class="xref py py-class docutils literal"><span class="pre">Page</span></tt></a> iterator.  Instances of this class can be 
+called as an iterator directly.  E.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">mw.xml_dump</span> <span class="kn">import</span> <span class="n">Iterator</span>
+
+<span class="c"># Construct dump file iterator</span>
+<span class="n">dump</span> <span class="o">=</span> <span class="n">Iterator</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;example/dump.xml&quot;</span><span class="p">))</span>
+
+<span class="c"># Iterate through pages</span>
+<span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">dump</span><span class="p">:</span>
+
+        <span class="c"># Iterate through a page&#39;s revisions</span>
+        <span class="k">for</span> <span class="n">revision</span> <span class="ow">in</span> <span class="n">page</span><span class="p">:</span>
+
+                <span class="k">print</span><span class="p">(</span><span class="n">revision</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="mw.xml_dump.Iterator.site_name">
+<tt class="descname">site_name</tt><a class="headerlink" href="#mw.xml_dump.Iterator.site_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the site. : str | <cite>None</cite> (if not specified in the XML)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Iterator.base">
+<tt class="descname">base</tt><a class="headerlink" href="#mw.xml_dump.Iterator.base" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: ??? : str | <cite>None</cite> (if not specified in the XML)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Iterator.generator">
+<tt class="descname">generator</tt><a class="headerlink" href="#mw.xml_dump.Iterator.generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: ??? : str | <cite>None</cite> (if not specified in the XML)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Iterator.case">
+<tt class="descname">case</tt><a class="headerlink" href="#mw.xml_dump.Iterator.case" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: ??? : str | <cite>None</cite> (if not specified in the XML)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Iterator.namespaces">
+<tt class="descname">namespaces</tt><a class="headerlink" href="#mw.xml_dump.Iterator.namespaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of <a class="reference internal" href="../types.html#mw.Namespace" title="mw.Namespace"><tt class="xref py py-class docutils literal"><span class="pre">mw.Namespace</span></tt></a> | <cite>None</cite> (if not specified in the XML)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.xml_dump.Page">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.</tt><tt class="descname">Page</tt><big>(</big><em>id</em>, <em>title</em>, <em>namespace</em>, <em>redirect</em>, <em>restrictions</em>, <em>revisions</em><big>)</big><a class="headerlink" href="#mw.xml_dump.Page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Page meta data and a <a class="reference internal" href="#mw.xml_dump.Revision" title="mw.xml_dump.Revision"><tt class="xref py py-class docutils literal"><span class="pre">Revision</span></tt></a> iterator.  Instances of 
+this class can be called as iterators directly.  E.g.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">page</span> <span class="o">=</span> <span class="n">mw</span><span class="o">.</span><span class="n">xml_dump</span><span class="o">.</span><span class="n">Page</span><span class="p">(</span> <span class="o">...</span> <span class="p">)</span>
+
+<span class="k">for</span> <span class="n">revision</span> <span class="ow">in</span> <span class="n">page</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;{0} {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">revision</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">page_id</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="mw.xml_dump.Page.id">
+<tt class="descname">id</tt><a class="headerlink" href="#mw.xml_dump.Page.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Page ID : <cite>int</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Page.title">
+<tt class="descname">title</tt><a class="headerlink" href="#mw.xml_dump.Page.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Page title (namespace excluded) : <cite>str</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Page.namespace">
+<tt class="descname">namespace</tt><a class="headerlink" href="#mw.xml_dump.Page.namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Namespace ID : <cite>int</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Page.redirect">
+<tt class="descname">redirect</tt><a class="headerlink" href="#mw.xml_dump.Page.redirect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Page is currently redirect? : <a class="reference internal" href="#mw.xml_dump.Redirect" title="mw.xml_dump.Redirect"><tt class="xref py py-class docutils literal"><span class="pre">Redirect</span></tt></a> | <cite>None</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Page.restrictions">
+<tt class="descname">restrictions</tt><a class="headerlink" href="#mw.xml_dump.Page.restrictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of page editing restrictions (empty unless restrictions are specified) : list( <cite>str</cite> )</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.xml_dump.Redirect">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.</tt><tt class="descname">Redirect</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#mw.xml_dump.Redirect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a redirect tag.</p>
+<dl class="docutils">
+<dt><strong>title</strong></dt>
+<dd>Full page name that this page is redirected to : <cite>str</cite></dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.xml_dump.Revision">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.</tt><tt class="descname">Revision</tt><big>(</big><em>id</em>, <em>timestamp</em>, <em>contributor=None</em>, <em>minor=None</em>, <em>comment=None</em>, <em>text=None</em>, <em>bytes=None</em>, <em>sha1=None</em>, <em>parent_id=None</em>, <em>model=None</em>, <em>format=None</em><big>)</big><a class="headerlink" href="#mw.xml_dump.Revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revision meta data.</p>
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.id">
+<tt class="descname">id</tt><a class="headerlink" href="#mw.xml_dump.Revision.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revision ID : <cite>int</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.timestamp">
+<tt class="descname">timestamp</tt><a class="headerlink" href="#mw.xml_dump.Revision.timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revision timestamp : <a class="reference internal" href="../types.html#mw.Timestamp" title="mw.Timestamp"><tt class="xref py py-class docutils literal"><span class="pre">mw.Timestamp</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.contributor">
+<tt class="descname">contributor</tt><a class="headerlink" href="#mw.xml_dump.Revision.contributor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contributor meta data : <a class="reference internal" href="#mw.xml_dump.Contributor" title="mw.xml_dump.Contributor"><tt class="xref py py-class docutils literal"><span class="pre">Contributor</span></tt></a> | <cite>None</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.minor">
+<tt class="descname">minor</tt><a class="headerlink" href="#mw.xml_dump.Revision.minor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is revision a minor change? : <cite>bool</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.comment">
+<tt class="descname">comment</tt><a class="headerlink" href="#mw.xml_dump.Revision.comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comment left with revision : <a class="reference internal" href="#mw.xml_dump.Comment" title="mw.xml_dump.Comment"><tt class="xref py py-class docutils literal"><span class="pre">Comment</span></tt></a> (behaves like <cite>str</cite>, with additional members)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.text">
+<tt class="descname">text</tt><a class="headerlink" href="#mw.xml_dump.Revision.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Content of text : <a class="reference internal" href="#mw.xml_dump.Text" title="mw.xml_dump.Text"><tt class="xref py py-class docutils literal"><span class="pre">Text</span></tt></a> (behaves like <cite>str</cite>, with additional members)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.bytes">
+<tt class="descname">bytes</tt><a class="headerlink" href="#mw.xml_dump.Revision.bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of bytes of content : <cite>str</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.sha1">
+<tt class="descname">sha1</tt><a class="headerlink" href="#mw.xml_dump.Revision.sha1" title="Permalink to this definition">¶</a></dt>
+<dd><p>sha1 hash of the content : <cite>str</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.parent_id">
+<tt class="descname">parent_id</tt><a class="headerlink" href="#mw.xml_dump.Revision.parent_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revision ID of preceding revision : <cite>int</cite> | <cite>None</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.model">
+<tt class="descname">model</tt><a class="headerlink" href="#mw.xml_dump.Revision.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: ??? : <cite>str</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Revision.format">
+<tt class="descname">format</tt><a class="headerlink" href="#mw.xml_dump.Revision.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: ??? : <cite>str</cite></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.xml_dump.Comment">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.</tt><tt class="descname">Comment</tt><a class="headerlink" href="#mw.xml_dump.Comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>A revision comment.  This class behaves identically to
+<tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> except that it takes and stores an additional parameter 
+recording whether the comment was deleted or not.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mw.xml_dump</span> <span class="kn">import</span> <span class="n">Comment</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Comment</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">==</span> <span class="s">&quot;foo&quot;</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">deleted</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><strong>deleted</strong></dt>
+<dd>Was the comment deleted? | <cite>bool</cite></dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.xml_dump.Contributor">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.</tt><tt class="descname">Contributor</tt><big>(</big><em>id</em>, <em>user_text</em><big>)</big><a class="headerlink" href="#mw.xml_dump.Contributor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contributor meta data.</p>
+<dl class="attribute">
+<dt id="mw.xml_dump.Contributor.id">
+<tt class="descname">id</tt><a class="headerlink" href="#mw.xml_dump.Contributor.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>User ID : int | <cite>None</cite> (if not specified in the XML)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mw.xml_dump.Contributor.user_text">
+<tt class="descname">user_text</tt><a class="headerlink" href="#mw.xml_dump.Contributor.user_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>User name or IP address : str | <cite>None</cite> (if not specified in the XML)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.xml_dump.Text">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.</tt><tt class="descname">Text</tt><a class="headerlink" href="#mw.xml_dump.Text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revision text content.  This class behaves identically to
+<tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> except that it takes and stores an additional set of parameters.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mw.xml_dump</span> <span class="kn">import</span> <span class="n">Text</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">==</span> <span class="s">&quot;foo&quot;</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">deleted</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">xml_space</span>
+<span class="go">&#39;preserve&#39;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><strong>deleted</strong></dt>
+<dd>Was the text deleted? : <cite>bool</cite></dd>
+<dt><strong>xml_space</strong></dt>
+<dd>What to do with extra whitespace? : <cite>str</cite></dd>
+<dt><strong>id</strong></dt>
+<dd>TODO: ??? : <cite>int</cite> | <cite>None</cite></dd>
+<dt><strong>bytes</strong></dt>
+<dd>TODO: ??? : <cite>int</cite> | <cite>None</cite></dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="errors">
+<h2>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mw.xml_dump.errors.FileTypeError">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.errors.</tt><tt class="descname">FileTypeError</tt><a class="reference internal" href="../_modules/mw/xml_dump/errors.html#FileTypeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mw.xml_dump.errors.FileTypeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thrown when an XML dump file is not of an expected type.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="mw.xml_dump.errors.MalformedXML">
+<em class="property">class </em><tt class="descclassname">mw.xml_dump.errors.</tt><tt class="descname">MalformedXML</tt><a class="reference internal" href="../_modules/mw/xml_dump/errors.html#MalformedXML"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mw.xml_dump.errors.MalformedXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thrown when an XML dump file is not formatted as expected.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mw.xml_dump &#8211; XML dump processing</a><ul>
+<li><a class="reference internal" href="#the-map-function">The map() function</a></li>
+<li><a class="reference internal" href="#module-mw.xml_dump.iteration">Iteration</a></li>
+<li><a class="reference internal" href="#errors">Errors</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="database.html"
+                        title="previous chapter">mw.database &#8211; MySQL database abstraction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../lib/persistence.html"
+                        title="next chapter">mw.lib.persistence &#8211; tracking content between revisions</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/core/xml_dump.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../lib/persistence.html" title="mw.lib.persistence – tracking content between revisions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="database.html" title="mw.database – MySQL database abstraction"
+             >previous</a> |</li>
+        <li><a href="../index.html">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Aaron Halfaker.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

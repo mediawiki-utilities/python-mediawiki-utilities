@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MediaWiki Utilities &mdash; mediawiki-utilities 0.2.4
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.4
+',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mediawiki-utilities 0.2.4
+ documentation" href="#" />
+    <link rel="next" title="mw.types – common types" href="types.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="types.html" title="mw.types – common types"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mediawiki-utilities">
+<h1>MediaWiki Utilities<a class="headerlink" href="#mediawiki-utilities" title="Permalink to this headline">¶</a></h1>
+<p>MediaWiki Utilities is an open source (MIT Licensed) library developed by Aaron Halfaker for extracting and processing data from MediaWiki installations, slave databases and xml dumps.</p>
+<p><strong>Instal with pip:</strong> <tt class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">mediawiki-utilities</span></tt></p>
+<p><strong>Note:</strong> <em>Use of this library requires Python 3 or later.</em></p>
+<div class="section" id="types">
+<h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference internal" href="types.html#mw-types"><em>mw.Timestamp</em></a></dt>
+<dd>A simple datatype for handling MediaWiki&#8217;s various time formats.</dd>
+</dl>
+</div>
+<div class="section" id="core-modules">
+<h2>Core modules<a class="headerlink" href="#core-modules" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference internal" href="core/api.html#mw-api"><em>mw.api</em></a></dt>
+<dd><p class="first">A set of utilities for interacting with MediaWiki&#8217;s web API.</p>
+<ul class="last simple">
+<li><a class="reference internal" href="core/api.html#mw.api.Session" title="mw.api.Session"><tt class="xref py py-class docutils literal"><span class="pre">Session</span></tt></a> &#8211; Constructs an API session with a MediaWiki installation.  Contains convenience methods for accessing <tt class="docutils literal"><span class="pre">prop=revisions</span></tt>,  <tt class="docutils literal"><span class="pre">list=usercontribs</span></tt>, <tt class="docutils literal"><span class="pre">meta=siteinfo</span></tt>, <tt class="docutils literal"><span class="pre">list=deletedrevs</span></tt> and <tt class="docutils literal"><span class="pre">list=recentchanges</span></tt>.</li>
+</ul>
+</dd>
+<dt><a class="reference internal" href="core/database.html#mw-database"><em>mw.database</em></a></dt>
+<dd><p class="first">A set of utilities for interacting with MediaWiki&#8217;s database.</p>
+<ul class="last simple">
+<li><a class="reference internal" href="core/database.html#mw.database.DB" title="mw.database.DB"><tt class="xref py py-class docutils literal"><span class="pre">DB</span></tt></a> &#8211; Constructs a mysql database connector with convenience methods for accessing <tt class="docutils literal"><span class="pre">revision</span></tt>, <tt class="docutils literal"><span class="pre">archive</span></tt>, <tt class="docutils literal"><span class="pre">page</span></tt>, <tt class="docutils literal"><span class="pre">user</span></tt>, and <tt class="docutils literal"><span class="pre">recentchanges</span></tt>.</li>
+</ul>
+</dd>
+<dt><a class="reference internal" href="core/xml_dump.html#mw-xml-dump"><em>mw.xml_dump</em></a></dt>
+<dd><p class="first">A set of utilities for processing MediaWiki&#8217;s XML database dumps quickly and without dealing with streaming XML.</p>
+<ul class="last simple">
+<li><a class="reference internal" href="core/xml_dump.html#mw.xml_dump.map" title="mw.xml_dump.map"><tt class="xref py py-func docutils literal"><span class="pre">map()</span></tt></a> &#8211; Applies a function to a set of dump files (<a class="reference internal" href="core/xml_dump.html#mw.xml_dump.Iterator" title="mw.xml_dump.Iterator"><tt class="xref py py-class docutils literal"><span class="pre">Iterator</span></tt></a>) using <tt class="xref py py-class docutils literal"><span class="pre">multiprocessing</span></tt> and aggregates the output.</li>
+<li><a class="reference internal" href="core/xml_dump.html#mw.xml_dump.Iterator" title="mw.xml_dump.Iterator"><tt class="xref py py-class docutils literal"><span class="pre">Iterator</span></tt></a> &#8211; Constructs an iterator over a standard XML dump.  Dumps contain site_info and pages.  Pages contain metadata and revisions.  Revisions contain metadata and text.  This is probably why you are here.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="libraries">
+<h2>Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference internal" href="lib/persistence.html#mw-lib-persistence"><em>mw.lib.persistence</em></a></dt>
+<dd><p class="first">A set of utilities for tracking the persistence of content between revisions.</p>
+<ul class="last simple">
+<li><a class="reference internal" href="lib/persistence.html#mw.lib.persistence.State" title="mw.lib.persistence.State"><tt class="xref py py-class docutils literal"><span class="pre">State</span></tt></a> &#8211; Constructs an object that represents the current content persistence state of a page.  Reports useful details about the persistence of content when updated.</li>
+</ul>
+</dd>
+<dt><a class="reference internal" href="lib/reverts.html#mw-lib-reverts"><em>mw.lib.reverts</em></a></dt>
+<dd><p class="first">A set of utilities for performing revert detection</p>
+<ul class="last simple">
+<li><a class="reference internal" href="lib/reverts.html#mw.lib.reverts.detect" title="mw.lib.reverts.detect"><tt class="xref py py-func docutils literal"><span class="pre">detect()</span></tt></a> &#8211; Detects reverts in a sequence of revision events.</li>
+<li><a class="reference internal" href="lib/reverts.html#mw.lib.reverts.Detector" title="mw.lib.reverts.Detector"><tt class="xref py py-class docutils literal"><span class="pre">Detector</span></tt></a> &#8211; Constructs an identity revert detector that can be updated manually over the history of a page.</li>
+</ul>
+</dd>
+<dt><a class="reference internal" href="lib/sessions.html#mw-lib-sessions"><em>mw.lib.sessions</em></a></dt>
+<dd><p class="first">A set of utilities for grouping revisions and other events into sessions</p>
+<ul class="last simple">
+<li><a class="reference internal" href="lib/sessions.html#mw.lib.sessions.cluster" title="mw.lib.sessions.cluster"><tt class="xref py py-func docutils literal"><span class="pre">cluster()</span></tt></a> &#8211; Clusters a sequence of user actions into sessions.</li>
+<li><a class="reference internal" href="lib/sessions.html#mw.lib.sessions.Cache" title="mw.lib.sessions.Cache"><tt class="xref py py-class docutils literal"><span class="pre">Cache</span></tt></a> &#8211; Constructs a cache of recent user actions that can be updated manually in order to detect sessions.</li>
+</ul>
+</dd>
+<dt><a class="reference internal" href="lib/title.html#mw-lib-title"><em>mw.lib.title</em></a></dt>
+<dd><p class="first">A set of utilities for normalizing and parsing page titles</p>
+<ul class="last simple">
+<li><a class="reference internal" href="lib/title.html#mw.lib.title.normalize" title="mw.lib.title.normalize"><tt class="xref py py-func docutils literal"><span class="pre">normalize()</span></tt></a> &#8211; Normalizes a page title.</li>
+<li><a class="reference internal" href="lib/title.html#mw.lib.title.Parser" title="mw.lib.title.Parser"><tt class="xref py py-class docutils literal"><span class="pre">Parser</span></tt></a> &#8211; Constructs a parser with a set of namespaces that can be used to parse and normalize page titles.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="about-the-author">
+<h2>About the author<a class="headerlink" href="#about-the-author" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body">Aaron Halfaker</td>
+</tr>
+<tr class="field-even field"><th class="field-name">email:</th><td class="field-body"><a class="reference external" href="mailto:aaron&#46;halfaker&#37;&#52;&#48;gmail&#46;com">aaron<span>&#46;</span>halfaker<span>&#64;</span>gmail<span>&#46;</span>com</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">website:</th><td class="field-body"><a class="reference external" href="http://halfaker.info">http://halfaker.info</a> &#8211;
+<a class="reference external" href="http://en.wikipedia.org/wiki/User:EpochFail">http://en.wikipedia.org/wiki/User:EpochFail</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="contributors">
+<h2>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h2>
+<p>None yet.  See <a class="reference external" href="http://github.com/halfak/mediawiki-utilities">http://github.com/halfak/mediawiki-utilities</a>.  Pull requests are encouraged.</p>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="types.html">mw.types &#8211; common types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core/api.html">mw.api &#8211; MediaWiki API abstraction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/api.html#session">Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/api.html#collections">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/api.html#errors">Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core/database.html">mw.database &#8211; MySQL database abstraction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/database.html#db">DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/database.html#collections">Collections</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core/xml_dump.html">mw.xml_dump &#8211; XML dump processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/xml_dump.html#the-map-function">The map() function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/xml_dump.html#module-mw.xml_dump.iteration">Iteration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/xml_dump.html#errors">Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lib/persistence.html">mw.lib.persistence &#8211; tracking content between revisions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lib/persistence.html#tokenization">Tokenization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib/persistence.html#module-mw.lib.persistence.difference">Difference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib/persistence.html#module-mw.lib.persistence.defaults">Constants</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lib/reverts.html">mw.lib.reverts &#8211; detecting reverts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lib/reverts.html#module-mw.lib.reverts.api">Convenience functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib/reverts.html#module-mw.lib.reverts.defaults">Constants</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lib/sessions.html">mw.lib.sessions &#8211; event clustering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lib/sessions.html#module-mw.lib.sessions.defaults">Constants</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lib/title.html">mw.lib.title &#8211; parsing and normalizing titles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lib/title.html#title-parser">Title parser</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MediaWiki Utilities</a><ul>
+<li><a class="reference internal" href="#types">Types</a></li>
+<li><a class="reference internal" href="#core-modules">Core modules</a></li>
+<li><a class="reference internal" href="#libraries">Libraries</a></li>
+<li><a class="reference internal" href="#about-the-author">About the author</a></li>
+<li><a class="reference internal" href="#contributors">Contributors</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="types.html"
+                        title="next chapter">mw.types &#8211; common types</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="types.html" title="mw.types – common types"
+             >next</a> |</li>
+        <li><a href="#">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Aaron Halfaker.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mw.api.errors &mdash; mediawiki-utilities 0.2.4
+ documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2.4
+',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mediawiki-utilities 0.2.4
+ documentation" href="../../../index.html" />
+    <link rel="up" title="mw.api" href="../api.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mw.html" >mw</a> &raquo;</li>
+          <li><a href="../api.html" accesskey="U">mw.api</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mw.api.errors</h1><div class="highlight"><pre>
+<span class="k">class</span> <span class="nc">DocError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">doc</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		The document returned by the API that brought about this error.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="APIError"><a class="viewcode-back" href="../../../core/api.html#mw.api.errors.APIError">[docs]</a><span class="k">class</span> <span class="nc">APIError</span><span class="p">(</span><span class="n">DocError</span><span class="p">):</span>
+	
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+		<span class="n">code</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s">&#39;error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">)</span>
+		<span class="n">message</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s">&#39;error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;message&#39;</span><span class="p">)</span>
+		
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="s">&quot;{0}:{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">message</span><span class="p">),</span> <span class="n">doc</span><span class="p">)</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">code</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		The error code returned by the api -- if available. </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		The error message returned by the api -- if available.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+	
+</div>
+<div class="viewcode-block" id="AuthenticationError"><a class="viewcode-back" href="../../../core/api.html#mw.api.errors.AuthenticationError">[docs]</a><span class="k">class</span> <span class="nc">AuthenticationError</span><span class="p">(</span><span class="n">APIError</span><span class="p">):</span>
+	
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s">&#39;login&#39;</span><span class="p">][</span><span class="s">&#39;result&#39;</span><span class="p">]</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		The result code of an authentication attempt.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+	</div>
+<div class="viewcode-block" id="MalformedResponse"><a class="viewcode-back" href="../../../core/api.html#mw.api.errors.MalformedResponse">[docs]</a><span class="k">class</span> <span class="nc">MalformedResponse</span><span class="p">(</span><span class="n">APIError</span><span class="p">):</span>
+	
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		The expected, but missing key from the API call.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+	</div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mediawiki-utilities 0.2.4
+ documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mw.html" >mw</a> &raquo;</li>
+          <li><a href="../api.html" >mw.api</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Aaron Halfaker.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>
