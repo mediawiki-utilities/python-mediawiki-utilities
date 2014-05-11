@@ -6,6 +6,15 @@ class Text(str, serializable.Type):
 	Revision text content.  This class behaves identically to
 	:class:`str` except that it takes and stores an additional set of parameters.
 	
+	**deleted**
+		Was the text deleted? : `bool`
+	**xml_space**
+		What to do with extra whitespace? : `str`
+	**id**
+		TODO: ??? : `int` | `None`
+	**bytes**
+		TODO: ??? : `int` | `None`
+	
 	>>> from mw.xml_dump import Text
 	>>> 
 	>>> t = Text("foo")
@@ -15,15 +24,6 @@ class Text(str, serializable.Type):
 	False
 	>>> t.xml_space
 	'preserve'
-	
-	**deleted**
-		Was the text deleted? : `bool`
-	**xml_space**
-		What to do with extra whitespace? : `str`
-	**id**
-		TODO: ??? : `int` | `None`
-	**bytes**
-		TODO: ??? : `int` | `None`
 	"""
 	def __new__(cls, string_or_text="", deleted=False, xml_space="preserve", id=None, bytes=None):
 		if isinstance(string_or_text, cls):
@@ -53,7 +53,7 @@ class Text(str, serializable.Type):
 	
 	def serialize(self):
 		return {
-			"string": str(self),
+			"string_or_text": str(self),
 			"deleted": self.deleted,
 			"xml_space": self.xml_space,
 			"id": self.id,

@@ -44,7 +44,7 @@ class Comment(str, serializable.Type):
 	
 	def serialize(self):
 		return {
-			"string": str(self),
+			"string_or_comment": str(self),
 			"deleted": self.deleted
 		}
 	

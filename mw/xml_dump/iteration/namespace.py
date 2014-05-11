@@ -6,7 +6,7 @@ class Namespace(types.Namespace):
 	def from_element(cls, element):
 		return cls(
 			element.attr('key'),
-			element.attr('case'),
-			element.text
+			element.text,
+			case=element.attr('case')
 		)
 	

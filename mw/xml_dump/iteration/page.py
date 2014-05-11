@@ -47,7 +47,7 @@ class Page(serializable.Type):
 		Page is currently redirect? : :class:`~mw.xml_dump.Redirect` | `None`
 		"""
 		
-		self.restrictions = list(restrictions)
+		self.restrictions = serializable.List.deserialize(restrictions)
 		"""
 		A list of page editing restrictions (empty unless restrictions are specified) : list( `str` )
 		"""

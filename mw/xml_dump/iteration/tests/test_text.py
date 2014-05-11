@@ -33,3 +33,12 @@ def test_full_constructor():
 	eq_(t.id, 10)
 	eq_(t.xml_space, "foobar")
 	eq_(t.bytes, 1001)
+
+def test_serialize():
+	t = Text("Foobar!", deleted=False, id=10, xml_space="foobar", bytes=1001)
+	t2 = Text.deserialize(t.serialize())
+	eq_(t2.deleted, False)
+	eq_(t2.id, 10)
+	eq_(t2.xml_space, "foobar")
+	eq_(t2.bytes, 1001)
+	

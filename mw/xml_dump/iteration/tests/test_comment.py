@@ -24,3 +24,8 @@ def test_full_constructor():
 	c = Comment("Foobar!", deleted=False)
 	eq_(c, "Foobar!")
 	eq_(c.deleted, False)
+
+def test_serialize():
+	c = Comment("Foobar!", deleted=False)
+	c2 = Comment.deserialize(c.serialize())
+	eq_(c2.deleted, False)

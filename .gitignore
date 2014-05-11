@@ -16,7 +16,7 @@ build/
 develop-eggs/
 dist/
 eggs/
-lib/
+#lib/
 lib64/
 parts/
 sdist/
@@ -38,6 +38,6 @@ nosetests.xml
 coverage.xml
 
 # Sphinx documentation
-docs/_build/
-docs/.buildfile
+doc/_build/
+doc/.buildfile
 *.toctree
