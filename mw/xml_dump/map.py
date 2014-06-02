@@ -7,7 +7,7 @@ from .functions import file
 
 logger = logging.getLogger("mw.dump.map")
     
-def re_raise(error, processor):
+def re_raise(error, path):
     raise error
 
 def map(paths, process_dump, handle_error=re_raise,
@@ -87,7 +87,7 @@ def map(paths, process_dump, handle_error=re_raise,
                 yield item
             else:
                 error, processor = item
-                re_raise(error, processor)
+                re_raise(error, path)
         
     except Empty:
         pass

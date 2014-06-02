@@ -1,4 +1,4 @@
-import logging, traceback
+import logging, sys, traceback
 from multiprocessing import Process
 from queue import Empty
 from collections import namedtuple
@@ -34,7 +34,8 @@ class Processor(Process):
                     for out in self.process_dump(dump, path):
                         self.outputq.put(ErrorItem(False, out))
                 except Exception as error:
-                    self.outputq.put(ErrorItem(True, (error, self)))
+                    
+                    self.outputq.put(ErrorItem(True, (error, path)))
                     
                     logger.error(
                         "Failed while processing dump " + \
