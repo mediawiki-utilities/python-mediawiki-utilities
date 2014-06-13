@@ -128,6 +128,7 @@ class Revisions(Collection):
 		
 		query += " WHERE rev_id = ?"
 		
+		cursor = self.db.shared_connection.cursor()
 		cursor.execute(query, [rev_id])
 		
 		for row in cursor:
