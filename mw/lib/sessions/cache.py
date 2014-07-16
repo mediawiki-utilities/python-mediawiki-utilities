@@ -23,6 +23,7 @@ provided during revert detection.
         A list of event data : list( `mixed` )
 """
 
+
 class Cache:
     """
     A cache of recent user session.  Since sessions expire once activities stop
@@ -53,11 +54,12 @@ class Cache:
 
 
     """
+
     def __init__(self, cutoff=defaults.CUTOFF):
         self.cutoff = int(cutoff)
 
         self.recently_active = Heap()
-        self.active_users  = {}
+        self.active_users = {}
 
     def process(self, user, timestamp, data=None):
         """
@@ -80,7 +82,7 @@ class Cache:
         for user, events in self._clear_expired(event.timestamp):
             yield Session(user, unpack_events(events))
 
-        #Apply revision
+        # Apply revision
         if event.user in self.active_users:
             events = self.active_users[event.user]
         else:

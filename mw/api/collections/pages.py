@@ -5,21 +5,21 @@ from .collection import Collection
 
 logger = logging.getLogger("mw.api.collections.pages")
 
+
 class Pages(Collection):
     """
     TODO
     """
 
     def _edit(self, title=None, pageid=None, section=None, sectiontitle=None,
-                    text=None, token=None, summary=None, minor=None,
-                    notminor=None, bot=None, basetimestamp=None,
-                    starttimestamp=None, recreate=None, createonly=None,
-                    nocreate=None, watch=None, unwatch=None, watchlist=None,
-                    md5=None, prependtext=None, appendtext=None, undo=None,
-                    undoafter=None, redirect=None, contentformat=None,
-                    contentmodel=None, assert_=None, nassert=None,
-                    captchaword=None, captchaid=None):
-
+              text=None, token=None, summary=None, minor=None,
+              notminor=None, bot=None, basetimestamp=None,
+              starttimestamp=None, recreate=None, createonly=None,
+              nocreate=None, watch=None, unwatch=None, watchlist=None,
+              md5=None, prependtext=None, appendtext=None, undo=None,
+              undoafter=None, redirect=None, contentformat=None,
+              contentmodel=None, assert_=None, nassert=None,
+              captchaword=None, captchaid=None):
         params = {
             'action': "edit"
         }

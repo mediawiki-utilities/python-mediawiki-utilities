@@ -1,9 +1,10 @@
 from . import autovivifying
 
+
 class Circle(list):
     def __init__(self, maxsize, iterable=None):
         self._maxsize = int(maxsize)
-        list.__init__(self, [None]*maxsize)
+        list.__init__(self, [None] * maxsize)
         self._size = 0
         self._pointer = 0
 
@@ -24,7 +25,7 @@ class Circle(list):
             yield list.__getitem__(self, self._internalize(i))
 
     def __reversed__(self):
-        for i in range(self._size-1, -1, -1):
+        for i in range(self._size - 1, -1, -1):
             yield list.__getitem__(self, self._internalize(i))
 
     def pop(self, index=None):
@@ -45,7 +46,7 @@ class Circle(list):
 
         # Update state
         self._pointer = (self._pointer + 1) % self._maxsize
-        self._size = min(self._maxsize, self._size+1)
+        self._size = min(self._maxsize, self._size + 1)
 
         # If we overwrote a value, yield it.
         return old_value
@@ -67,9 +68,9 @@ class HistoricalMap(autovivifying.Dict):
 
     def __init__(self, *args, maxlen, **kwargs):
         '''Maxlen specifies the maximum amount of history to keep'''
-        super().__init__(self, *args, vivifier=lambda k:[], **kwargs)
+        super().__init__(self, *args, vivifier=lambda k: [], **kwargs)
 
-        self._circle = Circle(maxlen)  #List to preserve order for history
+        self._circle = Circle(maxlen)  # List to preserve order for history
 
     def __iter__(self):
         return iter(self._circle)
@@ -106,8 +107,10 @@ class HistoricalMap(autovivifying.Dict):
     def up_to(self, key):
         '''Gets the recently inserted values up to a key'''
         for okey, ovalue in reversed(self._circle):
-            if okey == key: break
-            else: yield ovalue
+            if okey == key:
+                break
+            else:
+                yield ovalue
 
     def last(self):
         return self.circle[-1]

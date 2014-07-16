@@ -1,5 +1,6 @@
 import re
 
+
 def wikitext_split(text):
     """
     Performs the simplest possible split of latin character-based languages

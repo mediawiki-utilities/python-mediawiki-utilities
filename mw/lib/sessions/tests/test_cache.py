@@ -2,6 +2,7 @@ from nose.tools import eq_
 
 from ..cache import Cache
 
+
 def test_session_manager():
     cache = Cache(cutoff=2)
 

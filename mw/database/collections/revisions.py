@@ -9,8 +9,8 @@ from .collection import Collection
 
 logger = logging.getLogger("mw.database.collections.revisions")
 
-class AllRevisions(Collection):
 
+class AllRevisions(Collection):
     def get(self, rev_id, include_page=False):
         """
         Gets a single revisions by ID.  Checks both the ``revision`` and
@@ -78,14 +78,14 @@ class AllRevisions(Collection):
                     revisions,
                     archives,
                     compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) <= \
-                                   (r2['rev_timestamp'], r2['rev_id'])
+                                           (r2['rev_timestamp'], r2['rev_id'])
                 )
-            else: # direction == "older"
+            else:  # direction == "older"
                 collated_revisions = iteration.sequence(
                     revisions,
                     archives,
                     compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) >= \
-                                   (r2['rev_timestamp'], r2['rev_id'])
+                                           (r2['rev_timestamp'], r2['rev_id'])
                 )
         else:
             collated_revisions = chain(revisions, archives)
@@ -101,8 +101,8 @@ class AllRevisions(Collection):
             for rev in collated_revisions:
                 yield rev
 
-class Revisions(Collection):
 
+class Revisions(Collection):
     def get(self, rev_id, include_page=False):
         """
         Gets a single revisions by ID.  Checks the ``revision`` table.   This
@@ -216,9 +216,7 @@ class Revisions(Collection):
             query += " AND rev_id > ? "
             values.append(after_id)
 
-
         if direction != None:
-
             direction = ("ASC " if direction == "newer" else "DESC ")
             query += " ORDER BY rev_timestamp {0}, rev_id {0}".format(direction)
 
@@ -236,9 +234,7 @@ class Revisions(Collection):
         logger.debug("%s revisions read in %s seconds" % (count, time.time() - start_time))
 
 
-
 class Archives(Collection):
-
     def get(self, rev_id):
         """
         Gets a single revisions by ID.  Checks the ``archive`` table. This
@@ -252,7 +248,6 @@ class Archives(Collection):
             A revision row
         """
         rev_id = int(rev_id)
-
 
         query = """
             SELECT

@@ -2,6 +2,7 @@ from nose.tools import eq_
 
 from ..detector import Detector
 
+
 def test_detector():
     detector = Detector(2)
 

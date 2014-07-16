@@ -4,8 +4,8 @@ from ....types import Namespace
 
 from ..parser import Parser
 
-def test_simple():
 
+def test_simple():
     parser = Parser(
         [
             Namespace(0, "", case="first-letter"),
@@ -18,8 +18,8 @@ def test_simple():
     eq_((1, "Foo_bar"), parser.parse("Discuss\u00e3o:Foo bar"))
     eq_((0, "Herpderp:Foo_bar"), parser.parse("Herpderp:Foo bar"))
 
-def test_from_site_info():
 
+def test_from_site_info():
     parser = Parser.from_site_info(
         {
             "namespaces": {

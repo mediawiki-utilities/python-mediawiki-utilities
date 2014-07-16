@@ -1,7 +1,7 @@
 from .peekable import Peekable
 
-def sequence(*iterables, by=None, compare=None):
 
+def sequence(*iterables, by=None, compare=None):
     if compare != None:
         compare = compare
     elif by != None:

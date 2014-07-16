@@ -8,6 +8,8 @@ from .functions import detect
 """
 Simple constant used in order to not do weird things with a dummy revision.
 """
+
+
 def check_row(db, rev_row, **kwargs):
     """
     Checks whether a revision (database row) was reverted (identity) and returns
@@ -27,15 +29,19 @@ def check_row(db, rev_row, **kwargs):
     """
 
     # extract rev_id, sha1, page_id
-    if 'rev_id' in rev_row: rev_id = rev_row['rev_id']
-    else: raise TypeError("rev_row must have 'rev_id'")
-    if 'page_id' in rev_row: page_id = rev_row['page_id']
-    elif 'rev_page' in rev_row: page_id = rev_row['rev_page']
-    else: raise TypeError("rev_row must have 'page_id' or 'rev_page'")
+    if 'rev_id' in rev_row:
+        rev_id = rev_row['rev_id']
+    else:
+        raise TypeError("rev_row must have 'rev_id'")
+    if 'page_id' in rev_row:
+        page_id = rev_row['page_id']
+    elif 'rev_page' in rev_row:
+        page_id = rev_row['rev_page']
+    else:
+        raise TypeError("rev_row must have 'page_id' or 'rev_page'")
 
     # run the regular check
     return check(db, rev_id, page_id=page_id, **kwargs)
-
 
 
 def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False, before=None):
@@ -68,8 +74,10 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
     before = none_or(before, Timestamp)
 
     # If we are searching the archive, we'll need to use `all_revisions`.
-    if check_archive: dbrevs = db.all_revisions
-    else: dbrevs = db.revisions
+    if check_archive:
+        dbrevs = db.all_revisions
+    else:
+        dbrevs = db.revisions
 
     # If we don't have the sha1 or page_id, we're going to need to look them up
     if page_id == None:
@@ -79,16 +87,16 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
     # Load history and current rev
     current_and_past_revs = list(dbrevs.query(
         page_id=page_id,
-        limit=radius+1,
-        before_id=rev_id+1, # Ensures that we capture the current revision
+        limit=radius + 1,
+        before_id=rev_id + 1,  # Ensures that we capture the current revision
         direction="older"
     ))
 
     try:
         # Extract current rev and reorder history
         current_rev, past_revs = (
-            current_and_past_revs[0], # Current rev is the first one returned
-            reversed(current_and_past_revs[1:]) # The rest are past revs, but they are in the wrong order
+            current_and_past_revs[0],  # Current rev is the first one returned
+            reversed(current_and_past_revs[1:])  # The rest are past revs, but they are in the wrong order
         )
     except IndexError:
         # Only way to get here is if there isn't enough history.  Couldn't be

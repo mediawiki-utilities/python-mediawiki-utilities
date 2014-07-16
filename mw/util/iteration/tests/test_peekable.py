@@ -1,10 +1,11 @@
 from nose.tools import eq_
 from ..peekable import Peekable
 
+
 def test_peekable():
-    iterable = range(0,100)
+    iterable = range(0, 100)
     iterable = Peekable(iterable)
-    expected = list(range(0,100))
+    expected = list(range(0, 100))
 
     result = []
 

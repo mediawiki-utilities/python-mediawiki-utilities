@@ -19,6 +19,7 @@ on the revision data provided during revert detection.
         The reverted-to revision data : `mixed`
 """
 
+
 class Detector(ordered.HistoricalMap):
     """
     Detects revert events in a stream of revisions (to the same page) based on
@@ -49,7 +50,7 @@ class Detector(ordered.HistoricalMap):
             radius : int
                 the maximum revision distance that a revert can span.
         """
-        super().__init__(maxlen=radius+1)
+        super().__init__(maxlen=radius + 1)
 
     def process(self, checksum, revision=None):
         """
@@ -69,11 +70,11 @@ class Detector(ordered.HistoricalMap):
         """
         revert = None
 
-        if checksum in self: #potential revert
+        if checksum in self:  # potential revert
 
             reverteds = list(self.up_to(checksum))
 
-            if len(reverteds) > 0: # If no reverted revisions, this is a noop
+            if len(reverteds) > 0:  # If no reverted revisions, this is a noop
                 revert = Revert(revision, reverteds, self[checksum])
 
         self.insert(checksum, revision)

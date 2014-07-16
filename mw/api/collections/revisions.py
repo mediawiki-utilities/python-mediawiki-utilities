@@ -6,6 +6,7 @@ from .collection import Collection
 
 logger = logging.getLogger("mw.api.collections.revisions")
 
+
 class Revisions(Collection):
     """
     A collection of revisions indexes by title, page_id and user_text.
@@ -144,11 +145,11 @@ class Revisions(Collection):
 
 
     def _query(self, revids=None, titles=None, pageids=None, properties=None,
-                     limit=None, start_id=None, end_id=None, start=None, end=None,
-                     direction=None, user=None, excludeuser=None,
-                     tag=None, expandtemplates=None, generatexml=None,
-                     parse=None, section=None, token=None, rvcontinue=None,
-                     diffto=None, difftotext=None, contentformat=None):
+               limit=None, start_id=None, end_id=None, start=None, end=None,
+               direction=None, user=None, excludeuser=None,
+               tag=None, expandtemplates=None, generatexml=None,
+               parse=None, section=None, token=None, rvcontinue=None,
+               diffto=None, difftotext=None, contentformat=None):
 
         params = {
             'action': "query",

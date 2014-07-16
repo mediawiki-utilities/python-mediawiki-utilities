@@ -1,5 +1,6 @@
 from difflib import SequenceMatcher
 
+
 def sequence_matcher(old, new):
     """
     Generates a sequence of operations using :class:`difflib.SequenceMatcher`.
@@ -16,6 +17,7 @@ def sequence_matcher(old, new):
     sm = SequenceMatcher(None, list(old), list(new))
     return sm.get_opcodes()
 
+
 def apply(ops, old, new):
     """
     Applies operations (delta) to copy items from `old` to `new`.
@@ -31,7 +33,7 @@ def apply(ops, old, new):
         An iterator over elements matching `new` but copied from `old`
     """
     for code, a_start, a_end, b_start, b_end in ops:
-        if code   == "insert":
+        if code == "insert":
             for t in new[b_start:b_end]: yield t
         elif code == "replace":
             for t in new[b_start:b_end]: yield t

@@ -1,22 +1,24 @@
 import logging
+import time
 
 from ...types import Timestamp
 from .collection import Collection
+from ...util import none_or
+
 
 logger = logging.getLogger("mw.database.collections.pages")
 
+
 class RecentChanges(Collection):
-
-     # (https://www.mediawiki.org/wiki/Manual:Recentchanges_table)
+    # (https://www.mediawiki.org/wiki/Manual:Recentchanges_table)
     TYPES = {
-        'edit': 0, # edit of existing page
-        'new': 1, # new page
-        'move': 2, # Marked as obsolete
-        'log': 3, # log action (introduced in MediaWiki 1.2)
-        'move_over_redirect': 4, # Marked as obsolete
-        'external': 5 # An external recent change. Primarily used by Wikidata
+        'edit': 0,  # edit of existing page
+        'new': 1,  # new page
+        'move': 2,  # Marked as obsolete
+        'log': 3,  # log action (introduced in MediaWiki 1.2)
+        'move_over_redirect': 4,  # Marked as obsolete
+        'external': 5  # An external recent change. Primarily used by Wikidata
     }
-
 
     def listen(self, last=None, types=None, max_wait=5):
         """
@@ -54,10 +56,8 @@ class RecentChanges(Collection):
             time.sleep(max_wait - (time.time() - start))
 
 
-
-
     def query(self, before=None, after=None, before_id=None, after_id=None,
-                    types=None, direction=None, limit=None):
+              types=None, direction=None, limit=None):
         """
         Queries the ``recentchanges`` table.  See
         `<https://www.mediawiki.org/wiki/Manual:Recentchanges_table>`_
@@ -116,7 +116,6 @@ class RecentChanges(Collection):
             query += " AND rc_type IN ({0}) ".format(
                 ",".join(self.TYPES[t] for t in types)
             )
-
 
         if direction != None:
             direction = ("ASC " if direction == "newer" else "DESC ")

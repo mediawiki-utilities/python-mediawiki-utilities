@@ -6,6 +6,7 @@ from .collection import Collection
 
 logger = logging.getLogger("mw.api.collections.user_contribs")
 
+
 class UserContribs(Collection):
     """
     A collection of revisions indexes by user.
@@ -78,7 +79,7 @@ class UserContribs(Collection):
             if limit == None:
                 kwargs['limit'] = self.MAX_REVISIONS
             else:
-                kwargs['limit'] = min(limit-revisions_yielded, self.MAX_REVISIONS)
+                kwargs['limit'] = min(limit - revisions_yielded, self.MAX_REVISIONS)
 
             uc_docs, uccontinue = self._query(*args, **kwargs)
 
@@ -97,9 +98,9 @@ class UserContribs(Collection):
 
 
     def _query(self, user=None, userprefix=None, limit=None, start=None,
-                    end=None, direction=None, namespace=None, properties=None,
-                    show=None, tag=None, toponly=None,
-                    uccontinue=None):
+               end=None, direction=None, namespace=None, properties=None,
+               show=None, tag=None, toponly=None,
+               uccontinue=None):
 
         params = {
             'action': "query",
@@ -111,7 +112,7 @@ class UserContribs(Collection):
         if uccontinue != None:
             params.update(uccontinue)
         params['ucuser'] = self._items(user, type=str)
-        params['ucuserprefix'] =  self._items(userprefix, type=str)
+        params['ucuserprefix'] = self._items(userprefix, type=str)
         params['ucdir'] = self._check_direction(direction)
         params['ucnamespace'] = none_or(namespace, int)
         params['ucprop'] = self._items(properties, levels=self.PROPERTIES)

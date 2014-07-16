@@ -2,6 +2,7 @@ from nose.tools import eq_
 
 from ..functions import reverts
 
+
 def test_reverts():
     checksum_revisions = [
         ("a", {'id': 1}),

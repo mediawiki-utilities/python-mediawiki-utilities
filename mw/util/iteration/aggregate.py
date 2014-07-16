@@ -1,9 +1,11 @@
 from .peekable import Peekable
 
-def group(it, by=lambda i:i):
+
+def group(it, by=lambda i: i):
     return aggregate(it, by)
 
-def aggregate(it, by=lambda i:i):
+
+def aggregate(it, by=lambda i: i):
     it = Peekable(it)
 
     def chunk(it, by):

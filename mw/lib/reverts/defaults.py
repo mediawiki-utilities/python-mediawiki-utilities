@@ -1,4 +1,4 @@
-RADIUS=15
+RADIUS = 15
 """
 TODO: Better documentation here.  For the time being, see:
 

@@ -4,11 +4,13 @@ from .. import reverts
 from .tokens import Tokens, Token
 from . import defaults
 
+
 class Version:
     __slots__ = ('tokens')
 
     def __init__(self):
         self.tokens = None
+
 
 class State:
     """
@@ -63,10 +65,11 @@ class State:
          [],
          [])
     """
+
     def __init__(self, tokenize=defaults.TOKENIZE, diff=defaults.DIFF,
-                       revert_radius=reverts.defaults.RADIUS,
-                       revert_detector=None):
-        self.tokenize  = tokenize
+                 revert_radius=reverts.defaults.RADIUS,
+                 revert_detector=None):
+        self.tokenize = tokenize
         self.diff = diff
 
         # Either pass a detector or the revert radius so I can make one
@@ -109,7 +112,7 @@ class State:
         version = Version()
 
         revert = self.revert_detector.process(checksum, version)
-        if revert != None: # Revert
+        if revert != None:  # Revert
 
             # Empty words.
             tokens_added = Tokens()
@@ -121,7 +124,7 @@ class State:
 
         else:
 
-            if self.last == None: # First version of the page!
+            if self.last == None:  # First version of the page!
 
                 version.tokens = Tokens(Token(t) for t in self.tokenize(text))
                 tokens_added = version.tokens
@@ -137,8 +140,6 @@ class State:
                 # produce a lot of tokens.
                 version.tokens, tokens_added, tokens_removed = \
                     self.last.tokens.compare(self.tokenize(text), self.diff)
-
-
 
         version.tokens.persist(revision)
 

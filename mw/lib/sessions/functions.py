@@ -5,6 +5,7 @@ from . import defaults
 
 logger = logging.getLogger("mw.lib.sessions.functions")
 
+
 def cluster(user_events, cutoff=defaults.CUTOFF):
     """
     Clusters user sessions from a sequence of user events.  Note that,

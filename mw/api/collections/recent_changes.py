@@ -5,7 +5,9 @@ from ...util import none_or
 from ..errors import MalformedResponse
 from .collection import Collection
 
+
 logger = logging.getLogger("mw.api.collections.recent_changes")
+
 
 class RecentChanges(Collection):
     """
@@ -119,7 +121,7 @@ class RecentChanges(Collection):
             if limit == None:
                 kwargs['limit'] = self.MAX_CHANGES
             else:
-                kwargs['limit'] = min(limit-changes_yielded, self.MAX_CHANGES)
+                kwargs['limit'] = min(limit - changes_yielded, self.MAX_CHANGES)
 
             rc_docs, rccontinue = self._query(*args, **kwargs)
 
@@ -139,13 +141,13 @@ class RecentChanges(Collection):
 
 
     def _query(self, start=None, end=None, direction=None, namespace=None,
-                     user=None, excludeuser=None, tag=None, properties=None,
-                     token=None, show=None, limit=None, type=None,
-                     toponly=None, rccontinue=None):
+               user=None, excludeuser=None, tag=None, properties=None,
+               token=None, show=None, limit=None, type=None,
+               toponly=None, rccontinue=None):
 
         params = {
             'action': "query",
-            'list':   "recentchanges"
+            'list': "recentchanges"
         }
 
         params['rcstart'] = none_or(start, str)
@@ -176,13 +178,12 @@ class RecentChanges(Collection):
                 rccontinue = doc['query-continue']['recentchanges']['rccontinue']
             elif len(rc_docs) > 0:
                 rccontinue = "|".join(rc_docs[-1]['timestamp'],
-                                      rc_docs[-1]['rcid']+1)
+                                      rc_docs[-1]['rcid'] + 1)
             else:
-                pass # Leave it be
+                pass  # Leave it be
 
         except KeyError as e:
             raise MalformedResponse(str(e), doc)
-
 
         return rc_docs, rccontinue
 

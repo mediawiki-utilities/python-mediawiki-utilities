@@ -5,10 +5,11 @@ from ...util import none_or
 from ...types import Timestamp
 from .collection import Collection
 
+
 logger = logging.getLogger("mw.database.collections.users")
 
-class Users(Collection):
 
+class Users(Collection):
     CREATION_ACTIONS = {'newusers', 'create', 'create2', 'autocreate',
                         'byemail'}
 
@@ -61,8 +62,8 @@ class Users(Collection):
         raise KeyError(user_id if user_id != None else user_name)
 
     def query(self, registered_before=None, registered_after=None,
-                    before_id=None, after_id=None, limit=None,
-                    direction=None, self_created_only=False):
+              before_id=None, after_id=None, limit=None,
+              direction=None, self_created_only=False):
         """
         Queries users based on various filtering parameters.
 
@@ -124,14 +125,13 @@ class Users(Collection):
             query += "AND user_id >= ? "
             values.append(after_id)
 
-        query += "GROUP BY user_id " # In case of duplicate log events
+        query += "GROUP BY user_id "  # In case of duplicate log events
 
         if direction != None:
             if direction == "newer":
                 query += "ORDER BY user_id ASC "
             else:
                 query += "ORDER BY user_id DESC "
-
 
         if limit != None:
             query += "LIMIT ? "

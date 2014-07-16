@@ -4,6 +4,7 @@ from .collection import Collection
 
 logger = logging.getLogger("mw.database.collections.pages")
 
+
 class Pages(Collection):
     def get(self, page_id=None, namespace_title=None, rev_id=None):
         """

@@ -5,6 +5,7 @@ from ...util import none_or
 from . import defaults
 from .functions import detect
 
+
 def check_rev(session, rev, **kwargs):
     """
     Checks whether a revision (database row) was reverted (identity) and returns
@@ -24,15 +25,19 @@ def check_rev(session, rev, **kwargs):
     """
 
     # extract rev_id, sha1, page_id
-    if 'revid' in rev: rev_id = rev['revid']
-    else: raise TypeError("rev must have 'rev_id'")
-    if 'page' in rev: page_id = rev['page']['id']
-    elif 'pageid' in rev: page_id = rev['pageid']
-    else: raise TypeError("rev must have 'page' or 'pageid'")
+    if 'revid' in rev:
+        rev_id = rev['revid']
+    else:
+        raise TypeError("rev must have 'rev_id'")
+    if 'page' in rev:
+        page_id = rev['page']['id']
+    elif 'pageid' in rev:
+        page_id = rev['pageid']
+    else:
+        raise TypeError("rev must have 'page' or 'pageid'")
 
     # run the regular check
     return check(session, rev_id, page_id=page_id, **kwargs)
-
 
 
 def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
@@ -73,8 +78,8 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
     # Load history and current rev
     current_and_past_revs = list(session.revisions.query(
         pageids={page_id},
-        limit=radius+1,
-        start_id=rev_id+1, # Ensures that we capture the current revision
+        limit=radius + 1,
+        start_id=rev_id + 1,  # Ensures that we capture the current revision
         direction="older",
         properties={'ids', 'timestamp', 'sha1'} | properties
     ))
@@ -82,8 +87,8 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
     try:
         # Extract current rev and reorder history
         current_rev, past_revs = (
-            current_and_past_revs[0], # Current rev is the first one returned
-            reversed(current_and_past_revs[1:]) # The rest are past revs, but they are in the wrong order
+            current_and_past_revs[0],  # Current rev is the first one returned
+            reversed(current_and_past_revs[1:])  # The rest are past revs, but they are in the wrong order
         )
     except IndexError:
         # Only way to get here is if there isn't enough history.  Couldn't be
