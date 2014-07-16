@@ -8,4 +8,3 @@ def test_wikitext_split():
         list(tokenization.wikitext_split("foo bar herp {{derp}}")),
         ["foo", " ", "bar", " ", "herp", " ", "{{", "derp", "}}"]
     )
-

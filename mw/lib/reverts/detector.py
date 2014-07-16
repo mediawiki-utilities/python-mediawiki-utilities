@@ -79,4 +79,3 @@ class Detector(ordered.HistoricalMap):
 
         self.insert(checksum, revision)
         return revert
-

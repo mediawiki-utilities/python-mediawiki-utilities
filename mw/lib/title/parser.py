@@ -177,6 +177,3 @@ class Parser:
             An initialized :class:`mw.lib.title.Parser`
         """
         return cls(dump.namespaces)
-
-
-

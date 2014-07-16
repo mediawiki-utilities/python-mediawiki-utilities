@@ -45,4 +45,3 @@ class MalformedResponse(APIError):
         """
         The expected, but missing key from the API call.
         """
-

@@ -80,4 +80,3 @@ class SiteInfo(Collection):
             return doc['query']
         except KeyError as e:
             raise MalformedResponse(str(e), doc)
-

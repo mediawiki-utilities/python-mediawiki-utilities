@@ -96,5 +96,3 @@ class Tokens(list):
                     "encounted an unrecognized operation code: " + repr(code)
 
         return (tokens, tokens_added, tokens_removed)
-
-

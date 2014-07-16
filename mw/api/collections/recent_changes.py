@@ -186,4 +186,3 @@ class RecentChanges(Collection):
             raise MalformedResponse(str(e), doc)
 
         return rc_docs, rccontinue
-

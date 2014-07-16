@@ -127,6 +127,3 @@ class DB:
         kwargs['default_cursor'] = oursql.DictCursor
         connection = oursql.connect(*args, **kwargs)
         return cls(connection)
-
-
-

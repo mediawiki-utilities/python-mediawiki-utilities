@@ -137,4 +137,3 @@ class DeletedRevs(Collection):
         except KeyError as e:
             print(doc)
             raise MalformedResponse(str(e), doc)
-

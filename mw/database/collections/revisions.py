@@ -387,4 +387,3 @@ class Archives(Collection):
             count += 1
 
         logger.debug("%s revisions read in %s seconds" % (count, time.time() - start_time))
-
