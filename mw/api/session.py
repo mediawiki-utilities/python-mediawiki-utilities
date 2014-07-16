@@ -48,7 +48,6 @@ class Session(api.Session):
         An instance of :class:`mw.api.DeletedRevs`.
         """
 
-
     def login(self, username, password, token=None):
         """
         Performs a login operation.  This method usually makes two requests to
@@ -90,7 +89,6 @@ class Session(api.Session):
 
         except KeyError() as e:
             raise MalformedResponse(e.message, doc)
-
 
     def request(self, type, params, **kwargs):
         params.update({'format': "json"})

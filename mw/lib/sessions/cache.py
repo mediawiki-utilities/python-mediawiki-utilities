@@ -117,6 +117,5 @@ class Cache:
             else:
                 self.recently_active.push((events[-1].timestamp, events))
 
-
     def __repr__(self):
         return "%s(%s)".format(self.__class__.__name__, repr(self.cutoff))

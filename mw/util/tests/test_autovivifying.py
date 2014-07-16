@@ -18,7 +18,6 @@ def test_word_count():
 
         lame_counts[word] += 1
 
-
     # Awesome way
     awesome_counts = autovivifying.Dict(  # Autovivifies entries with zero.
                                           vivifier=lambda k: 0  # Useful for counting.

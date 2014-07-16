@@ -279,7 +279,6 @@ class Archives(Collection):
 
         raise KeyError(rev_id)
 
-
     def query(self, page_id=None, user_id=None, user_text=None,
               before=None, after=None, before_id=None, after_id=None,
               direction=None, limit=None, include_page=True):
