@@ -36,7 +36,7 @@ class RecentChanges(Collection):
             return rccontinue
         else:
             raise TypeError(
-                "rccontinue {0} is not formatted correctly ".format(rccontinue) + \
+                "rccontinue {0} is not formatted correctly ".format(rccontinue) +
                 "'%Y-%m-%dT%H:%M:%SZ|<last_rcid>'"
             )
 

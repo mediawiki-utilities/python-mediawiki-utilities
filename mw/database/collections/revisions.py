@@ -77,14 +77,14 @@ class AllRevisions(Collection):
                 collated_revisions = iteration.sequence(
                     revisions,
                     archives,
-                    compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) <= \
+                    compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) <=
                                            (r2['rev_timestamp'], r2['rev_id'])
                 )
             else:  # direction == "older"
                 collated_revisions = iteration.sequence(
                     revisions,
                     archives,
-                    compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) >= \
+                    compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) >=
                                            (r2['rev_timestamp'], r2['rev_id'])
                 )
         else:
