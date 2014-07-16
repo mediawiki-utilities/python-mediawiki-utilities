@@ -1,5 +1,4 @@
 from nose.tools import eq_
-from itertools import chain
 
 from ..cache import Cache
 

@@ -1,6 +1,9 @@
-import oursql, os, getpass, time, logging, argparse
+import os
+import getpass
+import logging
 
-from .collections import Pages, RecentChanges, Revisions, Archives, \
+import oursql
+from .collections import Pages, Revisions, Archives, \
                          AllRevisions, Users
 
 logger = logging.getLogger("mw.database.db")

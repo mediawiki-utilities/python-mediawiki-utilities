@@ -1,8 +1,4 @@
-import requests, traceback, sys, logging, time
-from requests.exceptions import HTTPError, ConnectionError, Timeout
-from requests.exceptions import TooManyRedirects
-
-from ..util import none_or, api
+from ..util import api
 
 from .errors import MalformedResponse, AuthenticationError
 from .collections import Pages, RecentChanges, Revisions, SiteInfo, \

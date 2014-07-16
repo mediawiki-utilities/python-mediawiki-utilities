@@ -5,6 +5,7 @@ from queue import Empty
 from .processor import Processor
 from .functions import file
 
+
 logger = logging.getLogger("mw.dump.map")
 
 

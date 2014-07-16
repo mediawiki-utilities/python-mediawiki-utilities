@@ -2,7 +2,6 @@ from itertools import chain
 
 from ...types import Timestamp
 from ...util import none_or
-
 from . import defaults
 from .functions import detect
 

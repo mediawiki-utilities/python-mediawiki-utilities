@@ -1,10 +1,11 @@
-import time, logging
+import time
+import logging
 from itertools import chain
 
 from ...types import Timestamp
 from ...util import iteration, none_or
-
 from .collection import Collection
+
 
 logger = logging.getLogger("mw.database.collections.revisions")
 

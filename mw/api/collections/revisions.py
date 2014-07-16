@@ -1,9 +1,7 @@
-import re, logging, sys
+import logging
 
 from ...util import none_or
-
 from ..errors import MalformedResponse
-
 from .collection import Collection
 
 logger = logging.getLogger("mw.api.collections.revisions")

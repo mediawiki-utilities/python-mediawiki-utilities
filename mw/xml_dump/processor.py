@@ -7,6 +7,7 @@ from collections import namedtuple
 from .iteration import Iterator
 from .functions import open_file
 
+
 logger = logging.getLogger("mw.dump.processor")
 
 ErrorItem = namedtuple("ErrorItem", ['error', 'item'])

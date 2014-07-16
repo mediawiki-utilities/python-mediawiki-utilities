@@ -6,6 +6,7 @@ from ...types import Timestamp
 from . import defaults
 from .event import Event, unpack_events
 
+
 logger = logging.getLogger("mw.lib.sessions.cache")
 
 Session = namedtuple("Session", ["user", "events"])

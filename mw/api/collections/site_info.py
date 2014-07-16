@@ -1,9 +1,6 @@
-import re, logging
-
-from ...util import none_or
+import logging
 
 from ..errors import MalformedResponse
-
 from .collection import Collection
 
 logger = logging.getLogger("mw.api.collections.site_info")

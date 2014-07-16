@@ -1,4 +1,6 @@
-import requests, logging
+import logging
+
+import requests
 
 logger = logging.getLogger("mw.util.api.session")
 
