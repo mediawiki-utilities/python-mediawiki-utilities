@@ -39,7 +39,7 @@ def detect(checksum_revisions, radius=defaults.RADIUS):
 
     for checksum, revision in checksum_revisions:
         revert = revert_detector.process(checksum, revision)
-        if revert != None: yield revert
+        if revert is not None: yield revert
 
 # For backwards compatibility
 reverts = detect

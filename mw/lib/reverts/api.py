@@ -68,10 +68,10 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
     radius = int(radius)
     page_id = none_or(page_id, int)
     before = none_or(before, Timestamp)
-    properties = set(properties) if properties != None else set()
+    properties = set(properties) if properties is not None else set()
 
     # If we don't have the page_id, we're going to need to look them up
-    if page_id == None:
+    if page_id is None:
         rev = session.revisions.get(rev_id)
         page_id = row['page']['id']
 

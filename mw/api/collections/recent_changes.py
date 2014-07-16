@@ -30,7 +30,7 @@ class RecentChanges(Collection):
     MAX_CHANGES = 50
 
     def _check_rccontinue(self, rccontinue):
-        if rccontinue == None:
+        if rccontinue is None:
             return None
         elif self.RCCONTINUE.match(rccontinue):
             return rccontinue
@@ -118,7 +118,7 @@ class RecentChanges(Collection):
         done = False
         while not done:
 
-            if limit == None:
+            if limit is None:
                 kwargs['limit'] = self.MAX_CHANGES
             else:
                 kwargs['limit'] = min(limit - changes_yielded, self.MAX_CHANGES)
@@ -129,11 +129,11 @@ class RecentChanges(Collection):
                 yield doc
                 changes_yielded += 1
 
-                if limit != None and changes_yielded >= limit:
+                if limit is not None and changes_yielded >= limit:
                     done = True
                     break
 
-            if rccontinue != None and len(rc_docs) > 0:
+            if rccontinue is not None and len(rc_docs) > 0:
 
                 kwargs['rccontinue'] = rccontinue
             else:

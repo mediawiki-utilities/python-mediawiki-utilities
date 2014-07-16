@@ -194,33 +194,33 @@ class Revisions(Collection):
         """
         values = []
 
-        if page_id != None:
+        if page_id is not None:
             query += " AND rev_page = ? "
             values.append(page_id)
-        if user_id != None:
+        if user_id is not None:
             query += " AND rev_user = ? "
             values.append(user_id)
-        if user_text != None:
+        if user_text is not None:
             query += " AND rev_user_text = ? "
             values.append(user_text)
-        if before != None:
+        if before is not None:
             query += " AND rev_timestamp < ? "
             values.append(before.short_format())
-        if after != None:
+        if after is not None:
             query += " AND rev_timestamp > ? "
             values.append(after.short_format())
-        if before_id != None:
+        if before_id is not None:
             query += " AND rev_id < ? "
             values.append(before_id)
-        if after_id != None:
+        if after_id is not None:
             query += " AND rev_id > ? "
             values.append(after_id)
 
-        if direction != None:
+        if direction is not None:
             direction = ("ASC " if direction == "newer" else "DESC ")
             query += " ORDER BY rev_timestamp {0}, rev_id {0}".format(direction)
 
-        if limit != None:
+        if limit is not None:
             query += " LIMIT ? "
             values.append(limit)
 
@@ -351,32 +351,32 @@ class Archives(Collection):
         """
         values = []
 
-        if page_id != None:
+        if page_id is not None:
             query += " AND ar_page_id = ? "
             values.append(page_id)
-        if user_id != None:
+        if user_id is not None:
             query += " AND ar_user = ? "
             values.append(user_id)
-        if user_text != None:
+        if user_text is not None:
             query += " AND ar_user_text = ? "
             values.append(user_text)
-        if before != None:
+        if before is not None:
             query += " AND ar_timestamp < ? "
             values.append(before.short_format())
-        if after != None:
+        if after is not None:
             query += " AND ar_timestamp > ? "
             values.append(after.short_format())
-        if before_id != None:
+        if before_id is not None:
             query += " AND ar_rev_id < ? "
             values.append(before_id)
-        if after_id != None:
+        if after_id is not None:
             query += " AND ar_rev_id > ? "
             values.append(after_id)
 
-        if direction != None:
+        if direction is not None:
             direction = ("ASC " if direction == "newer" else "DESC ")
             query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(direction)
-        if limit != None:
+        if limit is not None:
             query += " LIMIT ? "
             values.append(limit)
 

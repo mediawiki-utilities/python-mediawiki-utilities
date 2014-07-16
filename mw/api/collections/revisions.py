@@ -123,7 +123,7 @@ class Revisions(Collection):
         revisions_yielded = 0
         done = False
         while not done:
-            if limit == None:
+            if limit is None:
                 kwargs['limit'] = self.MAX_REVISIONS
             else:
                 kwargs['limit'] = min(limit - revisions_yielded, self.MAX_REVISIONS)
@@ -134,11 +134,11 @@ class Revisions(Collection):
                 yield doc
                 revisions_yielded += 1
 
-                if limit != None and revisions_yielded >= limit:
+                if limit is not None and revisions_yielded >= limit:
                     done = True
                     break
 
-            if rvcontinue != None and len(rev_docs) > 0:
+            if rvcontinue is not None and len(rev_docs) > 0:
                 kwargs['rvcontinue'] = rvcontinue
             else:
                 done = True
@@ -210,7 +210,7 @@ class Revisions(Collection):
 
 
     def _check_diffto(self, diffto):
-        if diffto == None or diffto in self.DIFF_TO:
+        if diffto is None or diffto in self.DIFF_TO:
             return diffto
         else:
             return int(diffto)

@@ -64,7 +64,7 @@ class DB:
         Adds the arguments to an :class:`argparse.ArgumentParser` in order to
         create a database connection.
         """
-        defaults = defaults if defaults != None else defaults
+        defaults = defaults if defaults is not None else defaults
 
         default_host = defaults.get('host', "localhost")
         parser.add_argument(

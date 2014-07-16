@@ -10,7 +10,7 @@ class Token:
         The text of the token.
         """
 
-        self.revisions = revisions if revisions != None else []
+        self.revisions = revisions if revisions is not None else []
         """
         The meta data for the revisions that the token has appeared within.
         """

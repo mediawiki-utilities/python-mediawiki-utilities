@@ -79,7 +79,7 @@ class DeletedRevs(Collection):
                 revisions_yielded += 1
                 if revisions_yielded >= limit: break
 
-            if drcontinue != None and len(rev_docs) > 0:
+            if drcontinue is not None and len(rev_docs) > 0:
                 kwargs['drcontinue'] = drcontinue
             else:
                 done = True

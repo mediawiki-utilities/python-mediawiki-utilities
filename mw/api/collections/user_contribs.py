@@ -76,7 +76,7 @@ class UserContribs(Collection):
         done = False
         while not done:
 
-            if limit == None:
+            if limit is None:
                 kwargs['limit'] = self.MAX_REVISIONS
             else:
                 kwargs['limit'] = min(limit - revisions_yielded, self.MAX_REVISIONS)
@@ -87,11 +87,11 @@ class UserContribs(Collection):
                 yield doc
                 revisions_yielded += 1
 
-                if limit != None and revisions_yielded >= limit:
+                if limit is not None and revisions_yielded >= limit:
                     done = True
                     break
 
-            if uccontinue == None or len(uc_docs) == 0:
+            if uccontinue is None or len(uc_docs) == 0:
                 done = True
             else:
                 kwargs['uccontinue'] = uccontinue
@@ -109,7 +109,7 @@ class UserContribs(Collection):
         params['uclimit'] = none_or(limit, int)
         params['ucstart'] = self._check_timestamp(start)
         params['ucend'] = self._check_timestamp(end)
-        if uccontinue != None:
+        if uccontinue is not None:
             params.update(uccontinue)
         params['ucuser'] = self._items(user, type=str)
         params['ucuserprefix'] = self._items(userprefix, type=str)
