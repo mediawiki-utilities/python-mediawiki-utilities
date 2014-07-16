@@ -55,7 +55,6 @@ class RecentChanges(Collection):
 
             time.sleep(max_wait - (time.time() - start))
 
-
     def query(self, before=None, after=None, before_id=None, after_id=None,
               types=None, direction=None, limit=None):
         """

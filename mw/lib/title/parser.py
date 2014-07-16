@@ -89,7 +89,6 @@ class Parser:
         if namespace.canonical is not None:
             self.names[namespace.canonical] = namespace
 
-
     def contains_name(self, name):
         return normalize(name) in self.names
 

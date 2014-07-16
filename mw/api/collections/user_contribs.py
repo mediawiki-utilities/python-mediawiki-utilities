@@ -96,7 +96,6 @@ class UserContribs(Collection):
             else:
                 kwargs['uccontinue'] = uccontinue
 
-
     def _query(self, user=None, userprefix=None, limit=None, start=None,
                end=None, direction=None, namespace=None, properties=None,
                show=None, tag=None, toponly=None,

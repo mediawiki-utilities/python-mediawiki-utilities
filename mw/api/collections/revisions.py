@@ -143,7 +143,6 @@ class Revisions(Collection):
             else:
                 done = True
 
-
     def _query(self, revids=None, titles=None, pageids=None, properties=None,
                limit=None, start_id=None, end_id=None, start=None, end=None,
                direction=None, user=None, excludeuser=None,
@@ -208,7 +207,6 @@ class Revisions(Collection):
 
         except KeyError as e:
             raise MalformedResponse(str(e), doc)
-
 
     def _check_diffto(self, diffto):
         if diffto is None or diffto in self.DIFF_TO:

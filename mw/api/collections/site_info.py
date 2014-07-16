@@ -20,7 +20,6 @@ class SiteInfo(Collection):
 
     FILTERIW = {'local', '!local'}
 
-
     def query(self, properties=None, filteriw=None, showalldb=None,
               numberinggroup=None, inlanguagecode=None):
         """

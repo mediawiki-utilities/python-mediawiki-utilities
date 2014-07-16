@@ -139,7 +139,6 @@ class RecentChanges(Collection):
             else:
                 done = True
 
-
     def _query(self, start=None, end=None, direction=None, namespace=None,
                user=None, excludeuser=None, tag=None, properties=None,
                token=None, show=None, limit=None, type=None,
