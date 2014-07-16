@@ -5,9 +5,9 @@ Prints the rev_id, characters and hash of all revisions to User:EpochFail.
 from mw import database
 
 db = database.DB.from_params(
-    host = "s1-analytics-slave.eqiad.wmnet", 
-    read_default_file = "~/.my.cnf", 
-    user = "research", 
+    host = "s1-analytics-slave.eqiad.wmnet",
+    read_default_file = "~/.my.cnf",
+    user = "research",
     db = "enwiki"
 )
 

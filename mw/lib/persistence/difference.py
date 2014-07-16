@@ -3,13 +3,13 @@ from difflib import SequenceMatcher
 def sequence_matcher(old, new):
     """
     Generates a sequence of operations using :class:`difflib.SequenceMatcher`.
-    
+
     :Parameters:
         old : list( `hashable` )
-            Old tokens 
+            Old tokens
         new : list( `hashable` )
-            New tokens 
-    
+            New tokens
+
     Returns:
         Minimal operations needed to convert `old` to `new`
     """
@@ -18,15 +18,15 @@ def sequence_matcher(old, new):
 
 def apply(ops, old, new):
     """
-    Applies operations (delta) to copy items from `old` to `new`. 
-    
+    Applies operations (delta) to copy items from `old` to `new`.
+
     :Parameters:
         ops : list((op, a1, a2, b1, b2))
             Operations to perform
         old : list( `hashable` )
-            Old tokens 
+            Old tokens
         new : list( `hashable` )
-            New tokens 
+            New tokens
     :Returns:
         An iterator over elements matching `new` but copied from `old`
     """

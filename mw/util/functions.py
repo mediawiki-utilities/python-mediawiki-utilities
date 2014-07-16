@@ -5,17 +5,17 @@ def none_or(val, func=None, levels=None):
         if levels != None:
             if val not in set(levels):
                 raise KeyError(val)
-            
+
             return val
         else:
             return func(val)
-        
-    
+
+
 def try_keys(dictionary, keys):
     attempted_keys = []
     for key in keys:
-        if key in dictionary: 
+        if key in dictionary:
             return dictionary[key]
         attempted_keys.append(key)
-        
+
     raise KeyError("|".join(str(k) for k in attempted_keys))

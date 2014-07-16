@@ -8,7 +8,7 @@ logger = logging.getLogger("mw.lib.sessions.event")
 
 #class Event:
 #   __slots__ = ('user', 'timestamp', 'data')
-#   
+#
 #   def __init__(self, user, timestamp, data=None):
 #       self.user = user
 #       self.timestamp = Timestamp(timestamp)
