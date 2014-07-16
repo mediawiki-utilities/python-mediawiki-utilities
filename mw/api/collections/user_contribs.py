@@ -12,19 +12,19 @@ class UserContribs(Collection):
     """
     A collection of revisions indexes by user.
     """
-    
-    PROPERTIES = {'ids', 'title', 'timestamp', 'comment', 'parsedcomment', 
+
+    PROPERTIES = {'ids', 'title', 'timestamp', 'comment', 'parsedcomment',
                   'size', 'sizediff', 'flags', 'patrolled', 'tags'}
-    
+
     SHOW = {'minor', '!minor', 'patrolled', '!patrolled'}
-    
+
     MAX_REVISIONS = 50
-    
+
     def query(self, *args, limit=None, **kwargs):
         """
         Get a user's revisions.
         See `<https://www.mediawiki.org/wiki/API:Usercontribs>`_
-        
+
         :Parameters:
             limit : int
                 The maximum number of contributions to return.
@@ -40,9 +40,9 @@ class UserContribs(Collection):
                 "newer" or "older"
             namespace : int
                 Only list contributions in these namespaces
-            properties : 
+            properties :
                 Include additional pieces of information
-                
+
                 * ids            - Adds the page ID and revision ID
                 * title          - Adds the title and namespace ID of the page
                 * timestamp      - Adds the timestamp of the edit
@@ -54,17 +54,17 @@ class UserContribs(Collection):
                 * patrolled      - Tags patrolled edits
                 * tags           - Lists tags for the edit
             show : set(str)
-                Show only items that meet thse criteria, e.g. non minor edits only: ucshow=!minor.  
+                Show only items that meet thse criteria, e.g. non minor edits only: ucshow=!minor.
                 NOTE: If ucshow=patrolled or ucshow=!patrolled is set, revisions older than
                 $wgRCMaxAge (2592000) won't be shown
-                
+
                 * minor
-                * !minor, 
-                * patrolled, 
-                * !patrolled, 
-                * top, 
-                * !top, 
-                * new, 
+                * !minor,
+                * patrolled,
+                * !patrolled,
+                * top,
+                * !top,
+                * new,
                 * !new
             tag : str
                 Only list revisions tagged with this tag
@@ -72,37 +72,37 @@ class UserContribs(Collection):
                 DEPRECATED! Only list changes which are the latest revision
         """
         limit = none_or(limit, int)
-        
+
         revisions_yielded = 0
         done = False
         while not done:
-        
+
             if limit == None:
                 kwargs['limit'] = self.MAX_REVISIONS
             else:
                 kwargs['limit'] = min(limit-revisions_yielded, self.MAX_REVISIONS)
-                
+
             uc_docs, uccontinue = self._query(*args, **kwargs)
-            
+
             for doc in uc_docs:
                 yield doc
                 revisions_yielded += 1
-                
-                if limit != None and revisions_yielded >= limit: 
+
+                if limit != None and revisions_yielded >= limit:
                     done = True
                     break
-            
-            if uccontinue == None or len(uc_docs) == 0: 
+
+            if uccontinue == None or len(uc_docs) == 0:
                 done = True
             else:
                 kwargs['uccontinue'] = uccontinue
-    
-    
-    def _query(self, user=None, userprefix=None, limit=None, start=None, 
-                    end=None, direction=None, namespace=None, properties=None, 
+
+
+    def _query(self, user=None, userprefix=None, limit=None, start=None,
+                    end=None, direction=None, namespace=None, properties=None,
                     show=None, tag=None, toponly=None,
                     uccontinue=None):
-        
+
         params = {
             'action': "query",
             'list': "usercontribs"
@@ -118,18 +118,18 @@ class UserContribs(Collection):
         params['ucnamespace'] = none_or(namespace, int)
         params['ucprop'] = self._items(properties, levels=self.PROPERTIES)
         params['ucshow'] = self._items(show, levels=self.SHOW)
-        
+
         doc = self.session.get(params)
         try:
             if 'query-continue' in doc:
                 uccontinue = doc['query-continue']['usercontribs']
             else:
                 uccontinue = None
-            
+
             uc_docs = doc['query']['usercontribs']
-            
+
             return uc_docs, uccontinue
-            
+
         except KeyError as e:
             raise MalformedResponse(str(e), doc)
 

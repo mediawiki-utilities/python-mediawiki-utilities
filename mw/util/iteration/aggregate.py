@@ -5,7 +5,7 @@ def group(it, by=lambda i:i):
 
 def aggregate(it, by=lambda i:i):
     it = Peekable(it)
-    
+
     def chunk(it, by):
         identifier = by(it.peek())
         while not it.empty():
@@ -13,7 +13,7 @@ def aggregate(it, by=lambda i:i):
                 yield next(it)
             else:
                 break
-            
+
     while not it.empty():
-        yield (by(it.peek()), chunk(it, by)) 
+        yield (by(it.peek()), chunk(it, by))
 

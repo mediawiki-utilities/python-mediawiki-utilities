@@ -2,9 +2,9 @@ import re
 
 def wikitext_split(text):
     """
-    Performs the simplest possible split of latin character-based languages 
+    Performs the simplest possible split of latin character-based languages
     and wikitext.
-    
+
     :Parameters:
         text : str
             Text to split.

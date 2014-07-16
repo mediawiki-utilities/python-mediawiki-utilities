@@ -7,21 +7,21 @@ from ...util import iteration, none_or
 from .collection import Collection
 
 logger = logging.getLogger("mw.database.collections.revisions")
-    
+
 class AllRevisions(Collection):
-    
+
     def get(self, rev_id, include_page=False):
         """
-        Gets a single revisions by ID.  Checks both the ``revision`` and 
-        ``archive`` tables.  This method throws a :class:`KeyError` if a 
+        Gets a single revisions by ID.  Checks both the ``revision`` and
+        ``archive`` tables.  This method throws a :class:`KeyError` if a
         revision cannot be found.
-        
+
         :Parameters:
             rev_id : int
                 Revision ID
             include_page : bool
                 Join revision returned against ``page``
-            
+
         :Returns:
             A revision row
         """
@@ -30,16 +30,16 @@ class AllRevisions(Collection):
             rev_row = self.db.revisions.get(rev_id, include_page=include_page)
         except KeyError as e:
             rev_row = self.db.archives.get(rev_id)
-        
+
         return rev_row
-        
+
     def query(self, *args, **kwargs):
         """
         Queries revisions (excludes revisions to deleted pages)
-        
+
         :Parameters:
             page_id : int
-                Page identifier.  Filter revisions to this page. 
+                Page identifier.  Filter revisions to this page.
             user_id : int
                 User identifier.  Filter revisions to those made by this user.
             user_text : str
@@ -59,65 +59,65 @@ class AllRevisions(Collection):
                 Limit the number of results
             include_page : bool
                 Join revisions returned against ``page``
-            
+
         :Returns:
             An iterator over revision rows.
         """
-        
+
         revisions = self.db.revisions.query(*args, **kwargs)
         archives = self.db.archives.query(*args, **kwargs)
-        
+
         if 'direction' in kwargs:
             direction = kwargs['direction']
-            if direction not in self.DIRECTIONS: 
+            if direction not in self.DIRECTIONS:
                 raise TypeError("direction must be in {0}".format(self.DIRECTIONS))
-            
+
             if direction == "newer":
                 collated_revisions = iteration.sequence(
-                    revisions, 
+                    revisions,
                     archives,
                     compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) <= \
                                    (r2['rev_timestamp'], r2['rev_id'])
                 )
             else: # direction == "older"
                 collated_revisions = iteration.sequence(
-                    revisions, 
+                    revisions,
                     archives,
                     compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) >= \
                                    (r2['rev_timestamp'], r2['rev_id'])
                 )
         else:
             collated_revisions = chain(revisions, archives)
-        
+
         if 'limit' in kwargs:
             limit = kwargs['limit']
-            
+
             for i, rev in enumerate(collated_revisions):
-                yield rev 
+                yield rev
                 if i >= limit: break
-            
+
         else:
             for rev in collated_revisions:
                 yield rev
 
 class Revisions(Collection):
-    
+
     def get(self, rev_id, include_page=False):
         """
-        Gets a single revisions by ID.  Checks the ``revision`` table.   This 
+        Gets a single revisions by ID.  Checks the ``revision`` table.   This
         method throws a :class:`KeyError` if a revision cannot be found.
-        
+
         :Parameters:
             rev_id : int
                 Revision ID
             include_page : bool
                 Join revision returned against ``page``
-            
+
         :Returns:
             A revision row
         """
         rev_id = int(rev_id)
-        
+
         query = """
             SELECT *, FALSE AS archived FROM revision
         """
@@ -125,25 +125,25 @@ class Revisions(Collection):
             query += """
                 INNER JOIN page ON page_id = rev_page
             """
-        
+
         query += " WHERE rev_id = ?"
-        
+
         cursor.execute(query, [rev_id])
-        
+
         for row in cursor:
             return row
-        
+
         raise KeyError(rev_id)
-    
-    def query(self, page_id=None, user_id=None, user_text=None, 
-              before=None, after=None, before_id=None, after_id=None, 
+
+    def query(self, page_id=None, user_id=None, user_text=None,
+              before=None, after=None, before_id=None, after_id=None,
               direction=None, limit=None, include_page=False):
         """
         Queries revisions (excludes revisions to deleted pages)
-        
+
         :Parameters:
             page_id : int
-                Page identifier.  Filter revisions to this page. 
+                Page identifier.  Filter revisions to this page.
             user_id : int
                 User identifier.  Filter revisions to those made by this user.
             user_text : str
@@ -163,12 +163,12 @@ class Revisions(Collection):
                 Limit the number of results
             include_page : bool
                 Join revisions returned against ``page``
-            
+
         :Returns:
             An iterator over revision rows.
         """
         start_time = time.time()
-        
+
         page_id = none_or(page_id, int)
         user_id = none_or(user_id, int)
         user_text = none_or(user_text, str)
@@ -178,21 +178,21 @@ class Revisions(Collection):
         after_id = none_or(after_id, int)
         direction = none_or(direction, levels=self.DIRECTIONS)
         include_page = bool(include_page)
-        
+
         query = """
             SELECT *, FALSE AS archived FROM revision
         """
-        
+
         if include_page:
             query += """
                 INNER JOIN page ON page_id = rev_page
             """
-        
+
         query += """
             WHERE 1
         """
         values = []
-        
+
         if page_id != None:
             query += " AND rev_page = ? "
             values.append(page_id)
@@ -214,45 +214,45 @@ class Revisions(Collection):
         if after_id != None:
             query += " AND rev_id > ? "
             values.append(after_id)
-        
-        
+
+
         if direction != None:
-            
+
             direction = ("ASC " if direction == "newer" else "DESC ")
             query += " ORDER BY rev_timestamp {0}, rev_id {0}".format(direction)
-        
+
         if limit != None:
             query += " LIMIT ? "
             values.append(limit)
-        
+
         cursor = self.db.shared_connection.cursor()
         cursor.execute(query, values)
         count = 0
         for row in cursor:
             yield row
             count += 1
-        
+
         logger.debug("%s revisions read in %s seconds" % (count, time.time() - start_time))
-    
+
 
 
 class Archives(Collection):
-    
+
     def get(self, rev_id):
         """
-        Gets a single revisions by ID.  Checks the ``archive`` table. This 
+        Gets a single revisions by ID.  Checks the ``archive`` table. This
         method throws a :class:`KeyError` if a revision cannot be found.
-        
+
         :Parameters:
             rev_id : int
                 Revision ID
-            
+
         :Returns:
             A revision row
         """
         rev_id = int(rev_id)
-        
-        
+
+
         query = """
             SELECT
                 ar_id,
@@ -275,23 +275,23 @@ class Archives(Collection):
             FROM archive
             WHERE ar_rev_id = ?
         """
-        
+
         cursor.execute(query, [rev_id])
         for row in cursor:
             return row
-        
+
         raise KeyError(rev_id)
-        
-    
+
+
     def query(self, page_id=None, user_id=None, user_text=None,
-              before=None, after=None, before_id=None, after_id=None, 
+              before=None, after=None, before_id=None, after_id=None,
               direction=None, limit=None, include_page=True):
         """
         Queries archived revisions (revisions of deleted pages)
-        
+
         :Parameters:
             page_id : int
-                Page identifier.  Filter revisions to this page. 
+                Page identifier.  Filter revisions to this page.
             user_id : int
                 User identifier.  Filter revisions to those made by this user.
             user_text : str
@@ -310,11 +310,11 @@ class Archives(Collection):
             limit : int
                 Limit the number of results
             include_page : bool
-                This field is ignored.  It's only here for compatibility with 
+                This field is ignored.  It's only here for compatibility with
                 :class:`mw.database.Revision`.
-        
+
         :Returns:
-            An iterator over revision rows. 
+            An iterator over revision rows.
         """
         page_id = none_or(page_id, int)
         user_id = none_or(user_id, int)
@@ -324,10 +324,10 @@ class Archives(Collection):
         after_id = none_or(after_id, int)
         direction = none_or(direction, levels=self.DIRECTIONS)
         limit = none_or(limit, int)
-        
+
         start_time = time.time()
         cursor = self.db.shared_connection.cursor()
-        
+
         query = """
             SELECT
                 ar_id,
@@ -349,12 +349,12 @@ class Archives(Collection):
                 TRUE AS archived
             FROM archive
         """
-        
+
         query += """
             WHERE 1
         """
         values = []
-        
+
         if page_id != None:
             query += " AND ar_page_id = ? "
             values.append(page_id)
@@ -376,19 +376,19 @@ class Archives(Collection):
         if after_id != None:
             query += " AND ar_rev_id > ? "
             values.append(after_id)
-        
+
         if direction != None:
             direction = ("ASC " if direction == "newer" else "DESC ")
             query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(direction)
         if limit != None:
             query += " LIMIT ? "
             values.append(limit)
-        
+
         cursor.execute(query, values)
         count = 0
         for row in cursor:
             yield row
             count += 1
-        
+
         logger.debug("%s revisions read in %s seconds" % (count, time.time() - start_time))
-    
+

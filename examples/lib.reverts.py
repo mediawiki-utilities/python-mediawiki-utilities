@@ -5,7 +5,7 @@ from mw.lib import reverts
 # Gather a page's revisions from the API
 api_session = Session("https://en.wikipedia.org/w/api.php")
 revs = api_session.revisions.query(
-    titles={"User:EpochFail"}, 
+    titles={"User:EpochFail"},
     properties={'ids', 'sha1'},
     direction="newer"
 )

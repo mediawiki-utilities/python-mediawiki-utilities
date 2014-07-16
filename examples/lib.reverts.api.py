@@ -7,7 +7,7 @@ revisions = session.user_contribs.query(user={"PermaNoob"}, direction="newer")
 
 for rev in revisions:
     revert = reverts.api.check_rev(session, rev)
-    if revert != None: 
+    if revert != None:
         print("{0} reverted {1} to {2}".format(
                 revert.reverting['revid'],
                 rev['revid'],

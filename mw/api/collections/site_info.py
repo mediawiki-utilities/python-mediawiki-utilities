@@ -12,27 +12,27 @@ class SiteInfo(Collection):
     """
     General information about the site.
     """
-    
-    PROPERTIES = {'general', 'namespaces', 'namespacealiases', 
-                  'specialpagealiases', 'magicwords', 'interwikimap', 
-                  'dbrepllag', 'statistics', 'usergroups', 'extensions', 
-                  'fileextensions', 'rightsinfo', 'languages', 'skins', 
-                  'extensiontags', 'functionhooks', 'showhooks', 
+
+    PROPERTIES = {'general', 'namespaces', 'namespacealiases',
+                  'specialpagealiases', 'magicwords', 'interwikimap',
+                  'dbrepllag', 'statistics', 'usergroups', 'extensions',
+                  'fileextensions', 'rightsinfo', 'languages', 'skins',
+                  'extensiontags', 'functionhooks', 'showhooks',
                   'variables', 'protocols'}
-    
+
     FILTERIW = {'local', '!local'}
-    
-    
-    def query(self, properties=None, filteriw=None, showalldb=None, 
+
+
+    def query(self, properties=None, filteriw=None, showalldb=None,
                    numberinggroup=None, inlanguagecode=None):
         """
         General information about the site.
         See `<https://www.mediawiki.org/wiki/API:Meta#siteinfo_.2F_si>`_
-    
+
         :Parameters:
             properties: set(str)
                 Which sysinfo properties to get:
-                
+
                 * general               - Overall system information
                 * namespaces            - List of registered namespaces and their canonical names
                 * namespacealiases      - List of registered namespace aliases
@@ -63,9 +63,9 @@ class SiteInfo(Collection):
             inlanguagecode : bool
                 Language code for localised language names (best effort, use CLDR extension)
   """
-        
+
         siprop = self._items(properties, levels=self.PROPERTIES)
-        
+
         doc = self.session.get(
             {
                 'action': "query",
@@ -77,9 +77,9 @@ class SiteInfo(Collection):
                 'siinlanguagecode': inlanguagecode
             }
         )
-        
+
         try:
             return doc['query']
         except KeyError as e:
             raise MalformedResponse(str(e), doc)
-            
+

@@ -1,5 +1,5 @@
 from nose.tools import eq_
-from itertools import chain 
+from itertools import chain
 
 
 from .. import defaults
@@ -34,16 +34,16 @@ def test_group_events():
     events = []
     events.extend(chain(*EVENTS['foo']))
     events.extend(chain(*EVENTS['bar']))
-    
+
     events.sort()
-    
+
     user_sessions = sessions(events)
-    
+
     counts = {
         'foo': 0,
         'bar': 0
     }
-    
+
     for user, session in user_sessions:
         eq_(list(e[2] for e in EVENTS[user][counts[user]]), list(session))
         counts[user] += 1
