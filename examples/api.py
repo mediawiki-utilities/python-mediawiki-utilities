@@ -1,4 +1,7 @@
-import sys,os;sys.path.insert(0, os.path.abspath(os.getcwd()))
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.getcwd()))
 """
 Prints the rev_id of all revisions to User:EpochFail.
 """

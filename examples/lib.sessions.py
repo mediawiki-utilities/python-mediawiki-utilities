@@ -1,6 +1,6 @@
-import sys,os;sys.path.insert(0, os.path.abspath(os.getcwd()))
 from mw.api import Session
 from mw.lib import sessions
+
 
 # Gather a user's revisions from the API
 api_session = Session("https://en.wikipedia.org/w/api.php")

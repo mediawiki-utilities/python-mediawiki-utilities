@@ -1,8 +1,12 @@
-import sys,os;sys.path.insert(0, os.path.abspath(os.getcwd()))
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.getcwd()))
 """
 Prints the rev_id, characters and hash of all revisions to Willy_on_Wheels.
 """
-import getpass, hashlib
+import getpass
+import hashlib
 from mw import api
 
 api_session = api.Session("https://en.wikipedia.org/w/api.php")
