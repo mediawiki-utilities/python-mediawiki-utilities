@@ -1,6 +1,6 @@
 from ..util import api
 
-from .errors import MalformedResponse, AuthenticationError
+from .errors import MalformedResponse, AuthenticationError, APIError
 from .collections import Pages, RecentChanges, Revisions, SiteInfo, \
     UserContribs, DeletedRevs
 

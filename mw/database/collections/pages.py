@@ -1,6 +1,7 @@
 import logging
 
 from .collection import Collection
+from ..util import none_or
 
 logger = logging.getLogger("mw.database.collections.pages")
 
