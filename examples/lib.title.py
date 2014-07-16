@@ -1,4 +1,7 @@
-import sys,os;sys.path.insert(0, os.path.abspath(os.getcwd()))
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.getcwd()))
 """
 Demonstrates title normalization and parsing.
 """
@@ -20,5 +23,3 @@ parser.parse("user:epochFail")
 # Handles namespace aliases
 parser.parse("WT:foobar")
 # > 5, "Foobar"
-
-
