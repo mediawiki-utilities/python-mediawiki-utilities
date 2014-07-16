@@ -2,8 +2,8 @@ from nose.tools import eq_
 
 from ..state import State
 
-def test_state():
 
+def test_state():
     contents_revisions = [
         ("Apples are red.", 0),
         ("Apples are blue.", 1),

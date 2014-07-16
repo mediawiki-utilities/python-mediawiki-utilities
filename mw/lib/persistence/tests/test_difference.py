@@ -2,8 +2,8 @@ from nose.tools import eq_
 
 from .. import difference
 
-def test_sequence_matcher():
 
+def test_sequence_matcher():
     t1 = "foobar derp hepl derpl"
     t2 = "fooasldal 3 hepl asl a derpl"
 

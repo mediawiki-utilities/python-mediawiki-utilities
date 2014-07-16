@@ -4,9 +4,11 @@ import logging
 
 import oursql
 from .collections import Pages, Revisions, Archives, \
-                         AllRevisions, Users
+    AllRevisions, Users
+
 
 logger = logging.getLogger("mw.database.db")
+
 
 class DB:
     """
@@ -16,6 +18,7 @@ class DB:
         connection = :class:`oursql.Connection`
             A connection to a MediaWiki database
     """
+
     def __init__(self, connection):
         self.shared_connection = connection
 
@@ -49,7 +52,7 @@ class DB:
             self.__class__.__name__,
             ", ".join(
                 [repr(arg) for arg in self.args] +
-                ["%s=%r" % (k,v) for k,v in self.kwargs.items()]
+                ["%s=%r" % (k, v) for k, v in self.kwargs.items()]
             )
         )
 

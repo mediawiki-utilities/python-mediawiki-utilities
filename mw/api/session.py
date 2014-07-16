@@ -2,7 +2,7 @@ from ..util import api
 
 from .errors import MalformedResponse, AuthenticationError
 from .collections import Pages, RecentChanges, Revisions, SiteInfo, \
-                         UserContribs, DeletedRevs
+    UserContribs, DeletedRevs
 
 
 class Session(api.Session):
@@ -66,16 +66,14 @@ class Session(api.Session):
             The response in a json :py:class:`dict`
         """
 
-
         doc = self.post(
             {
                 'action': "login",
                 'lgname': username,
                 'lgpassword': password,
-                'lgtoken': token, # If None, we'll be getting a token
+                'lgtoken': token,  # If None, we'll be getting a token
             }
         )
-
 
         try:
             if doc['login']['result'] == "Success":

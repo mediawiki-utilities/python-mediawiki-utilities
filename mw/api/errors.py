@@ -1,5 +1,4 @@
 class DocError(Exception):
-
     def __init__(self, message, doc):
         super().__init__(message)
 
@@ -8,8 +7,8 @@ class DocError(Exception):
         The document returned by the API that brought about this error.
         """
 
-class APIError(DocError):
 
+class APIError(DocError):
     def __init__(self, doc):
         code = doc['error'].get('code')
         message = doc['error'].get('message')
@@ -28,7 +27,6 @@ class APIError(DocError):
 
 
 class AuthenticationError(APIError):
-
     def __init__(self, doc):
         result = doc['login']['result']
         super().__init__(result, doc)
@@ -38,8 +36,8 @@ class AuthenticationError(APIError):
         The result code of an authentication attempt.
         """
 
-class MalformedResponse(APIError):
 
+class MalformedResponse(APIError):
     def __init__(self, key, doc):
         super().__init__(key, doc)
 

@@ -1,4 +1,4 @@
-CUTOFF = 60*60
+CUTOFF = 60 * 60
 """
 TODO: Better documentation here.
 For the time being, see

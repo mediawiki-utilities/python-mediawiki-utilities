@@ -1,4 +1,3 @@
-
 class Token:
     """
     Represents a chunk of text and the revisions of a page that it survived.
@@ -73,7 +72,7 @@ class Tokens(list):
         tokens_removed = cls()
 
         for code, a_start, a_end, b_start, b_end in ops:
-            if code   == "insert":
+            if code == "insert":
                 for token_text in new[b_start:b_end]:
                     token = Token(token_text)
                     tokens.append(token)
@@ -95,7 +94,6 @@ class Tokens(list):
             else:
                 assert False, \
                     "encounted an unrecognized operation code: " + repr(code)
-
 
         return (tokens, tokens_added, tokens_removed)
 

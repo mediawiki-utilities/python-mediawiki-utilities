@@ -139,7 +139,6 @@ def test_map_error():
 
 
 def test_map_error_handler():
-
     f = io.StringIO(SAMPLE_XML)
 
     def process_dump(dump, path, handle_error=lambda exp, stack: None):

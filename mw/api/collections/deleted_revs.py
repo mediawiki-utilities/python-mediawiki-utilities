@@ -5,11 +5,11 @@ from ...util import none_or
 from ..errors import MalformedResponse
 from .collection import Collection
 
+
 logger = logging.getLogger("mw.api.collections.deletedrevs")
 
+
 class DeletedRevs(Collection):
-
-
     PROPERTIES = {'revid', 'parentid', 'user', 'userid', 'comment',
                   'parsedcomment', 'minor', 'len', 'sha1', 'content', 'token',
                   'tags'}
@@ -86,10 +86,10 @@ class DeletedRevs(Collection):
 
 
     def _query(self, titles=None,
-                     start=None, end=None, from_title=None, to_title=None,
-                     prefix=None, drcontinue=None, unique=None, tag=None,
-                     user=None, excludeuser=None, namespace=None, limit=None,
-                     properties=None, direction=None):
+               start=None, end=None, from_title=None, to_title=None,
+               prefix=None, drcontinue=None, unique=None, tag=None,
+               user=None, excludeuser=None, namespace=None, limit=None,
+               properties=None, direction=None):
 
         params = {
             'action': "query",

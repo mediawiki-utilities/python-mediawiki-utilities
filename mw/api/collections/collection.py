@@ -1,5 +1,6 @@
 import re
 
+
 class Collection:
     """
     Represents a collection of items that can be queried via the API.  This is
@@ -50,7 +51,7 @@ class Collection:
 
             return timestamp
 
-    def _items(self, items, none=True, levels=None, type=lambda val:val):
+    def _items(self, items, none=True, levels=None, type=lambda val: val):
 
         if none and items == None:
             return None
@@ -63,6 +64,5 @@ class Collection:
                 assert len(items - levels) == 0, \
                     "items {0} not in levels {1}".format(
                         items - levels, levels)
-
 
             return "|".join(items)

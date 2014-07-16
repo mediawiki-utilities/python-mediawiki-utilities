@@ -13,8 +13,8 @@ EVENTS = {
             ("foo", 1234567894, 3)
         ],
         [
-            ("foo", 1234567894+defaults.CUTOFF, 4),
-            ("foo", 1234567897+defaults.CUTOFF, 5)
+            ("foo", 1234567894 + defaults.CUTOFF, 4),
+            ("foo", 1234567897 + defaults.CUTOFF, 5)
         ]
     ],
     "bar": [
@@ -24,11 +24,12 @@ EVENTS = {
             ("bar", 1234567893, 8)
         ],
         [
-            ("bar", 1234567895+defaults.CUTOFF, 9),
-            ("bar", 1234567898+defaults.CUTOFF, 0)
+            ("bar", 1234567895 + defaults.CUTOFF, 9),
+            ("bar", 1234567898 + defaults.CUTOFF, 0)
         ]
     ]
 }
+
 
 def test_group_events():
     events = []

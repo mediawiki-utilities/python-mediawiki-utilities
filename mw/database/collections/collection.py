@@ -1,5 +1,4 @@
 class Collection:
-
     DIRECTIONS = {'newer', 'older'}
 
     def __init__(self, db):

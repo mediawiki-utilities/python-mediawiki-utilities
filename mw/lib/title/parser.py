@@ -1,4 +1,3 @@
-
 from ...types import Namespace
 from ...util import autovivifying, none_or
 
@@ -39,7 +38,7 @@ class Parser:
     def __init__(self, namespaces=None):
         namespaces = none_or(namespaces, set)
 
-        self.ids   = {}
+        self.ids = {}
         self.names = {}
 
         if namespaces != None:
@@ -70,7 +69,6 @@ class Parser:
             else:
                 ns_id = 0
                 title = normalize(page_name)
-
 
         return ns_id, title
 
@@ -126,16 +124,14 @@ class Parser:
         :Returns:
             An initialized :class:`mw.lib.title.Parser`
         """
-        aliases = autovivifying.Dict(vivifier=lambda k:[])
+        aliases = autovivifying.Dict(vivifier=lambda k: [])
         # get aliases
         if 'namespacealiases' in si_doc:
             for alias_doc in si_doc['namespacealiases']:
                 aliases[alias_doc['id']].append(alias_doc['*'])
 
-
         namespaces = []
         for ns_doc in si_doc['namespaces'].values():
-
             namespaces.append(
                 Namespace(
                     ns_doc['id'],
@@ -145,8 +141,6 @@ class Parser:
                     case=ns_doc['case']
                 )
             )
-
-
 
         return Parser(namespaces)
 

@@ -6,8 +6,8 @@ logger = logging.getLogger("mw.util.api.session")
 
 from .functions import none_or
 
-class Session:
 
+class Session:
     def __init__(self, uri, headers=None, failure_threshold=None, wait_step=2):
         if uri == None: raise TypeError("uri must not be None")
 
@@ -21,7 +21,7 @@ class Session:
         self.failed = 0
 
     def __sleep(self):
-        time.sleep(self.failed*(self.wait_step**self.failed))
+        time.sleep(self.failed * (self.wait_step ** self.failed))
 
     def get(self, params, **kwargs):
         return self.request('GET', params, **kwargs)

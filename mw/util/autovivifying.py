@@ -1,7 +1,5 @@
-
 class Dict(dict):
-
-    def __init__(self, *args, vivifier=lambda k:None, **kwargs):
+    def __init__(self, *args, vivifier=lambda k: None, **kwargs):
         self.vivifier = vivifier
 
         dict.__init__(self, *args, **kwargs)

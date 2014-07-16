@@ -4,7 +4,7 @@ from collections import namedtuple
 logger = logging.getLogger("mw.lib.sessions.event")
 
 
-#class Event:
+# class Event:
 #   __slots__ = ('user', 'timestamp', 'data')
 #
 #   def __init__(self, user, timestamp, data=None):
@@ -13,6 +13,7 @@ logger = logging.getLogger("mw.lib.sessions.event")
 #       self.data = data
 
 Event = namedtuple("Event", ['user', 'timestamp', 'data'])
+
 
 def unpack_events(events):
     return list(e.data for e in events)

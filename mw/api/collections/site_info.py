@@ -5,6 +5,7 @@ from .collection import Collection
 
 logger = logging.getLogger("mw.api.collections.site_info")
 
+
 class SiteInfo(Collection):
     """
     General information about the site.
@@ -21,7 +22,7 @@ class SiteInfo(Collection):
 
 
     def query(self, properties=None, filteriw=None, showalldb=None,
-                   numberinggroup=None, inlanguagecode=None):
+              numberinggroup=None, inlanguagecode=None):
         """
         General information about the site.
         See `<https://www.mediawiki.org/wiki/API:Meta#siteinfo_.2F_si>`_
