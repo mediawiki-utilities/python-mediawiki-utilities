@@ -1,11 +1,10 @@
 from ...types import serializable
 from ...util import none_or
 
-from .. import errors
 from ..element_iterator import ElementIterator
 from .namespace import Namespace
 from .page import Page
-from .util import consume_tags
+from ..errors import MalformedXML
 
 
 class Iterator(serializable.Type):

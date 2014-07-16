@@ -1,4 +1,6 @@
-import logging, os, subprocess, re
+import os
+import subprocess
+import re
 
 from .errors import FileTypeError
 

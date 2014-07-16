@@ -1,6 +1,7 @@
 from ...types import serializable
 from ...util import none_or
 
+from ..errors import MalformedXML
 from .revision import Revision
 from .redirect import Redirect
 

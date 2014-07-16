@@ -1,5 +1,4 @@
 from ...types import serializable
-from ...util import none_or
 
 
 class Comment(str, serializable.Type):
