@@ -23,4 +23,3 @@ def normalize(title):
             return (title[0].upper() + title[1:]).replace(" ", "_")
         else:
             return ""
-

@@ -50,4 +50,3 @@ def test_from_site_info():
     eq_((1, "Foo"), parser.parse("Discuss\u00e3o:Foo"))
     eq_((1, "Foo_bar"), parser.parse("Discuss\u00e3o:Foo bar"))
     eq_((0, "Herpderp:Foo_bar"), parser.parse("Herpderp:Foo bar"))
-

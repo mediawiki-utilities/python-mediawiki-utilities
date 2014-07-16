@@ -146,5 +146,3 @@ class State:
         self.last = version
 
         return version.tokens, tokens_added, tokens_removed
-
-

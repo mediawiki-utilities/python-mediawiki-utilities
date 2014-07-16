@@ -20,6 +20,3 @@ def test_session_manager():
 
     user_sessions = list(cache.get_active_sessions())
     eq_(len(user_sessions), 1)
-
-
-

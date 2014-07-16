@@ -21,5 +21,3 @@ def test_reverts():
 
     for revert in reverts(checksum_revisions, radius=2):
         eq_(revert, expected.pop(0))
-
-

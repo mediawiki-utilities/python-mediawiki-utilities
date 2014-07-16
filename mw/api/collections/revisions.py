@@ -214,4 +214,3 @@ class Revisions(Collection):
             return diffto
         else:
             return int(diffto)
-

@@ -43,4 +43,3 @@ def detect(checksum_revisions, radius=defaults.RADIUS):
 
 # For backwards compatibility
 reverts = detect
-

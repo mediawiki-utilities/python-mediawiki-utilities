@@ -48,5 +48,3 @@ class Pages(Collection):
         params['undoafter'] = none_or(undoafter, int)
 
         # TODO finish this
-
-

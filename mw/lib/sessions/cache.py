@@ -120,5 +120,3 @@ class Cache:
 
     def __repr__(self):
         return "%s(%s)".format(self.__class__.__name__, repr(self.cutoff))
-
-

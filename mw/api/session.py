@@ -101,6 +101,3 @@ class Session(api.Session):
             raise APIError(doc)
 
         return doc
-
-
-

@@ -18,5 +18,3 @@ def test_peekable():
 
     result.extend(list(iterable))
     eq_(result, expected)
-
-

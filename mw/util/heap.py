@@ -20,5 +20,3 @@ class Heap(list):
 
     def poppush(self, itemp):
         return heapq.replace(self, item)
-
-

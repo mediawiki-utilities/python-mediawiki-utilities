@@ -131,4 +131,3 @@ class UserContribs(Collection):
 
         except KeyError as e:
             raise MalformedResponse(str(e), doc)
-

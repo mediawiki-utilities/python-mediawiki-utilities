@@ -18,4 +18,3 @@ def aggregate(it, by=lambda i: i):
 
     while not it.empty():
         yield (by(it.peek()), chunk(it, by))
-

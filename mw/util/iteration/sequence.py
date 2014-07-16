@@ -25,5 +25,3 @@ def sequence(*iterables, by=None, compare=None):
             done = True
         else:
             yield next(iterables[next_i])
-
-
