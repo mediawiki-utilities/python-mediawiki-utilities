@@ -56,7 +56,8 @@ class DB:
             )
         )
 
-    def __str__(self): return self.__repr__()
+    def __str__(self):
+        return self.__repr__()
 
     @classmethod
     def add_arguments(cls, parser, defaults=None):

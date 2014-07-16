@@ -95,7 +95,8 @@ class AllRevisions(Collection):
 
             for i, rev in enumerate(collated_revisions):
                 yield rev
-                if i >= limit: break
+                if i >= limit:
+                    break
 
         else:
             for rev in collated_revisions:

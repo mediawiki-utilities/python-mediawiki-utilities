@@ -77,13 +77,13 @@ class DeletedRevs(Collection):
             for doc in rev_docs:
                 yield doc
                 revisions_yielded += 1
-                if revisions_yielded >= limit: break
+                if revisions_yielded >= limit:
+                    break
 
             if drcontinue is not None and len(rev_docs) > 0:
                 kwargs['drcontinue'] = drcontinue
             else:
                 done = True
-
 
     def _query(self, titles=None,
                start=None, end=None, from_title=None, to_title=None,
