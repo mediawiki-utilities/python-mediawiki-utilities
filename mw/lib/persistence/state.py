@@ -107,7 +107,8 @@ class State:
                 processed revision
 
         """
-        if checksum is None: checksum = sha1(bytes(text, 'utf8')).hexdigest()
+        if checksum is None:
+            checksum = sha1(bytes(text, 'utf8')).hexdigest()
 
         version = Version()
 

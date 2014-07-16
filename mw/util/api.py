@@ -9,7 +9,8 @@ from .functions import none_or
 
 class Session:
     def __init__(self, uri, headers=None, failure_threshold=None, wait_step=2):
-        if uri is None: raise TypeError("uri must not be None")
+        if uri is None:
+            raise TypeError("uri must not be None")
 
         self.uri = str(uri)
         self.headers = headers if headers is not None else {}
