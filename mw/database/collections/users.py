@@ -36,13 +36,13 @@ class Users(Collection):
         """
         values = []
 
-        if user_id != None:
+        if user_id is not None:
             query += """
                 WHERE user_id = ?
             """
             values.append(user_id)
 
-        elif user_name != None:
+        elif user_name is not None:
             query += """
                 WHERE user_name = ({0})
             """.format(user_name)
@@ -59,7 +59,7 @@ class Users(Collection):
         for row in cursor:
             return row
 
-        raise KeyError(user_id if user_id != None else user_name)
+        raise KeyError(user_id if user_id is not None else user_name)
 
     def query(self, registered_before=None, registered_after=None,
               before_id=None, after_id=None, limit=None,
@@ -112,28 +112,28 @@ class Users(Collection):
 
         query += "WHERE 1 "
 
-        if registered_before != None:
+        if registered_before is not None:
             query += "AND user_registration <= ? "
             values.append(registered_before.short_format())
-        if registered_after != None:
+        if registered_after is not None:
             query += "AND user_registration >= ? "
             values.append(registered_after.short_format())
-        if before_id != None:
+        if before_id is not None:
             query += "AND user_id <= ? "
             values.append(before_id)
-        if after_id != None:
+        if after_id is not None:
             query += "AND user_id >= ? "
             values.append(after_id)
 
         query += "GROUP BY user_id "  # In case of duplicate log events
 
-        if direction != None:
+        if direction is not None:
             if direction == "newer":
                 query += "ORDER BY user_id ASC "
             else:
                 query += "ORDER BY user_id DESC "
 
-        if limit != None:
+        if limit is not None:
             query += "LIMIT ? "
             values.append(limit)
 

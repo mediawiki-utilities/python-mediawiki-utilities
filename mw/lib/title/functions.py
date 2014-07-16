@@ -16,7 +16,7 @@ def normalize(title):
         'Foo_bar'
 
     """
-    if title == None:
+    if title is None:
         return title
     else:
         if len(title) > 0:

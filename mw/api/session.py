@@ -79,7 +79,7 @@ class Session(api.Session):
             if doc['login']['result'] == "Success":
                 return doc
             elif doc['login']['result'] == "NeedToken":
-                if token != None:
+                if token is not None:
                     # Woops.  We've been here before.  Better error out.
                     raise AuthenticationError(doc)
                 else:

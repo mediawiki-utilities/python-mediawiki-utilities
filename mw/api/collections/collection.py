@@ -27,7 +27,7 @@ class Collection:
         self.session = session
 
     def _check_direction(self, direction):
-        if direction == None:
+        if direction is None:
             return direction
         else:
             direction = str(direction)
@@ -38,7 +38,7 @@ class Collection:
             return direction
 
     def _check_timestamp(self, timestamp):
-        if timestamp == None:
+        if timestamp is None:
             return timestamp
         else:
             timestamp = str(timestamp)
@@ -53,12 +53,12 @@ class Collection:
 
     def _items(self, items, none=True, levels=None, type=lambda val: val):
 
-        if none and items == None:
+        if none and items is None:
             return None
         else:
             items = {str(type(item)) for item in items}
 
-            if levels != None:
+            if levels is not None:
                 levels = {str(level) for level in levels}
 
                 assert len(items - levels) == 0, \

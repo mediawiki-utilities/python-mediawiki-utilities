@@ -33,19 +33,19 @@ class Pages(Collection):
         """
         values = []
 
-        if page_id != None:
+        if page_id is not None:
             query += """
                 WHERE page_id = ?
             """
             values.append(page_id)
 
-        if namespace_title != None:
+        if namespace_title is not None:
             namespace, title = namespace_title
 
             query += " WHERE page_namespace = ? and page_title = ? "
             values.extend([int(namespace), str(title)])
 
-        elif rev_id != None:
+        elif rev_id is not None:
             query += """
                 WHERE page_id = (SELECT rev_page FROM revision WHERE rev_id = ?)
             """

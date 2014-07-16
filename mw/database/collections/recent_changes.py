@@ -38,7 +38,7 @@ class RecentChanges(Collection):
             A never-ending iterator over change rows.
         """
         while True:
-            if last != None:
+            if last is not None:
                 after = last['rc_timestamp']
                 after_id = last['rc_id']
             else:
@@ -100,28 +100,28 @@ class RecentChanges(Collection):
         """
         values = []
 
-        if before != None:
+        if before is not None:
             query += " AND rc_timestamp < ? "
             values.append(before.short_format())
-        if after != None:
+        if after is not None:
             query += " AND rc_timestamp < ? "
             values.append(after.short_format())
-        if before_id != None:
+        if before_id is not None:
             query += " AND rc_id < ? "
             values.append(before_id)
-        if after_id != None:
+        if after_id is not None:
             query += " AND rc_id < ? "
             values.append(after_id)
-        if types != None:
+        if types is not None:
             query += " AND rc_type IN ({0}) ".format(
                 ",".join(self.TYPES[t] for t in types)
             )
 
-        if direction != None:
+        if direction is not None:
             direction = ("ASC " if direction == "newer" else "DESC ")
             query += " ORDER BY rc_timestamp {0}, rc_id {0}".format(dir)
 
-        if limit != None:
+        if limit is not None:
             query += " LIMIT ? "
             values.append(limit)
 

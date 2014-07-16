@@ -8,7 +8,7 @@ class Circle(list):
         self._size = 0
         self._pointer = 0
 
-        if iterable != None:
+        if iterable is not None:
             self.extend(iterable)
 
     def state(self):
@@ -54,7 +54,7 @@ class Circle(list):
     def extend(self, values):
         for value in values:
             expectorate = self.append(value)
-            if expectorate != None or self._size == self._maxsize:
+            if expectorate is not None or self._size == self._maxsize:
                 yield expectorate
 
 
@@ -83,7 +83,7 @@ class HistoricalMap(autovivifying.Dict):
 
         autovivifying.Dict.__getitem__(self, key).append(value)
 
-        if expectorate != None:
+        if expectorate is not None:
             old_key, old_value = expectorate
             autovivifying.Dict.__getitem__(self, old_key).pop(0)
             if len(autovivifying.Dict.__getitem__(self, old_key)) == 0:

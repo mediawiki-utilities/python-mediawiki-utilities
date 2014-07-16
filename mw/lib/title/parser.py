@@ -41,7 +41,7 @@ class Parser:
         self.ids = {}
         self.names = {}
 
-        if namespaces != None:
+        if namespaces is not None:
             for namespace in namespaces:
                 self.add_namespace(namespace)
 
@@ -86,7 +86,7 @@ class Parser:
         for alias in namespace.aliases:
             self.names[alias] = namespace
 
-        if namespace.canonical != None:
+        if namespace.canonical is not None:
             self.names[namespace.canonical] = namespace
 
 
@@ -107,7 +107,7 @@ class Parser:
         :Returns:
             A :class:`mw.Namespace`.
         """
-        if id != None:
+        if id is not None:
             return self.ids[int(id)]
         else:
             return self.names[normalize(name)]

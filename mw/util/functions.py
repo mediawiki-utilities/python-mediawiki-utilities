@@ -1,8 +1,8 @@
 def none_or(val, func=None, levels=None):
-    if val == None:
+    if val is None:
         return None
     else:
-        if levels != None:
+        if levels is not None:
             if val not in set(levels):
                 raise KeyError(val)
 

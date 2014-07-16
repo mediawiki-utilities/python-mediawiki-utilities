@@ -73,7 +73,7 @@ class State:
         self.diff = diff
 
         # Either pass a detector or the revert radius so I can make one
-        if revert_detector == None:
+        if revert_detector is None:
             self.revert_detector = reverts.Detector(int(revert_radius))
         else:
             self.revert_detector = revert_detector
@@ -107,12 +107,12 @@ class State:
                 processed revision
 
         """
-        if checksum == None: checksum = sha1(bytes(text, 'utf8')).hexdigest()
+        if checksum is None: checksum = sha1(bytes(text, 'utf8')).hexdigest()
 
         version = Version()
 
         revert = self.revert_detector.process(checksum, version)
-        if revert != None:  # Revert
+        if revert is not None:  # Revert
 
             # Empty words.
             tokens_added = Tokens()
@@ -124,7 +124,7 @@ class State:
 
         else:
 
-            if self.last == None:  # First version of the page!
+            if self.last is None:  # First version of the page!
 
                 version.tokens = Tokens(Token(t) for t in self.tokenize(text))
                 tokens_added = version.tokens
