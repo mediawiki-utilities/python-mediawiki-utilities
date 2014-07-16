@@ -1,7 +1,8 @@
 import io
-from nose.tools import eq_
 
+from nose.tools import eq_
 from ..element_iterator import EventPointer, ElementIterator
+
 
 TEST_XML = """
 <foo>

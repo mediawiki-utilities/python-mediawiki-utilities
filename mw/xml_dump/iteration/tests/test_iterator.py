@@ -1,9 +1,9 @@
 import io
+
 from nose.tools import eq_
-
 from ....types import Timestamp
-
 from ..iterator import Iterator
+
 
 SAMPLE_XML = """
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http

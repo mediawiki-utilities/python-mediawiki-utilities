@@ -1,9 +1,6 @@
 import logging
 
-from . import defaults
-from .event import Event
-from .cache import Cache, Session
-
+from .cache import Cache
 from . import defaults
 
 logger = logging.getLogger("mw.lib.sessions.functions")

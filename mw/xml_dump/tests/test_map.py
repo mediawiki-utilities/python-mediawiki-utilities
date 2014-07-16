@@ -1,7 +1,8 @@
 import io
-from nose.tools import eq_, raises
 
+from nose.tools import eq_, raises
 from ..map import map
+
 
 SAMPLE_XML = """
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/"

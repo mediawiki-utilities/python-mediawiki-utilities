@@ -1,8 +1,8 @@
-import logging, time
+import logging
+import time
 
 from ...util import none_or
 from ...types import Timestamp
-
 from .collection import Collection
 
 logger = logging.getLogger("mw.database.collections.users")

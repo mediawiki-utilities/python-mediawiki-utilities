@@ -1,9 +1,9 @@
-from nose.tools import eq_
 from itertools import chain
 
-
+from nose.tools import eq_
 from .. import defaults
 from ..functions import sessions
+
 
 EVENTS = {
     "foo": [

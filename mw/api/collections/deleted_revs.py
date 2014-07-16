@@ -1,9 +1,8 @@
-import re, logging, sys
+import logging
+import sys
 
 from ...util import none_or
-
 from ..errors import MalformedResponse
-
 from .collection import Collection
 
 logger = logging.getLogger("mw.api.collections.deletedrevs")

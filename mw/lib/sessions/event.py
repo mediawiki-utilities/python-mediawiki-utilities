@@ -1,8 +1,6 @@
 import logging
 from collections import namedtuple
 
-from ...types import Timestamp
-
 logger = logging.getLogger("mw.lib.sessions.event")
 
 

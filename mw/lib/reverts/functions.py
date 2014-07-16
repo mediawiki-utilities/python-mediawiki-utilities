@@ -1,5 +1,5 @@
 
-from .detector import Detector, Revert
+from .detector import Detector
 from . import defaults
 
 def detect(checksum_revisions, radius=defaults.RADIUS):

@@ -4,6 +4,7 @@ import calendar
 
 from . import serializable
 
+
 LONG_MW_TIME_STRING = '%Y-%m-%dT%H:%M:%SZ'
 """
 The longhand version of MediaWiki time strings.
