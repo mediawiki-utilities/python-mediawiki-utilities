@@ -1,7 +1,8 @@
 import io
-from nose.tools import eq_, raises
 
+from nose.tools import eq_, raises
 from ..map import map
+
 
 SAMPLE_XML = """
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/"
@@ -69,15 +70,15 @@ SAMPLE_XML = """
 
 def test_map():
     f = io.StringIO(SAMPLE_XML)
-    
+
     def process_dump(dump, path):
         for page in dump:
             count = 0
             for rev in page:
                 count += 1
-                
+
             yield {'page_id': page.id, 'revisions': count}
-        
+
     pages = 0
     for doc in map([f], process_dump):
         page_id = doc['page_id']
@@ -88,26 +89,24 @@ def test_map():
             eq_(revisions, 1)
         else:
             assert False
-        
+
         pages += 1
-    
+
     eq_(pages, 2)
 
 
 def test_dict_yield():
-    f = io.StringIO(SAMPLE_XML)
-
     def test_map():
         f = io.StringIO(SAMPLE_XML)
-        
+
         def process_dump(dump, path):
             for page in dump:
                 count = 0
                 for rev in page:
                     count += 1
-                    
+
                 yield {'page_id': page.id, 'revisions': count}
-            
+
         pages = 0
         for doc in map([f], process_dump):
             page_id = doc['page_id']
@@ -118,44 +117,42 @@ def test_dict_yield():
                 eq_(revisions, 1)
             else:
                 assert False
-            
+
             pages += 1
-        
+
         eq_(pages, 2)
 
 
 @raises(TypeError)
 def test_map_error():
     f = io.StringIO(SAMPLE_XML)
-    
+
     def process_dump(dump, path):
         for page in dump:
-            
-            if page.id == 2: raise TypeError("Fake error")
-        
+
+            if page.id == 2:
+                raise TypeError("Fake error")
+
     pages = 0
     for doc in map([f], process_dump):
         page_id = doc['page_id']
-    
 
 
 def test_map_error_handler():
-    
     f = io.StringIO(SAMPLE_XML)
-    
+
     def process_dump(dump, path, handle_error=lambda exp, stack: None):
-        
         for page in dump:
             count = 0
-            
+
             for rev in page:
                 count += 1
-            
+
             if count > 2:
                 raise TypeError("Fake type error.")
-            
+
             yield {'page_id': page.id, 'revisions': count}
-        
+
     pages = 0
     for doc in map([f], process_dump):
         page_id = doc['page_id']
@@ -166,7 +163,7 @@ def test_map_error_handler():
             eq_(revisions, 1)
         else:
             assert False
-        
+
         pages += 1
-    
+
     eq_(pages, 2)

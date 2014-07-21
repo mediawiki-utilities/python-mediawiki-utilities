@@ -1,5 +1,3 @@
-from difflib import SequenceMatcher
-
 from . import tokenization, difference
 
 TOKENIZE = tokenization.wikitext_split
