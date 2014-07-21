@@ -14,7 +14,7 @@ setup(
     long_description=open('README.rst').read(),
     install_requires=[
         "argparse >= 1.1",
-        "requests >= 2.0.1"
+        "requests >= 2.0.1",
         "oursql >= 0.9.4"],
     test_suite='nose.collector',
     classifiers=[
