@@ -1,10 +1,11 @@
+"""
+Demonstrates title normalization and parsing.
+"""
 import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.getcwd()))
-"""
-Demonstrates title normalization and parsing.
-"""
+
 from mw.api import Session
 from mw.lib import title
 

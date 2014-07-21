@@ -1,6 +1,8 @@
+"""
+Prints out session information for user "TextAccountForMWUtils"
+"""
 from mw.api import Session
 from mw.lib import sessions
-
 
 # Gather a user's revisions from the API
 api_session = Session("https://en.wikipedia.org/w/api.php")

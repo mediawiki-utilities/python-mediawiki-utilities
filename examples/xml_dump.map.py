@@ -1,5 +1,7 @@
+"""
+Processes two dump files.
+"""
 from mw import xml_dump
-
 
 files = ["examples/dump.xml", "examples/dump2.xml"]
 

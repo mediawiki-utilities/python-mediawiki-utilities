@@ -25,11 +25,10 @@ class APIError(DocError):
         The error message returned by the api -- if available.
         """
 
-
 class AuthenticationError(APIError):
     def __init__(self, doc):
         result = doc['login']['result']
-        super().__init__(result, doc)
+        super().__init__(doc)
 
         self.result = result
         """
@@ -39,7 +38,7 @@ class AuthenticationError(APIError):
 
 class MalformedResponse(APIError):
     def __init__(self, key, doc):
-        super().__init__(key, doc)
+        super().__init__(doc)
 
         self.key = key
         """

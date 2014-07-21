@@ -1,6 +1,9 @@
+"""
+Prints the reverting rev_id, rev_id and reverted to rev_id of all reverted
+revisions made by user with ID 9133062.
+"""
 from mw.database import DB
 from mw.lib import reverts
-
 
 db = DB.from_params(
     host="s1-analytics-slave.eqiad.wmnet",

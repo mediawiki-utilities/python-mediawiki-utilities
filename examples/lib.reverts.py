@@ -1,6 +1,8 @@
+"""
+Prints all reverted revisions of User:EpochFail.
+"""
 from mw.api import Session
 from mw.lib import reverts
-
 
 # Gather a page's revisions from the API
 api_session = Session("https://en.wikipedia.org/w/api.php")

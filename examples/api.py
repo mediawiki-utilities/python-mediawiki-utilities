@@ -1,10 +1,11 @@
+"""
+Prints the rev_id of all revisions to User:EpochFail.
+"""
 import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.getcwd()))
-"""
-Prints the rev_id of all revisions to User:EpochFail.
-"""
+
 from mw import api
 
 api_session = api.Session("https://en.wikipedia.org/w/api.php")

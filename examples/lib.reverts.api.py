@@ -1,3 +1,7 @@
+"""
+Prints the reverting rev_id, rev_id and reverted to rev_id of all reverted
+revisions made by user "PermaNoob".
+"""
 from mw.api import Session
 from mw.lib import reverts
 

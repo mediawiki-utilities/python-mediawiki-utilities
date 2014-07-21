@@ -1,5 +1,7 @@
+"""
+Demonstrates some simple Timestamp operations
+"""
 from mw import Timestamp
-
 
 # Seconds since Unix Epoch
 str(Timestamp(1234567890))
