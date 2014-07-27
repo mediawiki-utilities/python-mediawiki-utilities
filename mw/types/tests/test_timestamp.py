@@ -1,6 +1,6 @@
 from nose.tools import eq_
 
-from ..timestamp import Timestamp, LONG_MW_TIME_STRING
+from ..timestamp import LONG_MW_TIME_STRING, Timestamp
 
 
 def test_self():
@@ -30,6 +30,7 @@ def test_subtraction():
 
     eq_(t2 - t1, 1)
     eq_(t1 - t2, -1)
+    eq_(t2 - 1, t1)
 
 
 def test_strptime():

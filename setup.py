@@ -1,4 +1,5 @@
 from distutils.core import setup
+
 from setuptools import find_packages
 
 setup(
@@ -15,7 +16,7 @@ setup(
     install_requires=[
         "argparse >= 1.1",
         "requests >= 2.0.1",
-        "oursql >= 0.9.4"],
+        "oursql >= 0.9.1"],
     test_suite='nose.collector',
     classifiers=[
         "Programming Language :: Python",

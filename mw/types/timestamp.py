@@ -270,7 +270,10 @@ class Timestamp(serializable.Type):
         return int(calendar.timegm(self.__time))
 
     def __sub__(self, other):
-        return self.unix() - other.unix()
+        if isinstance(other, Timestamp):
+            return self.unix() - other.unix()
+        else:
+            return self + (other * -1)
 
     def __add__(self, seconds):
         return Timestamp(self.unix() + seconds)
