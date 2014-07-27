@@ -124,6 +124,6 @@ class RecentChanges(Collection):
             query += " LIMIT ? "
             values.append(limit)
 
-        cursor.execite(query, values)
+        cursor.execute(query, values)
         for row in cursor:
             yield row

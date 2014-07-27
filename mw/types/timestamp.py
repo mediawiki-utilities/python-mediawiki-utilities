@@ -1,9 +1,8 @@
-import time
-import datetime
 import calendar
+import datetime
+import time
 
 from . import serializable
-
 
 LONG_MW_TIME_STRING = '%Y-%m-%dT%H:%M:%SZ'
 """
@@ -294,13 +293,13 @@ class Timestamp(serializable.Type):
         except AttributeError:
             return NotImplemented
 
-    def __lte__(self, other):
+    def __le__(self, other):
         try:
             return self.__time <= other.__time
         except AttributeError:
             return NotImplemented
 
-    def __gte__(self, other):
+    def __ge__(self, other):
         try:
             return self.__time <= other.__time
         except AttributeError:

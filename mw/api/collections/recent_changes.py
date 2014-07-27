@@ -111,6 +111,8 @@ class RecentChanges(Collection):
 
             toponly : bool
                 Only list changes which are the latest revision
+            rccontinue : str
+                Use this to continue loading results from where you last left off
         """
         limit = none_or(limit, int)
 
