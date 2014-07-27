@@ -304,7 +304,7 @@ class Timestamp(serializable.Type):
 
     def __ge__(self, other):
         try:
-            return self.__time <= other.__time
+            return self.__time >= other.__time
         except AttributeError:
             return NotImplemented
 

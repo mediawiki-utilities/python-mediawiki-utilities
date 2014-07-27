@@ -22,6 +22,16 @@ def test_comparison():
 
     assert t1 < t2, "Less than comparison failed"
     assert t2 > t1, "Greater than comparison failed"
+    assert not t2 < t1, "Not less than comparison failed"
+    assert not t1 > t2, "Not greater than comparison failed"
+
+    assert t1 <= t2, "Less than or equal to comparison failed"
+    assert t1 <= t1, "Less than or equal to comparison failed"
+    assert t2 >= t1, "Greater than or equal to comparison failed"
+    assert t2 >= t2, "Greater than or equal to comparison failed"
+    assert not t2 <= t1, "Not less than or equal to comparison failed"
+    assert not t1 >= t2, "Not greater than or equal to comparison failed"
+    
 
 
 def test_subtraction():
