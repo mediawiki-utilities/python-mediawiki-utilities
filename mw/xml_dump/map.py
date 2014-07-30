@@ -1,10 +1,9 @@
 import logging
-from multiprocessing import Queue, cpu_count, Value
+from multiprocessing import cpu_count, Queue, Value
 from queue import Empty
 
-from .processor import Processor
 from .functions import file
-
+from .processor import Processor
 
 logger = logging.getLogger("mw.dump.map")
 
@@ -59,15 +58,19 @@ def map(paths, process_dump, handle_error=re_raise,
 
     def dec():
         running.value -= 1
+    
+    processors = []
 
     for i in range(0, threads):
         running.value += 1
-        Processor(
+        processor = Processor(
             pathsq,
             outputq,
             process_dump,
             callback=dec
-        ).start()
+        )
+        processor.start()
+        processors.append(processor)
 
     # output while processes are running
     while running.value > 0:
@@ -84,6 +87,9 @@ def map(paths, process_dump, handle_error=re_raise,
 
     # finish yielding output buffer
     try:
+        for processor in processors:
+            processor.join()
+        
         while True:
             error, item = outputq.get(block=False)
 

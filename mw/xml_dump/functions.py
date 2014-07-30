@@ -1,15 +1,14 @@
 import os
-import subprocess
 import re
+import subprocess
 
 from .errors import FileTypeError
-
 
 EXTENSIONS = {
     'xml': "cat",
     'gz': "zcat",
     'bz2': "bzcat",
-    '7z': "7zr e -so",
+    '7z': "7z e -so",
     'lzma': "lzcat"
 }
 """

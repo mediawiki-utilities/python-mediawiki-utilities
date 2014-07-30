@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as etree
+from xml.etree.ElementTree import ParseError
 
 from .errors import MalformedXML
 
@@ -87,6 +88,12 @@ class ElementIterator:
 
     @classmethod
     def from_file(cls, f):
-        pointer = EventPointer.from_file(f)
-        event, element = next(pointer)
-        return cls(element, pointer)
+        
+        try:
+            pointer = EventPointer.from_file(f)
+            event, element = next(pointer)
+            return cls(element, pointer)
+        except ParseError as e:
+            raise ParseError(
+                    "{0}: {1}...".format(str(e),
+                                         str(f.read(500), 'utf-8', 'replace')))
