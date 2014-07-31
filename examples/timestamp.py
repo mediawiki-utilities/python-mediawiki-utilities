@@ -1,4 +1,6 @@
-import sys,os;sys.path.insert(0, os.path.abspath(os.getcwd()))
+"""
+Demonstrates some simple Timestamp operations
+"""
 from mw import Timestamp
 
 # Seconds since Unix Epoch
@@ -23,5 +25,3 @@ Timestamp(1234567890).strftime("%Y foobar")
 
 str(Timestamp.strptime("2009 derp 10", "%Y derp %m"))
 # > '20091001000000'
-
-

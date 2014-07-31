@@ -71,7 +71,7 @@ About the author
 	aaron.halfaker@gmail.com
 :website:
 	http://halfaker.info --
-	http://en.wikipedia.org/Wiki/User:EpochFail
+	http://en.wikipedia.org/wiki/User:EpochFail
 
 
 Contributors

@@ -4,6 +4,8 @@
 mw.lib.reverts -- detecting reverts
 =============================================
 
+.. automodule:: mw.lib.reverts
+
 .. autofunction:: mw.lib.reverts.detect
 
 .. autoclass:: mw.lib.reverts.Revert
