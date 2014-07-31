@@ -220,7 +220,12 @@ class Revisions(Collection):
 		if direction != None:
 			
 			direction = ("ASC " if direction == "newer" else "DESC ")
-			query += " ORDER BY rev_timestamp {0}, rev_id {0}".format(direction)
+			
+			if before_id != None or after_id != None:
+				query += " ORDER BY rev_id {0}, rev_timestamp {0}".format(direction)
+			else:
+				query += " ORDER BY rev_timestamp {0}, rev_id {0}".format(direction)
+			
 		
 		if limit != None:
 			query += " LIMIT ? "

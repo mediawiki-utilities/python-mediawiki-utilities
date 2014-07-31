@@ -74,7 +74,7 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
 	
 	# If we don't have the sha1 or page_id, we're going to need to look them up
 	if page_id == None:
-		row = dbrevs.get(id=rev_id)
+		row = dbrevs.get(rev_id=rev_id)
 		page_id = row['rev_page']
 		
 	# Load history and current rev
