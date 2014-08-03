@@ -1,10 +1,9 @@
-import re
 import logging
+import re
 
 from ...util import none_or
 from ..errors import MalformedResponse
 from .collection import Collection
-
 
 logger = logging.getLogger("mw.api.collections.recent_changes")
 
@@ -14,8 +13,9 @@ class RecentChanges(Collection):
     Recent changes (revisions, page creations, registrations, moves, etc.)
     """
 
-    RCCONTINUE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T" +
-                            r"[0-9]{2}:[0-9]{2}:[0-9]{2}Z" +
+    RCCONTINUE = re.compile(r"([0-9]{4}-[0-9]{2}-[0-9]{2}T" +
+                            r"[0-9]{2}:[0-9]{2}:[0-9]{2}Z|" +
+                            r"[0-9]{14})" +
                             r"\|[0-9]+")
 
     PROPERTIES = {'user', 'userid', 'comment', 'timestamp', 'title',
@@ -178,8 +178,8 @@ class RecentChanges(Collection):
             if 'query-continue' in doc:
                 rccontinue = doc['query-continue']['recentchanges']['rccontinue']
             elif len(rc_docs) > 0:
-                rccontinue = "|".join(rc_docs[-1]['timestamp'],
-                                      rc_docs[-1]['rcid'] + 1)
+                rccontinue = "|".join([rc_docs[-1]['timestamp'],
+                                       rc_docs[-1]['rcid'] + 1])
             else:
                 pass  # Leave it be
 
