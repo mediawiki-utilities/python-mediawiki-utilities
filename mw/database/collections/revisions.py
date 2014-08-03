@@ -76,15 +76,17 @@ class AllRevisions(Collection):
                 collated_revisions = iteration.sequence(
                     revisions,
                     archives,
-                    compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) <=
-                                           (r2['rev_timestamp'], r2['rev_id'])
+                    compare=lambda r1, r2: \
+                            (r1['rev_timestamp'], r1['rev_id']) <=
+                            (r2['rev_timestamp'], r2['rev_id'])
                 )
             else:  # direction == "older"
                 collated_revisions = iteration.sequence(
                     revisions,
                     archives,
-                    compare=lambda r1, r2: (r1['rev_timestamp'], r1['rev_id']) >=
-                                           (r2['rev_timestamp'], r2['rev_id'])
+                    compare=lambda r1, r2: \
+                            (r1['rev_timestamp'], r1['rev_id']) >=
+                            (r2['rev_timestamp'], r2['rev_id'])
                 )
         else:
             collated_revisions = chain(revisions, archives)
@@ -238,7 +240,6 @@ class Revisions(Collection):
             count += 1
 
         logger.debug("%s revisions read in %s seconds" % (count, time.time() - start_time))
->>>>>>> 3cf0b1b243371b198ebaae91f991bb94723c548c
 
 
 class Archives(Collection):
