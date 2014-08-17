@@ -176,10 +176,11 @@ class RecentChanges(Collection):
             rc_docs = doc['query']['recentchanges']
 
             if 'query-continue' in doc:
-                rccontinue = doc['query-continue']['recentchanges']['rccontinue']
+                rccontinue = \
+                        doc['query-continue']['recentchanges']['rccontinue']
             elif len(rc_docs) > 0:
                 rccontinue = "|".join([rc_docs[-1]['timestamp'],
-                                       rc_docs[-1]['rcid'] + 1])
+                                       str(rc_docs[-1]['rcid'] + 1)])
             else:
                 pass  # Leave it be
 

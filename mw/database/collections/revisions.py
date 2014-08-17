@@ -288,6 +288,7 @@ class Archives(Collection):
 
     def query(self, page_id=None, user_id=None, user_text=None,
               before=None, after=None, before_id=None, after_id=None,
+              before_ar_id=None, after_ar_id=None,
               direction=None, limit=None, include_page=True):
         """
         Queries archived revisions (revisions of deleted pages)
@@ -379,10 +380,23 @@ class Archives(Collection):
         if after_id is not None:
             query += " AND ar_rev_id > ? "
             values.append(after_id)
+        if before_ar_id is not None:
+            query += " AND ar_id < ? "
+            values.append(before_ar_id)
+        if after_ar_id is not None:
+            query += " AND ar_id > ? "
+            values.append(after_ar_id)
 
         if direction is not None:
-            direction = ("ASC " if direction == "newer" else "DESC ")
-            query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(direction)
+            dir = ("ASC " if direction == "newer" else "DESC ")
+            
+            if before is not None or after is not None
+                query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(dir)
+            elif before_id is not None or after_id is not None:
+                query += " ORDER BY ar_rev_id {0}, ar_timestamp {0}".format(dir)
+            else:
+                query += " ORDER BY ar_id {0}".format(dir)
+        
         if limit is not None:
             query += " LIMIT ? "
             values.append(limit)
