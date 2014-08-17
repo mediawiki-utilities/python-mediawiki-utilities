@@ -1,3 +1,5 @@
+import pickle
+
 from nose.tools import eq_
 
 from ..timestamp import LONG_MW_TIME_STRING, Timestamp
@@ -75,4 +77,11 @@ def test_serialization():
     eq_(
         timestamp,
         Timestamp.deserialize(timestamp.serialize())
+    )
+
+def test_pickling():
+    timestamp = Timestamp(1234567890)
+    eq_(
+        timestamp,
+        pickle.loads(pickle.dumps(timestamp))
     )

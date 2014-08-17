@@ -313,3 +313,6 @@ class Timestamp(serializable.Type):
             return not self.__time == other.__time
         except AttributeError:
             return NotImplemented
+        
+    def __getnewargs__(self):
+        return (self.__time,)
