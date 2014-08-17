@@ -390,7 +390,7 @@ class Archives(Collection):
         if direction is not None:
             dir = ("ASC " if direction == "newer" else "DESC ")
             
-            if before is not None or after is not None
+            if before is not None or after is not None:
                 query += " ORDER BY ar_timestamp {0}, ar_rev_id {0}".format(dir)
             elif before_id is not None or after_id is not None:
                 query += " ORDER BY ar_rev_id {0}, ar_timestamp {0}".format(dir)
