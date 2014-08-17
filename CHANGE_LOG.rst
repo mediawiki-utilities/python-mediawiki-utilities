@@ -1,3 +1,8 @@
+v0.3.8
+======
+
+Adds support for spaces in XML dump filenames when using the dump mapper.
+
 v0.3.7
 ======
 
