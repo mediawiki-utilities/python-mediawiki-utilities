@@ -5,11 +5,11 @@ import subprocess
 from .errors import FileTypeError
 
 EXTENSIONS = {
-    'xml': "cat",
-    'gz': "zcat",
-    'bz2': "bzcat",
-    '7z': "7z e -so",
-    'lzma': "lzcat"
+    'xml': ["cat"],
+    'gz': ["zcat"],
+    'bz2': ["bzcat"],
+    '7z': ["7z", "e", "-so"],
+    'lzma': ["lzcat"]
 }
 """
 A map from file extension to the command to run to extract the data to standard out.
@@ -66,8 +66,7 @@ def open_file(path_or_f):
     match = EXT_RE.search(path)
     ext = match.groups()[0]
     p = subprocess.Popen(
-        "%s %s" % (EXTENSIONS[ext], path),
-        shell=True,
+        EXTENSIONS[ext] + [path],
         stdout=subprocess.PIPE,
         stderr=open(os.devnull, "w")
     )
