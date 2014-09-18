@@ -1,9 +1,7 @@
 from ..util import api
-
-from .errors import MalformedResponse, AuthenticationError, APIError
-
-from .collections import Pages, RecentChanges, Revisions, SiteInfo, \
-    UserContribs, DeletedRevs
+from .collections import (DeletedRevs, Pages, RecentChanges, Revisions,
+                          SiteInfo, UserContribs, Users)
+from .errors import APIError, AuthenticationError, MalformedResponse
 
 
 class Session(api.Session):
@@ -42,6 +40,11 @@ class Session(api.Session):
         self.user_contribs = UserContribs(self)
         """
         An instance of :class:`mw.api.UserContribs`.
+        """
+        
+        self.users = Users(self)
+        """
+        An instance of :class:`mw.api.Users`.
         """
         
         self.deleted_revs = DeletedRevs(self)

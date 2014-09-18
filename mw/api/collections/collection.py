@@ -25,7 +25,7 @@ class Collection:
                 An api session to use for post & get.
         """
         self.session = session
-
+    
     def _check_direction(self, direction):
         if direction is None:
             return direction
