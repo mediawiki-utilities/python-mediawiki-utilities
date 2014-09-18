@@ -1,3 +1,8 @@
+v0.4.0
+======
+
+Adds api.collections.users
+
 v0.3.8
 ======
 
