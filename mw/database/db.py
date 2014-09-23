@@ -1,11 +1,11 @@
-import os
 import getpass
 import logging
+import os
 
-import oursql
-from .collections import Pages, Revisions, Archives, \
-    AllRevisions, Users
+import pymysql
+import pymysql.cursors
 
+from .collections import AllRevisions, Archives, Pages, Revisions, Users
 
 logger = logging.getLogger("mw.database.db")
 
@@ -21,6 +21,7 @@ class DB:
 
     def __init__(self, connection):
         self.shared_connection = connection
+        self.shared_connection.cursorclass = pymysql.cursors.DictCursor
 
         self.revisions = Revisions(self)
         """
@@ -107,10 +108,10 @@ class DB:
             args : :class:`argparse.Namespace`
                 A collection of argument values returned by :class:`argparse.ArgumentParser`'s :meth:`parse_args()`
         """
-        connection = oursql.connect(
+        connection = pymysql.connect(
             args.host,
             args.user,
-            db=args.database,
+            database=args.database,
             read_default_file=args.defaults_file
         )
         return cls(connection)
@@ -125,6 +126,9 @@ class DB:
             args : :class:`argparse.Namespace`
                 A collection of argument values returned by :class:`argparse.ArgumentParser`'s :meth:`parse_args()`
         """
-        kwargs['default_cursor'] = oursql.DictCursor
-        connection = oursql.connect(*args, **kwargs)
+        kwargs['cursorclass'] = pymysql.cursors.DictCursor
+        if kwargs['db']:
+            kwargs['database'] = kwargs['db']
+            del kwargs['db']
+        connection = pymysql.connect(*args, **kwargs)
         return cls(connection)

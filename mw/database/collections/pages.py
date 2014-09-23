@@ -1,7 +1,7 @@
 import logging
 
-from .collection import Collection
 from ...util import none_or
+from .collection import Collection
 
 logger = logging.getLogger("mw.database.collections.pages")
 
@@ -36,19 +36,19 @@ class Pages(Collection):
 
         if page_id is not None:
             query += """
-                WHERE page_id = ?
+                WHERE page_id = %s
             """
             values.append(page_id)
 
         if namespace_title is not None:
             namespace, title = namespace_title
 
-            query += " WHERE page_namespace = ? and page_title = ? "
+            query += " WHERE page_namespace = %s and page_title = %s "
             values.extend([int(namespace), str(title)])
 
         elif rev_id is not None:
             query += """
-                WHERE page_id = (SELECT rev_page FROM revision WHERE rev_id = ?)
+                WHERE page_id = (SELECT rev_page FROM revision WHERE rev_id = %s)
             """
             values.append(rev_id)
 

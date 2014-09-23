@@ -1,15 +1,21 @@
 """
-Prints the rev_id, characters and hash of all revisions to User:EpochFail.
+
 """
-import sys
 import os
+import sys
 
-sys.path.insert(0, os.path.abspath(os.getcwd()))
+try:
+    
+    sys.path.insert(0, os.path.abspath(os.getcwd()))
+    from mw import database
+    
+except:
+    raise
 
-from mw import database
+
 
 db = database.DB.from_params(
-    host="s1-analytics-slave.eqiad.wmnet",
+    host="analytics-store.eqiad.wmnet",
     read_default_file="~/.my.cnf",
     user="research",
     db="enwiki"
@@ -17,7 +23,6 @@ db = database.DB.from_params(
 
 users = db.users.query(
     registered_after="20140101000000",
-    registered_before="20140101115959",
     direction="newer",
     limit=10
 )
