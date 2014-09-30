@@ -76,7 +76,7 @@ class AllRevisions(Collection):
                 collated_revisions = iteration.sequence(
                     revisions,
                     archives,
-                    compare=lambda r1, r2: \
+                    compare=lambda r1, r2:\
                             (r1['rev_timestamp'], r1['rev_id']) <=
                             (r2['rev_timestamp'], r2['rev_id'])
                 )
@@ -84,7 +84,7 @@ class AllRevisions(Collection):
                 collated_revisions = iteration.sequence(
                     revisions,
                     archives,
-                    compare=lambda r1, r2: \
+                    compare=lambda r1, r2:\
                             (r1['rev_timestamp'], r1['rev_id']) >=
                             (r2['rev_timestamp'], r2['rev_id'])
                 )
@@ -130,7 +130,7 @@ class Revisions(Collection):
                 INNER JOIN page ON page_id = rev_page
             """
 
-        query += " WHERE rev_id = ?"
+        query += " WHERE rev_id = %s"
 
         cursor.execute(query, [rev_id])
 
@@ -198,25 +198,25 @@ class Revisions(Collection):
         values = []
 
         if page_id is not None:
-            query += " AND rev_page = ? "
+            query += " AND rev_page = %s "
             values.append(page_id)
         if user_id is not None:
-            query += " AND rev_user = ? "
+            query += " AND rev_user = %s "
             values.append(user_id)
         if user_text is not None:
-            query += " AND rev_user_text = ? "
+            query += " AND rev_user_text = %s "
             values.append(user_text)
         if before is not None:
-            query += " AND rev_timestamp < ? "
+            query += " AND rev_timestamp < %s "
             values.append(before.short_format())
         if after is not None:
-            query += " AND rev_timestamp > ? "
+            query += " AND rev_timestamp > %s "
             values.append(after.short_format())
         if before_id is not None:
-            query += " AND rev_id < ? "
+            query += " AND rev_id < %s "
             values.append(before_id)
         if after_id is not None:
-            query += " AND rev_id > ? "
+            query += " AND rev_id > %s "
             values.append(after_id)
 
         if direction is not None:
@@ -229,7 +229,7 @@ class Revisions(Collection):
                 query += " ORDER BY rev_timestamp {0}, rev_id {0}".format(direction)
 
         if limit is not None:
-            query += " LIMIT ? "
+            query += " LIMIT %s "
             values.append(limit)
 
         cursor = self.db.shared_connection.cursor()
@@ -277,7 +277,7 @@ class Archives(Collection):
                 ar_sha1 AS rev_sha1,
                 TRUE AS archived
             FROM archive
-            WHERE ar_rev_id = ?
+            WHERE ar_rev_id = %s
         """
 
         cursor.execute(query, [rev_id])
@@ -360,25 +360,25 @@ class Archives(Collection):
         values = []
 
         if page_id is not None:
-            query += " AND ar_page_id = ? "
+            query += " AND ar_page_id = %s "
             values.append(page_id)
         if user_id is not None:
-            query += " AND ar_user = ? "
+            query += " AND ar_user = %s "
             values.append(user_id)
         if user_text is not None:
-            query += " AND ar_user_text = ? "
+            query += " AND ar_user_text = %s "
             values.append(user_text)
         if before is not None:
-            query += " AND ar_timestamp < ? "
+            query += " AND ar_timestamp < %s "
             values.append(before.short_format())
         if after is not None:
-            query += " AND ar_timestamp > ? "
+            query += " AND ar_timestamp > %s "
             values.append(after.short_format())
         if before_id is not None:
-            query += " AND ar_rev_id < ? "
+            query += " AND ar_rev_id < %s "
             values.append(before_id)
         if after_id is not None:
-            query += " AND ar_rev_id > ? "
+            query += " AND ar_rev_id > %s "
             values.append(after_id)
         if before_ar_id is not None:
             query += " AND ar_id < ? "
@@ -398,7 +398,7 @@ class Archives(Collection):
                 query += " ORDER BY ar_id {0}".format(dir)
         
         if limit is not None:
-            query += " LIMIT ? "
+            query += " LIMIT %s "
             values.append(limit)
 
         cursor.execute(query, values)

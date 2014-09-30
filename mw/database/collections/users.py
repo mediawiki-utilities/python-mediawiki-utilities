@@ -1,10 +1,9 @@
 import logging
 import time
 
-from ...util import none_or
 from ...types import Timestamp
+from ...util import none_or
 from .collection import Collection
-
 
 logger = logging.getLogger("mw.database.collections.users")
 
@@ -38,14 +37,15 @@ class Users(Collection):
 
         if user_id is not None:
             query += """
-                WHERE user_id = ?
+                WHERE user_id = %s
             """
             values.append(user_id)
 
         elif user_name is not None:
             query += """
-                WHERE user_name = ({0})
-            """.format(user_name)
+                WHERE user_name = %s
+            """
+            values.append(user_name)
 
         else:
             raise TypeError("Must specify a user identifier.")
@@ -113,28 +113,34 @@ class Users(Collection):
         query += "WHERE 1 "
 
         if registered_before is not None:
-            query += "AND user_registration <= ? "
+            query += "AND user_registration <= %s "
             values.append(registered_before.short_format())
         if registered_after is not None:
-            query += "AND user_registration >= ? "
+            query += "AND user_registration >= %s "
             values.append(registered_after.short_format())
         if before_id is not None:
-            query += "AND user_id <= ? "
+            query += "AND user_id <= %s "
             values.append(before_id)
         if after_id is not None:
-            query += "AND user_id >= ? "
+            query += "AND user_id >= %s "
             values.append(after_id)
 
         query += "GROUP BY user_id "  # In case of duplicate log events
-
+        
         if direction is not None:
-            if direction == "newer":
-                query += "ORDER BY user_id ASC "
+            if registered_before is not None or registered_after is not None:
+                if direction == "newer":
+                    query += "ORDER BY user_registration ASC "
+                else:
+                    query += "ORDER BY user_registration DESC "
             else:
-                query += "ORDER BY user_id DESC "
+                if direction == "newer":
+                    query += "ORDER BY user_id ASC "
+                else:
+                    query += "ORDER BY user_id DESC "
 
         if limit is not None:
-            query += "LIMIT ? "
+            query += "LIMIT %s "
             values.append(limit)
 
         cursor = self.db.shared_connection.cursor()

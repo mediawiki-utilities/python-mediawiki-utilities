@@ -2,9 +2,8 @@ import logging
 import time
 
 from ...types import Timestamp
-from .collection import Collection
 from ...util import none_or
-
+from .collection import Collection
 
 logger = logging.getLogger("mw.database.collections.pages")
 
@@ -100,16 +99,16 @@ class RecentChanges(Collection):
         values = []
 
         if before is not None:
-            query += " AND rc_timestamp < ? "
+            query += " AND rc_timestamp < %s "
             values.append(before.short_format())
         if after is not None:
-            query += " AND rc_timestamp < ? "
+            query += " AND rc_timestamp < %s "
             values.append(after.short_format())
         if before_id is not None:
-            query += " AND rc_id < ? "
+            query += " AND rc_id < %s "
             values.append(before_id)
         if after_id is not None:
-            query += " AND rc_id < ? "
+            query += " AND rc_id < %s "
             values.append(after_id)
         if types is not None:
             query += " AND rc_type IN ({0}) ".format(
@@ -121,7 +120,7 @@ class RecentChanges(Collection):
             query += " ORDER BY rc_timestamp {0}, rc_id {0}".format(dir)
 
         if limit is not None:
-            query += " LIMIT ? "
+            query += " LIMIT %s "
             values.append(limit)
 
         cursor.execute(query, values)

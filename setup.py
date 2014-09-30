@@ -16,7 +16,7 @@ setup(
     install_requires=[
         "argparse >= 1.1",
         "requests >= 2.0.1",
-        "oursql >= 0.9.1"],
+        "pymysql >= 0.6.2"],
     test_suite='nose.collector',
     classifiers=[
         "Programming Language :: Python",
