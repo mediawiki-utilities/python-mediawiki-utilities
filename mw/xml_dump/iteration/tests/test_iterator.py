@@ -1,6 +1,7 @@
 import io
 
 from nose.tools import eq_
+
 from ....types import Timestamp
 from ..iterator import Iterator
 
@@ -173,3 +174,68 @@ def test_serialization():
     dump = Iterator.from_file(f)
 
     eq_(dump, Iterator.deserialize(dump.serialize()))
+    
+def test_from_page_xml():
+    page_xml = """
+    <page>
+      <title>Foo</title>
+      <ns>0</ns>
+      <id>1</id>
+      <revision>
+        <id>1</id>
+        <timestamp>2004-08-09T09:04:08Z</timestamp>
+        <contributor>
+          <username>Gen0cide</username>
+          <id>92182</id>
+        </contributor>
+        <text xml:space="preserve">Revision 1 text</text>
+        <sha1>g9chqqg94myzq11c56ixvq7o1yg75n9</sha1>
+        <model>wikitext</model>
+        <format>text/x-wiki</format>
+      </revision>
+      <revision>
+        <id>2</id>
+        <timestamp>2004-08-10T09:04:08Z</timestamp>
+        <contributor>
+          <ip>222.152.210.109</ip>
+        </contributor>
+        <text xml:space="preserve">Revision 2 text</text>
+        <sha1>g9chqqg94myzq11c56ixvq7o1yg75n9</sha1>
+        <model>wikitext</model>
+        <comment>Comment 2</comment>
+        <format>text/x-wiki</format>
+      </revision>
+    </page>
+    """
+    
+    dump = Iterator.from_page_xml(page_xml)
+    
+    # You have a `namespaces`, but it's empty.
+    eq_(dump.namespaces, [])
+    
+    page = next(dump)
+    eq_(page.title, "Foo")
+    eq_(page.namespace, 0)
+    eq_(page.id, 1)
+
+    revision = next(page)
+    eq_(revision.id, 1)
+    eq_(revision.timestamp, Timestamp("2004-08-09T09:04:08Z"))
+    eq_(revision.contributor.id, 92182)
+    eq_(revision.contributor.user_text, "Gen0cide")
+    eq_(revision.text, "Revision 1 text")
+    eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
+    eq_(revision.comment, None)
+    eq_(revision.model, "wikitext")
+    eq_(revision.format, "text/x-wiki")
+
+    revision = next(page)
+    eq_(revision.id, 2)
+    eq_(revision.timestamp, Timestamp("2004-08-10T09:04:08Z"))
+    eq_(revision.contributor.id, None)
+    eq_(revision.contributor.user_text, "222.152.210.109")
+    eq_(revision.text, "Revision 2 text")
+    eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
+    eq_(revision.comment, "Comment 2")
+    eq_(revision.model, "wikitext")
+    eq_(revision.format, "text/x-wiki")

@@ -1,3 +1,5 @@
+import io
+
 from ...types import serializable
 from ...util import none_or
 from ..element_iterator import ElementIterator
@@ -26,7 +28,8 @@ class Iterator(serializable.Type):
                 print(revision.id)
 
     """
-    __slots__ = ('site_name', 'base', 'generator', 'case', 'namespaces', '__pages')
+    __slots__ = ('site_name', 'base', 'generator', 'case', 'namespaces',
+                 '__pages')
 
     def __init__(self, site_name=None, base=None, generator=None, case=None,
                  namespaces=None, pages=None):
@@ -127,7 +130,8 @@ class Iterator(serializable.Type):
         for sub_element in element:
             tag = sub_element.tag
             if tag == "siteinfo":
-                site_name, base, generator, case, namespaces = cls.load_site_info(sub_element)
+                site_name, base, generator, case, namespaces = \
+                    cls.load_site_info(sub_element)
                 break
 
         # Consume all <page>
@@ -140,3 +144,26 @@ class Iterator(serializable.Type):
         element = ElementIterator.from_file(f)
         assert element.tag == "mediawiki"
         return cls.from_element(element)
+    
+    @classmethod
+    def from_page_xml(cls, page_xml):
+        # TODO: This is shameful
+        header = """
+        <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.5/"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.5/
+                     http://www.mediawiki.org/xml/export-0.5.xsd" version="0.5"
+                   xml:lang="en">
+        <siteinfo>
+            <namespaces>
+            </namespaces>
+        </siteinfo>
+        """
+        
+        footer = "</mediawiki>"
+        
+        # TODO: This is even more shameful.  We should not be concatinating a
+        #       string into a StringIO.  We should be producing a legitimate
+        #       TextIO thingie that streams the page XML, but programmers are
+        #       lazy and RAM is cheap, so here we are.
+        return cls.from_file(io.StringIO(header + page_xml + footer))

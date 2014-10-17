@@ -1,12 +1,11 @@
 import logging
 import traceback
+from collections import namedtuple
 from multiprocessing import Process
 from queue import Empty
-from collections import namedtuple
 
-from .iteration import Iterator
 from .functions import open_file
-
+from .iteration import Iterator
 
 logger = logging.getLogger("mw.dump.processor")
 
@@ -14,7 +13,8 @@ ErrorItem = namedtuple("ErrorItem", ['error', 'item'])
 
 
 class Processor(Process):
-    def __init__(self, pathq, outputq, process_dump, callback=lambda: None, logger=logger):
+    def __init__(self, pathq, outputq, process_dump,
+                       callback=lambda: None, logger=logger):
         self.pathq = pathq
         self.outputq = outputq
         self.process_dump = process_dump
