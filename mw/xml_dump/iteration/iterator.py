@@ -8,6 +8,47 @@ from .namespace import Namespace
 from .page import Page
 
 
+class ConcatinatingTextReader(io.TextIOBase):
+    
+    def __init__(self, *items):
+        self.items = [io.StringIO(i) if isinstance(i, str) else i
+                      for i in items]
+    
+    def read(self, size=-1):
+        return "".join(self._read(size))
+    
+    def readline(self):
+        
+        if len(self.items) > 0:
+            line = self.items[0].readline()
+            if line == "": self.items.pop(0)
+        else:
+            line = ""
+        
+        return line
+    
+    def _read(self, size):
+        if size > 0:
+            while len(self.items) > 0:
+                byte_vals = self.items[0].read(size)
+                yield byte_vals
+                if len(byte_vals) < size:
+                    size = size - len(byte_vals) # Decrement bytes
+                    self.items.pop(0)
+                else:
+                    break
+        
+        else:
+            for item in self.items:
+                yield item.read()
+            
+        
+    
+
+def concat(*stream_items):
+    return ConcatinatingTextReader(*stream_items)
+
+
 class Iterator(serializable.Type):
     """
     XML Dump Iterator. Dump file meta data and a
@@ -147,7 +188,6 @@ class Iterator(serializable.Type):
     
     @classmethod
     def from_page_xml(cls, page_xml):
-        # TODO: This is shameful
         header = """
         <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.5/"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -162,8 +202,4 @@ class Iterator(serializable.Type):
         
         footer = "</mediawiki>"
         
-        # TODO: This is even more shameful.  We should not be concatinating a
-        #       string into a StringIO.  We should be producing a legitimate
-        #       TextIO thingie that streams the page XML, but programmers are
-        #       lazy and RAM is cheap, so here we are.
-        return cls.from_file(io.StringIO(header + page_xml + footer))
+        return cls.from_file(concat(header, page_xml, footer))

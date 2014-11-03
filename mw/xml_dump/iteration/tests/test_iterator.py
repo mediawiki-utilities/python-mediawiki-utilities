@@ -208,7 +208,7 @@ def test_from_page_xml():
     </page>
     """
     
-    dump = Iterator.from_page_xml(page_xml)
+    dump = Iterator.from_page_xml(io.StringIO(page_xml))
     
     # You have a `namespaces`, but it's empty.
     eq_(dump.namespaces, [])
