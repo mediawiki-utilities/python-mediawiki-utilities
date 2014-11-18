@@ -23,7 +23,7 @@ SAMPLE_XML = """
     <title>Foo</title>
     <ns>0</ns>
     <id>1</id>
-    <revision>
+    <revision beginningofpage="true">
       <id>1</id>
       <timestamp>2004-08-09T09:04:08Z</timestamp>
       <contributor>
@@ -54,7 +54,7 @@ SAMPLE_XML = """
     <id>2</id>
     <redirect title="Computer accessibility" />
     <restrictions>edit=sysop:move=sysop</restrictions>
-    <revision>
+    <revision beginningofpage="true">
       <id>3</id>
       <timestamp>2004-08-11T09:04:08Z</timestamp>
       <contributor>
@@ -100,6 +100,7 @@ def test_complete():
     eq_(revision.comment, None)
     eq_(revision.model, "wikitext")
     eq_(revision.format, "text/x-wiki")
+    eq_(revision.beginningofpage, True)
 
     revision = next(page)
     eq_(revision.id, 2)
@@ -111,6 +112,7 @@ def test_complete():
     eq_(revision.comment, "Comment 2")
     eq_(revision.model, "wikitext")
     eq_(revision.format, "text/x-wiki")
+    eq_(revision.beginningofpage, False)
 
     page = next(dump)
     eq_(page.title, "Bar")

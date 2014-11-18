@@ -1,6 +1,5 @@
 from ...types import serializable, Timestamp
 from ...util import none_or
-
 from .comment import Comment
 from .contributor import Contributor
 from .text import Text
@@ -12,7 +11,8 @@ class Revision(serializable.Type):
     Revision meta data.
     """
     __slots__ = ('id', 'timestamp', 'contributor', 'minor', 'comment', 'text',
-                 'bytes', 'sha1', 'parent_id', 'model', 'format')
+                 'bytes', 'sha1', 'parent_id', 'model', 'format',
+                 'beginningofpage')
 
     TAG_MAP = {
         'id': lambda e: int(e.text),
@@ -29,7 +29,8 @@ class Revision(serializable.Type):
 
     def __init__(self, id, timestamp, contributor=None, minor=None,
                  comment=None, text=None, bytes=None, sha1=None,
-                 parent_id=None, model=None, format=None):
+                 parent_id=None, model=None, format=None,
+                 beginningofpage=False):
         self.id = none_or(id, int)
         """
         Revision ID : `int`
@@ -85,6 +86,14 @@ class Revision(serializable.Type):
         TODO: ??? : `str`
         """
 
+        self.beginningofpage = bool(beginningofpage)
+        """
+        Is the first revision of a page : `bool`
+        Used to identify the first revision of a page when using Wikihadoop
+        revision pairs.  Otherwise is always set to False.  Do not expect to use
+        this when processing an XML dump directly.
+        """
+
     @classmethod
     def from_element(cls, element):
         values = consume_tags(cls.TAG_MAP, element)
@@ -93,12 +102,15 @@ class Revision(serializable.Type):
             values.get('id'),
             values.get('timestamp'),
             values.get('contributor'),
-            values.get('minor') is True,
+            values.get('minor') is not None,
             values.get('comment'),
             values.get('text'),
             values.get('bytes'),
             values.get('sha1'),
             values.get('parentid'),
             values.get('model'),
-            values.get('format')
+            values.get('format'),
+            element.attr('beginningofpage') is not None
+                    # For Wikihadoop.
+                    # Probably never used by anything, ever.
         )
