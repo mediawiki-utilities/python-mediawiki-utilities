@@ -1,8 +1,8 @@
 from itertools import chain
 
+from . import defaults
 from ...types import Timestamp
 from ...util import none_or
-from . import defaults
 from .functions import detect
 
 
@@ -72,8 +72,8 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
 
     # If we don't have the page_id, we're going to need to look them up
     if page_id is None:
-        rev = session.revisions.get(rev_id)
-        page_id = row['page']['id']
+        rev = session.revisions.get(rev_id, properties={'ids'})
+        page_id = rev['page']['pageid']
 
     # Load history and current rev
     current_and_past_revs = list(session.revisions.query(

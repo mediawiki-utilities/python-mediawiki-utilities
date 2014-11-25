@@ -12,6 +12,7 @@ def re_raise(error, path):
     raise error
 
 
+
 def map(paths, process_dump, handle_error=re_raise,
         threads=cpu_count(), output_buffer=100):
     """
