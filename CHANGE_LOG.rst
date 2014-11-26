@@ -1,3 +1,8 @@
+v0.4.4
+======
+
+Adds API helper for persistence tracking and example script.
+
 v0.4.0
 ======
 
