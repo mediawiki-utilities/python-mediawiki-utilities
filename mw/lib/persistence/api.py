@@ -74,10 +74,10 @@ def score(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
                                          current_rev.get('sha1'))
     
     # Process new revisions
-    future_rev_count = 0
+    future_revs = list(future_revs)
     for rev in future_revs:
         state.process(rev.get('*', ""), rev, rev.get('sha1'))
-        future_rev_count = 0
+        future_rev_count += 1
     
     
-    return current_rev, tokens_added, future_rev_count
+    return current_rev, tokens_added, future_revs

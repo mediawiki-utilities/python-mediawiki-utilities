@@ -196,7 +196,7 @@ class Revisions(Collection):
             rev_docs = []
             
             for page_doc in pages:
-                if 'missing' in page_doc: continue
+                if 'missing' in page_doc or 'revisions' not in page_doc: continue
                 
                 page_rev_docs = page_doc['revisions']
                 del page_doc['revisions']
