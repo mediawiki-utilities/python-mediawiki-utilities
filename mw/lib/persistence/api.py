@@ -3,7 +3,7 @@ from ...util import none_or
 from .state import State
 
 
-def score(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
+def track(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
           future_revisions=reverts.defaults.RADIUS, properties=None):
     """
     Computes a persistence score for a revision by processing the revisions
@@ -81,3 +81,5 @@ def score(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
     
     
     return current_rev, tokens_added, future_revs
+
+score = track
