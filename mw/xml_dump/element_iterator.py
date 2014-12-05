@@ -1,4 +1,9 @@
-import xml.etree.ElementTree as etree
+
+try:
+	import xml.etree.cElementTree as etree
+except ImportError:
+	import xml.etree.ElementTree as etree
+
 from xml.etree.ElementTree import ParseError
 
 from .errors import MalformedXML
