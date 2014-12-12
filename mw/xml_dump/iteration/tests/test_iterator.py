@@ -1,9 +1,11 @@
 import io
 
-from nose.tools import eq_
+from nose.tools import eq_, assert_is_instance
 
 from ....types import Timestamp
 from ..iterator import Iterator
+from ..comment import Comment
+from ..text import Text
 
 
 SAMPLE_XML = """
@@ -95,6 +97,7 @@ def test_complete():
     eq_(revision.timestamp, Timestamp("2004-08-09T09:04:08Z"))
     eq_(revision.contributor.id, 92182)
     eq_(revision.contributor.user_text, "Gen0cide")
+    assert_is_instance(revision.text, Text)
     eq_(revision.text, "Revision 1 text")
     eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
     eq_(revision.comment, None)
@@ -109,6 +112,7 @@ def test_complete():
     eq_(revision.contributor.user_text, "222.152.210.109")
     eq_(revision.text, "Revision 2 text")
     eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
+    assert_is_instance(revision.comment, Comment)
     eq_(revision.comment, "Comment 2")
     eq_(revision.model, "wikitext")
     eq_(revision.format, "text/x-wiki")
@@ -126,6 +130,7 @@ def test_complete():
     eq_(revision.timestamp, Timestamp("2004-08-11T09:04:08Z"))
     eq_(revision.contributor.id, None)
     eq_(revision.contributor.user_text, "222.152.210.22")
+    assert_is_instance(revision.text, Text)
     eq_(revision.text, "Revision 3 text")
     eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
     eq_(revision.comment, None)
@@ -136,6 +141,7 @@ def test_complete():
     eq_(revision.id, 4)
     eq_(revision.timestamp, Timestamp("2004-08-12T09:04:08Z"))
     eq_(revision.contributor, None)
+    assert_is_instance(revision.text, Text)
     eq_(revision.text, "Revision 4 text")
     eq_(revision.sha1, "6ixvq7o1yg75n9g9chqqg94myzq11c5")
     eq_(revision.comment, None)
@@ -163,6 +169,7 @@ def test_skipping():
     eq_(revision.timestamp, Timestamp("2004-08-11T09:04:08Z"))
     eq_(revision.contributor.id, None)
     eq_(revision.contributor.user_text, "222.152.210.22")
+    assert_is_instance(revision.text, Text)
     eq_(revision.text, "Revision 3 text")
     eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
     eq_(revision.comment, None)
