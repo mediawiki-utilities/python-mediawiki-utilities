@@ -1,8 +1,8 @@
 from hashlib import sha1
 
-from .. import reverts
-from .tokens import Tokens, Token
 from . import defaults
+from .. import reverts
+from .tokens import Token, Tokens
 
 
 class Version:
