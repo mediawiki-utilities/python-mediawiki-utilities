@@ -1,5 +1,5 @@
 """
-Prints the rev_id and hash of the 10 oldest recent changes
+Prints the rev_id and hash of the 10 oldest edits in recent_changes.
 """
 import os
 import sys
@@ -13,6 +13,7 @@ except:
 api_session = api.Session("https://en.wikipedia.org/w/api.php")
 
 changes = api_session.recent_changes.query(
+    type={'edit', 'new'},
     properties={'ids', 'sha1', 'timestamp'},
     direction="newer",
     limit=10
@@ -20,9 +21,10 @@ changes = api_session.recent_changes.query(
 
 for change in changes:
     print(
-        "{0} ({1}): {2}".format(
+        "{0} ({1}) @ {2}: {3}".format(
+            change['rcid'],
+            change['type'],
             change['timestamp'],
-            change['revid'],
             change.get('sha1', "")
         )
     )
