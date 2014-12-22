@@ -20,11 +20,19 @@ class Contributor(serializable.Type):
         self.id = none_or(id, int)
         """
         User ID : int | `None` (if not specified in the XML)
+
+        User ID of a user if the contributor is signed into an account
+        in the while making the contribution and `None` when
+        contributors are not signed in.
         """
 
         self.user_text = none_or(user_text, str)
         """
         User name or IP address : str | `None` (if not specified in the XML)
+
+        If a user is logged in, this will reflect the users accout
+        name. If the user is not logged in, this will usually be
+        recorded as the IPv4 or IPv6 address in the XML.
         """
 
     @classmethod
