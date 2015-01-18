@@ -51,12 +51,12 @@ class Revision(serializable.Type):
         Is revision a minor change? : `bool`
         """
 
-        self.comment = none_or(comment, str)
+        self.comment = none_or(comment, Comment)
         """
         Comment left with revision : :class:`~mw.xml_dump.Comment` (behaves like `str`, with additional members)
         """
 
-        self.text = none_or(text, str)
+        self.text = none_or(text, Text)
         """
         Content of text : :class:`~mw.xml_dump.Text` (behaves like `str`, with additional members)
         """
