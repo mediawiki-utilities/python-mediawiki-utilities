@@ -1,6 +1,5 @@
 from ...types import Namespace
 from ...util import autovivifying, none_or
-
 from .functions import normalize
 
 
@@ -132,13 +131,7 @@ class Parser:
         namespaces = []
         for ns_doc in si_doc['namespaces'].values():
             namespaces.append(
-                Namespace(
-                    ns_doc['id'],
-                    ns_doc['*'],
-                    canonical=ns_doc.get('canonical'),
-                    aliases=aliases[ns_doc['id']],
-                    case=ns_doc['case']
-                )
+                Namespace.from_doc(ns_doc, aliases)
             )
 
         return Parser(namespaces)
