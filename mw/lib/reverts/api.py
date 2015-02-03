@@ -1,3 +1,4 @@
+import random
 from hashlib import sha1
 from itertools import chain
 
