@@ -1,3 +1,4 @@
+from hashlib import sha1
 from itertools import chain
 
 from . import defaults
@@ -5,6 +6,10 @@ from ...types import Timestamp
 from ...util import none_or
 from .functions import detect
 
+HEX = "1234567890abcdef"
+
+def random_sha1():
+    return ''.join(random.choice(HEX) for i in range(40))
 
 def check_rev(session, rev, **kwargs):
     """
@@ -79,7 +84,7 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
     current_and_past_revs = list(session.revisions.query(
         pageids={page_id},
         limit=radius + 1,
-        start_id=rev_id + 1,  # Ensures that we capture the current revision
+        start_id=rev_id,
         direction="older",
         properties={'ids', 'timestamp', 'sha1'} | properties
     ))
@@ -99,7 +104,7 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
     future_revs = session.revisions.query(
         pageids={page_id},
         limit=radius,
-        start_id=rev_id,
+        start_id=rev_id + 1, # Ensures that we skip the current revision
         end=before,
         direction="newer",
         properties={'ids', 'timestamp', 'sha1'} | properties
@@ -107,9 +112,9 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
 
     # Convert to an iterable of (checksum, rev) pairs for detect() to consume
     checksum_revisions = chain(
-        ((rev['sha1'], rev) for rev in past_revs),
-        [(current_rev['sha1'], current_rev)],
-        ((rev['sha1'], rev) for rev in future_revs)
+        ((rev['sha1'], rev) for rev in past_revs if 'sha1' in rev),
+        [(current_rev.get('sha1', random_sha1()), current_rev)],
+        ((rev['sha1'], rev) for rev in future_revs if 'sha1' in rev)
     )
 
     for revert in detect(checksum_revisions, radius=radius):
