@@ -77,7 +77,6 @@ def track(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
     future_revs = list(future_revs)
     for rev in future_revs:
         state.process(rev.get('*', ""), rev, rev.get('sha1'))
-        future_rev_count += 1
     
     
     return current_rev, tokens_added, future_revs
