@@ -3,6 +3,7 @@ from itertools import chain
 from . import defaults
 from ...types import Timestamp
 from ...util import none_or
+from .dummy_checksum import DummyChecksum
 from .functions import detect
 
 

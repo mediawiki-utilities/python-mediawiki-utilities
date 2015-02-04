@@ -30,7 +30,7 @@ def check_row(db, rev_row, **kwargs):
         radius : int
             a positive integer indicating the the maximum number of revisions that can be reverted
         check_archive : bool
-            should the archive table be check for reverting revisions?
+            should the archive table be checked for reverting revisions?
         before : `Timestamp`
             if set, limits the search for *reverting* revisions to those which were saved before this timestamp
     """
