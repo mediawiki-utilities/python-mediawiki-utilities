@@ -112,7 +112,7 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
     checksum_revisions = chain(
         ((rev['sha1'] if 'sha1' in rev else DummyChecksum(), rev)
          for rev in past_revs),
-        [(current_rev.get('sha1', defaults.DUMMY_SHA1), current_rev)],
+        [(current_rev.get('sha1', DummyChecksum()), current_rev)],
         ((rev['sha1'] if 'sha1' in rev else DummyChecksum(), rev)
          for rev in future_revs),
     )
