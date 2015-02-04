@@ -3,6 +3,7 @@ from itertools import chain
 from . import defaults
 from ...types import Timestamp
 from ...util import none_or
+from .dummy_checksum import DummyChecksum
 from .functions import detect
 
 
@@ -116,9 +117,13 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
 
     # Convert to an iterable of (checksum, rev) pairs for detect() to consume
     checksum_revisions = chain(
-        ((rev['rev_sha1'], rev) for rev in past_revs),
-        [(current_rev['rev_sha1'], current_rev)],
-        ((rev['rev_sha1'], rev) for rev in future_revs)
+        ((rev['rev_sha1'] if rev['rev_sha1'] is not None \
+          else DummyChecksum(), rev)
+         for rev in past_revs),
+        [(current_rev['rev_sha1'] or defaults.DUMMY_SHA1, current_rev)],
+        ((rev['rev_sha1'] if rev['rev_sha1'] is not None \
+          else DummyChecksum(), rev)
+         for rev in future_revs),
     )
 
     for revert in detect(checksum_revisions, radius=radius):

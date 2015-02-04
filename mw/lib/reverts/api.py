@@ -1,5 +1,3 @@
-import random
-from hashlib import sha1
 from itertools import chain
 
 from . import defaults
@@ -7,10 +5,6 @@ from ...types import Timestamp
 from ...util import none_or
 from .functions import detect
 
-HEX = "1234567890abcdef"
-
-def random_sha1():
-    return ''.join(random.choice(HEX) for i in range(40))
 
 def check_rev(session, rev, **kwargs):
     """
@@ -113,9 +107,11 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
 
     # Convert to an iterable of (checksum, rev) pairs for detect() to consume
     checksum_revisions = chain(
-        ((rev['sha1'], rev) for rev in past_revs if 'sha1' in rev),
-        [(current_rev.get('sha1', random_sha1()), current_rev)],
-        ((rev['sha1'], rev) for rev in future_revs if 'sha1' in rev)
+        ((rev['sha1'] if 'sha1' in rev else DummyChecksum(), rev)
+         for rev in past_revs),
+        [(current_rev.get('sha1', defaults.DUMMY_SHA1), current_rev)],
+        ((rev['sha1'] if 'sha1' in rev else DummyChecksum(), rev)
+         for rev in future_revs),
     )
 
     for revert in detect(checksum_revisions, radius=radius):
