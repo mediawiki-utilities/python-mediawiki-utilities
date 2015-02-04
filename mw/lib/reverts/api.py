@@ -17,7 +17,7 @@ def check_rev(session, rev, **kwargs):
         rev : dict
             a revision dict containing 'revid' and 'page.id'
         radius : int
-            the maximum number of revisions that can be reverted
+            a positive integer indicating the maximum number of revisions that can be reverted
         before : :class:`mw.Timestamp`
             if set, limits the search for *reverting* revisions to those which were saved before this timestamp
         properties : set( str )
@@ -54,7 +54,7 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
         page_id : int
             the ID of the page the revision occupies (slower if not provided)
         radius : int
-            the maximum number of revisions that can be reverted
+            a positive integer indicating the maximum number of revisions that can be reverted
         before : :class:`mw.Timestamp`
             if set, limits the search for *reverting* revisions to those which were saved before this timestamp
         properties : set( str )
@@ -66,6 +66,9 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
 
     rev_id = int(rev_id)
     radius = int(radius)
+    if radius < 1:
+        raise TypeError("invalid radius.  Expected a positive integer.")
+
     page_id = none_or(page_id, int)
     before = none_or(before, Timestamp)
     properties = set(properties) if properties is not None else set()

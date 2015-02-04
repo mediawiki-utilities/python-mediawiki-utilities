@@ -1,3 +1,4 @@
+import random
 from itertools import chain
 
 from . import defaults
@@ -6,6 +7,10 @@ from ...util import none_or
 from .dummy_checksum import DummyChecksum
 from .functions import detect
 
+HEX = "1234567890abcdef"
+
+def random_sha1():
+    return ''.join(random.choice(HEX) for i in range(40))
 
 """
 Simple constant used in order to not do weird things with a dummy revision.
@@ -23,7 +28,7 @@ def check_row(db, rev_row, **kwargs):
         rev_row : dict
             a revision row containing 'rev_id' and 'rev_page' or 'page_id'
         radius : int
-            the maximum number of revisions that can be reverted
+            a positive integer indicating the the maximum number of revisions that can be reverted
         check_archive : bool
             should the archive table be check for reverting revisions?
         before : `Timestamp`
@@ -60,9 +65,9 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
         page_id : int
             the ID of the page the revision occupies (slower if not provided)
         radius : int
-            the maximum number of revisions that can be reverted
+            a positive integer indicating the maximum number of revisions that can be reverted
         check_archive : bool
-            should the archive table be check for reverting revisions?
+            should the archive table be checked for reverting revisions?
         before : `Timestamp`
             if set, limits the search for *reverting* revisions to those which were saved before this timestamp
     """
@@ -72,6 +77,8 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
 
     rev_id = int(rev_id)
     radius = int(radius)
+    if radius < 1:
+        raise TypeError("invalid radius.  Expected a positive integer.")
     page_id = none_or(page_id, int)
     check_archive = bool(check_archive)
     before = none_or(before, Timestamp)
@@ -120,10 +127,10 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
         ((rev['rev_sha1'] if rev['rev_sha1'] is not None \
           else DummyChecksum(), rev)
          for rev in past_revs),
-        [(current_rev['rev_sha1'] or defaults.DUMMY_SHA1, current_rev)],
+        [(current_rev['rev_sha1'] or DummyChecksum(), current_rev)],
         ((rev['rev_sha1'] if rev['rev_sha1'] is not None \
           else DummyChecksum(), rev)
-         for rev in future_revs),
+         for rev in future_revs)
     )
 
     for revert in detect(checksum_revisions, radius=radius):
