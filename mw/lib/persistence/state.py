@@ -23,7 +23,7 @@ class State:
         diff : function(list( `str` ), list( `str` )) --> list( `ops` )
             A function to perform a difference between token lists
         revert_radius : int
-            the maximum revision distance that a revert can span.
+            a positive integer indicating the maximum revision distance that a revert can span.
         revert_detector : :class:`mw.lib.reverts.Detector`
             a revert detector to start process with
     :Example:

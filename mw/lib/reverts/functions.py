@@ -15,7 +15,7 @@ def detect(checksum_revisions, radius=defaults.RADIUS):
         checksum_revisions : iter( ( checksum : str, revision : `mixed` ) )
             an iterable over tuples of checksum and revision meta data
         radius : int
-            the maximum revision distance that a revert can span.
+            a positive integer indicating the maximum revision distance that a revert can span.
 
     :Return:
         a iterator over :class:`Revert`

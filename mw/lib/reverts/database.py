@@ -1,3 +1,4 @@
+import random
 from itertools import chain
 
 from . import defaults
@@ -5,6 +6,10 @@ from ...types import Timestamp
 from ...util import none_or
 from .functions import detect
 
+HEX = "1234567890abcdef"
+
+def random_sha1():
+    return ''.join(random.choice(HEX) for i in range(40))
 
 """
 Simple constant used in order to not do weird things with a dummy revision.
@@ -22,7 +27,7 @@ def check_row(db, rev_row, **kwargs):
         rev_row : dict
             a revision row containing 'rev_id' and 'rev_page' or 'page_id'
         radius : int
-            the maximum number of revisions that can be reverted
+            a positive integer indicating the the maximum number of revisions that can be reverted
         check_archive : bool
             should the archive table be check for reverting revisions?
         before : `Timestamp`
@@ -59,7 +64,7 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
         page_id : int
             the ID of the page the revision occupies (slower if not provided)
         radius : int
-            the maximum number of revisions that can be reverted
+            a positive integer indicating the maximum number of revisions that can be reverted
         check_archive : bool
             should the archive table be check for reverting revisions?
         before : `Timestamp`
@@ -71,6 +76,8 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
 
     rev_id = int(rev_id)
     radius = int(radius)
+    if radius < 1:
+        raise TypeError("invalid radius.  Expected a positive integer.")
     page_id = none_or(page_id, int)
     check_archive = bool(check_archive)
     before = none_or(before, Timestamp)
@@ -116,9 +123,9 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
 
     # Convert to an iterable of (checksum, rev) pairs for detect() to consume
     checksum_revisions = chain(
-        ((rev['rev_sha1'], rev) for rev in past_revs),
-        [(current_rev['rev_sha1'], current_rev)],
-        ((rev['rev_sha1'], rev) for rev in future_revs)
+        ((rev['rev_sha1'], rev) for rev in past_revs if 'rev_sha1' in rev),
+        [(current_rev.get('rev_sha1', random_sha1()), current_rev)],
+        ((rev['rev_sha1'], rev) for rev in future_revs if 'rev_sha1' in rev)
     )
 
     for revert in detect(checksum_revisions, radius=radius):
