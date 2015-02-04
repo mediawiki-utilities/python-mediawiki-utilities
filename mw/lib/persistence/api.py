@@ -26,6 +26,8 @@ def track(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
     rev_id = int(rev_id)
     page_id = none_or(page_id, int)
     revert_radius = int(revert_radius)
+    if revert_radius < 1:
+        raise TypeError("invalid radius.  Expected a positive integer.")
     properties = set(properties) if properties is not None else set()
 
 
@@ -38,7 +40,7 @@ def track(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
     current_and_past_revs = list(session.revisions.query(
         pageids={page_id},
         limit=revert_radius + 1,
-        start_id=rev_id + 1,  # Ensures that we capture the current revision
+        start_id=rev_id,
         direction="older",
         properties={'ids', 'timestamp', 'content', 'sha1'} | properties
     ))
@@ -58,7 +60,7 @@ def track(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
     future_revs = session.revisions.query(
         pageids={page_id},
         limit=future_revisions,
-        start_id=rev_id+1,
+        start_id=rev_id + 1, # Ensures that we skip the current revision
         direction="newer",
         properties={'ids', 'timestamp', 'content', 'sha1'} | properties
     )
