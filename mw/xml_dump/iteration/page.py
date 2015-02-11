@@ -25,7 +25,6 @@ class Page(serializable.Type):
         'namespace',
         'redirect',
         'restrictions',
-        'revisions'
     )
 
     def __init__(self, id, title, namespace, redirect, restrictions, revisions):
