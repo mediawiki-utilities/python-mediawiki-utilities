@@ -27,7 +27,7 @@ class Page(serializable.Type):
         'restrictions',
     )
 
-    def __init__(self, id, title, namespace, redirect, restrictions, revisions):
+    def __init__(self, id, title, namespace, redirect, restrictions, revisions=[]):
         self.id = none_or(id, int)
         """
         Page ID : `int`
