@@ -1,9 +1,8 @@
 from ...types import serializable
 from ...util import none_or
-
 from ..errors import MalformedXML
-from .revision import Revision
 from .redirect import Redirect
+from .revision import Revision
 
 
 class Page(serializable.Type):
@@ -24,11 +23,10 @@ class Page(serializable.Type):
         'title',
         'namespace',
         'redirect',
-        'restrictions',
-        'revisions'
+        'restrictions'
     )
 
-    def __init__(self, id, title, namespace, redirect, restrictions, revisions):
+    def __init__(self, id, title, namespace, redirect, restrictions, revisions=None):
         self.id = none_or(id, int)
         """
         Page ID : `int`
@@ -55,7 +53,7 @@ class Page(serializable.Type):
         """
 
         # Should be a lazy generator
-        self.__revisions = revisions
+        self.__revisions = revisions or []
 
     def __iter__(self):
         return self.__revisions
