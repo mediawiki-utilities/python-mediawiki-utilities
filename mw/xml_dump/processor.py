@@ -11,14 +11,14 @@ logger = logging.getLogger("mw.dump.processor")
 
 ErrorItem = namedtuple("ErrorItem", ['error', 'item'])
 
+class DONE: pass
+
 
 class Processor(Process):
-    def __init__(self, pathq, outputq, process_dump,
-                       callback=lambda: None, logger=logger):
+    def __init__(self, pathq, outputq, process_dump, logger=logger):
         self.pathq = pathq
         self.outputq = outputq
         self.process_dump = process_dump
-        self.callback = callback
         self.logger = logger
         Process.__init__(self)
 
@@ -45,4 +45,4 @@ class Processor(Process):
         except Empty:
             self.logger.info("Nothing left to do.  Shutting down thread.")
         finally:
-            self.callback()
+            self.outputq.put(ErrorItem(False, DONE))
