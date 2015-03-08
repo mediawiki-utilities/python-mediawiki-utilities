@@ -34,7 +34,7 @@ SAMPLE_XML = """
         <username>Gen0cide</username>
         <id>92182</id>
       </contributor>
-      <text xml:space="preserve">Revision 1 text</text>
+      <text xml:space="preserve" bytes="234" id="55">Revision 1 text</text>
       <sha1>g9chqqg94myzq11c56ixvq7o1yg75n9</sha1>
       <model>wikitext</model>
       <format>text/x-wiki</format>
@@ -45,7 +45,7 @@ SAMPLE_XML = """
       <contributor>
         <ip>222.152.210.109</ip>
       </contributor>
-      <text xml:space="preserve">Revision 2 text</text>
+      <text xml:space="preserve" bytes="235" id="56">Revision 2 text</text>
       <sha1>g9chqqg94myzq11c56ixvq7o1yg75n9</sha1>
       <model>wikitext</model>
       <comment>Comment 2</comment>
@@ -64,7 +64,7 @@ SAMPLE_XML = """
       <contributor>
         <ip>222.152.210.22</ip>
       </contributor>
-      <text xml:space="preserve">Revision 3 text</text>
+      <text xml:space="preserve" bytes="236" id="57">Revision 3 text</text>
       <sha1>g9chqqg94myzq11c56ixvq7o1yg75n9</sha1>
       <model>wikitext</model>
       <format>text/x-wiki</format>
@@ -72,7 +72,7 @@ SAMPLE_XML = """
     <revision>
       <id>4</id>
       <timestamp>2004-08-12T09:04:08Z</timestamp>
-      <text xml:space="preserve">Revision 4 text</text>
+      <text id="58" bytes="237" />
       <sha1>6ixvq7o1yg75n9g9chqqg94myzq11c5</sha1>
       <model>wikitext</model>
       <format>text/x-wiki</format>
@@ -101,6 +101,9 @@ def test_complete():
     eq_(revision.contributor.user_text, "Gen0cide")
     assert_is_instance(revision.text, Text)
     eq_(revision.text, "Revision 1 text")
+    eq_(revision.text.bytes, 234)
+    eq_(revision.text.id, 55)
+    eq_(revision.text, "Revision 1 text")
     eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
     eq_(revision.comment, None)
     eq_(revision.model, "wikitext")
@@ -113,6 +116,8 @@ def test_complete():
     eq_(revision.contributor.id, None)
     eq_(revision.contributor.user_text, "222.152.210.109")
     eq_(revision.text, "Revision 2 text")
+    eq_(revision.text.bytes, 235)
+    eq_(revision.text.id, 56)
     eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
     assert_is_instance(revision.comment, Comment)
     eq_(revision.comment, "Comment 2")
@@ -135,6 +140,8 @@ def test_complete():
     eq_(revision.contributor.id, None)
     eq_(revision.contributor.user_text, "222.152.210.22")
     assert_is_instance(revision.text, Text)
+    eq_(revision.text.bytes, 236)
+    eq_(revision.text.id, 57)
     eq_(revision.text, "Revision 3 text")
     eq_(revision.sha1, "g9chqqg94myzq11c56ixvq7o1yg75n9")
     eq_(revision.comment, None)
@@ -148,7 +155,9 @@ def test_complete():
     eq_(revision.timestamp, Timestamp("2004-08-12T09:04:08Z"))
     eq_(revision.contributor, None)
     assert_is_instance(revision.text, Text)
-    eq_(revision.text, "Revision 4 text")
+    eq_(revision.text.bytes, 237)
+    eq_(revision.text.id, 58)
+    eq_(revision.text, "")
     eq_(revision.sha1, "6ixvq7o1yg75n9g9chqqg94myzq11c5")
     eq_(revision.comment, None)
     eq_(revision.model, "wikitext")
@@ -190,7 +199,7 @@ def test_serialization():
     dump = Iterator.from_file(f)
 
     eq_(dump, Iterator.deserialize(dump.serialize()))
-    
+
 def test_from_page_xml():
     page_xml = """
     <page>
@@ -223,12 +232,12 @@ def test_from_page_xml():
       </revision>
     </page>
     """
-    
+
     dump = Iterator.from_page_xml(io.StringIO(page_xml))
-    
+
     # You have a `namespaces`, but it's empty.
     eq_(dump.namespaces, [])
-    
+
     page = next(dump)
     eq_(page.title, "Foo")
     eq_(page.namespace, 0)

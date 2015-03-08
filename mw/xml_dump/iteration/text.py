@@ -64,8 +64,9 @@ class Text(str, serializable.Type):
 
     @classmethod
     def from_element(cls, e):
+        content = e.text or ""
         return cls(
-            e.text,
+            content,
             deleted=e.attr('deleted', False),
             xml_space=e.attr('xml:space'),
             id=e.attr('id'),
