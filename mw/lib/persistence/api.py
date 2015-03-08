@@ -80,7 +80,6 @@ def track(session, rev_id, page_id=None, revert_radius=reverts.defaults.RADIUS,
     for rev in future_revs:
         state.process(rev.get('*', ""), rev, rev.get('sha1'))
 
-
     return current_rev, tokens_added, future_revs
 
 score = track
