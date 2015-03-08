@@ -192,7 +192,7 @@ class Revisions(Collection):
             else:
                 rvcontinue = None
             
-            pages = doc['query']['pages'].values()
+            pages = doc['query'].get('pages', {}).values()
             rev_docs = []
             
             for page_doc in pages:

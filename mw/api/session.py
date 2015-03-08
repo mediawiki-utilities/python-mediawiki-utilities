@@ -1,20 +1,46 @@
+import logging
+
 from ..util import api
 from .collections import (DeletedRevs, Pages, RecentChanges, Revisions,
                           SiteInfo, UserContribs, Users)
 from .errors import APIError, AuthenticationError, MalformedResponse
 
+logger = logging.getLogger("mw.api.session")
+
+DEFAULT_USER_AGENT = "MediaWiki-Utilities"
+"""
+The default User-Agent to be sent with requests to the API.
+"""
 
 class Session(api.Session):
     """
     Represents a connection to a MediaWiki API.
     
     Cookies and other session information is preserved.
+    
+    :Parameters:
+        uri : str
+            The base URI for the API to use.  Usually ends in "api.php"
+        user_agent : str
+            The User-Agent to be sent with requests.  Will raise a warning if
+            left to default value.
     """
     
-    def __init__(self, uri, *args, **kwargs):
+    def __init__(self, uri, *args, user_agent=DEFAULT_USER_AGENT, **kwargs):
         """
         Constructs a new :class:`Session`.
         """
+        
+        if user_agent == DEFAULT_USER_AGENT:
+            logger.warning("Sending requests with default User-Agent.  "  +
+                           "Set 'user_agent' on api.Session to quiet this " +
+                           "message.")
+        
+        if 'headers' in kwargs:
+            kwargs['headers']['User-Agent'] = str(user_agent)
+        else:
+            kwargs['headers'] = {'User-Agent': str(user_agent)}
+        
         super().__init__(uri, *args, **kwargs)
         
         self.pages = Pages(self)

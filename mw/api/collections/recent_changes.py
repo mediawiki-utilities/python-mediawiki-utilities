@@ -24,7 +24,9 @@ class RecentChanges(Collection):
 
     SHOW = {'minor', '!minor', 'bot', '!bot', 'anon', '!anon',
             'redirect', '!redirect', 'patrolled', '!patrolled'}
-
+    
+    TYPES = {'edit', 'external', 'new', 'log'}
+    
     DIRECTIONS = {'newer', 'older'}
 
     MAX_CHANGES = 50
@@ -166,7 +168,7 @@ class RecentChanges(Collection):
         params['rctoken'] = none_or(tag, str)
         params['rcshow'] = self._items(show, levels=self.SHOW)
         params['rclimit'] = none_or(limit, int)
-        params['rctype'] = none_or(type, str)
+        params['rctype'] = self._items(type, self.TYPES)
         params['rctoponly'] = none_or(toponly, bool)
         params['rccontinue'] = self._check_rccontinue(rccontinue)
 

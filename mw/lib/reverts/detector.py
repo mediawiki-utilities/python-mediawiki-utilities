@@ -30,7 +30,7 @@ class Detector(ordered.HistoricalMap):
 
     :Parameters:
         radius : int
-            the maximum revision distance that a revert can span.
+            a positive integer indicating the maximum revision distance that a revert can span.
 
     :Example:
         >>> from mw.lib import reverts
@@ -48,8 +48,10 @@ class Detector(ordered.HistoricalMap):
         """
         :Parameters:
             radius : int
-                the maximum revision distance that a revert can span.
+                a positive integer indicating the maximum revision distance that a revert can span.
         """
+        if radius < 1:
+            raise TypeError("invalid radius. Expected a positive integer.")
         super().__init__(maxlen=radius + 1)
 
     def process(self, checksum, revision=None):

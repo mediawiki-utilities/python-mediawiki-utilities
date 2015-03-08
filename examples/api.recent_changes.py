@@ -1,5 +1,5 @@
 """
-Prints the rev_id, characters and hash of all revisions to User:EpochFail.
+Prints the rev_id and hash of the 10 oldest edits in recent_changes.
 """
 import os
 import sys
@@ -13,16 +13,18 @@ except:
 api_session = api.Session("https://en.wikipedia.org/w/api.php")
 
 changes = api_session.recent_changes.query(
-    properties={'ids', 'sha1'},
+    type={'edit', 'new'},
+    properties={'ids', 'sha1', 'timestamp'},
     direction="newer",
-    limit=100
+    limit=10
 )
 
 for change in changes:
     print(
-        "{0} ({1} chars): {2}".format(
-            change['revid'],
-            len(change.get('*', "")),
+        "{0} ({1}) @ {2}: {3}".format(
+            change['rcid'],
+            change['type'],
+            change['timestamp'],
             change.get('sha1', "")
         )
     )

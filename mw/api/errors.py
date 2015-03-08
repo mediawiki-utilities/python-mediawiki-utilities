@@ -10,8 +10,9 @@ class DocError(Exception):
 
 class APIError(DocError):
     def __init__(self, doc):
-        code = doc['error'].get('code')
-        message = doc['error'].get('message')
+        
+        code = doc.get('error', {}).get('code')
+        message = doc.get('error', {}).get('message')
 
         super().__init__("{0}:{1}".format(code, message), doc)
 
@@ -36,9 +37,10 @@ class AuthenticationError(APIError):
         """
 
 
-class MalformedResponse(APIError):
+class MalformedResponse(DocError):
     def __init__(self, key, doc):
-        super().__init__(doc)
+
+        super().__init__("Expected to find '{0}' in result.".format(key), doc)
 
         self.key = key
         """

@@ -1,7 +1,6 @@
 from nose.tools import eq_
 
 from ....types import Namespace
-
 from ..parser import Parser
 
 
@@ -43,10 +42,17 @@ def test_from_site_info():
                     "subpages": "",
                     "canonical": "User"
                 }
-            }
+            },
+            "namespacealiases": [
+                {
+                    "id": 1,
+                    "*": "WAFFLES"
+                }
+            ]
         }
     )
 
     eq_((1, "Foo"), parser.parse("Discuss\u00e3o:Foo"))
     eq_((1, "Foo_bar"), parser.parse("Discuss\u00e3o:Foo bar"))
     eq_((0, "Herpderp:Foo_bar"), parser.parse("Herpderp:Foo bar"))
+    eq_((1, "Foo_bar"), parser.parse("WAFFLES:Foo bar"))

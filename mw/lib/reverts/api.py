@@ -3,6 +3,7 @@ from itertools import chain
 from . import defaults
 from ...types import Timestamp
 from ...util import none_or
+from .dummy_checksum import DummyChecksum
 from .functions import detect
 
 
@@ -17,7 +18,7 @@ def check_rev(session, rev, **kwargs):
         rev : dict
             a revision dict containing 'revid' and 'page.id'
         radius : int
-            the maximum number of revisions that can be reverted
+            a positive integer indicating the maximum number of revisions that can be reverted
         before : :class:`mw.Timestamp`
             if set, limits the search for *reverting* revisions to those which were saved before this timestamp
         properties : set( str )
@@ -54,7 +55,7 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
         page_id : int
             the ID of the page the revision occupies (slower if not provided)
         radius : int
-            the maximum number of revisions that can be reverted
+            a positive integer indicating the maximum number of revisions that can be reverted
         before : :class:`mw.Timestamp`
             if set, limits the search for *reverting* revisions to those which were saved before this timestamp
         properties : set( str )
@@ -66,6 +67,9 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
 
     rev_id = int(rev_id)
     radius = int(radius)
+    if radius < 1:
+        raise TypeError("invalid radius.  Expected a positive integer.")
+
     page_id = none_or(page_id, int)
     before = none_or(before, Timestamp)
     properties = set(properties) if properties is not None else set()
@@ -79,7 +83,7 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
     current_and_past_revs = list(session.revisions.query(
         pageids={page_id},
         limit=radius + 1,
-        start_id=rev_id + 1,  # Ensures that we capture the current revision
+        start_id=rev_id,
         direction="older",
         properties={'ids', 'timestamp', 'sha1'} | properties
     ))
@@ -99,7 +103,7 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
     future_revs = session.revisions.query(
         pageids={page_id},
         limit=radius,
-        start_id=rev_id,
+        start_id=rev_id + 1, # Ensures that we skip the current revision
         end=before,
         direction="newer",
         properties={'ids', 'timestamp', 'sha1'} | properties
@@ -107,9 +111,11 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
 
     # Convert to an iterable of (checksum, rev) pairs for detect() to consume
     checksum_revisions = chain(
-        ((rev['sha1'], rev) for rev in past_revs),
-        [(current_rev['sha1'], current_rev)],
-        ((rev['sha1'], rev) for rev in future_revs)
+        ((rev['sha1'] if 'sha1' in rev else DummyChecksum(), rev)
+         for rev in past_revs),
+        [(current_rev.get('sha1', DummyChecksum()), current_rev)],
+        ((rev['sha1'] if 'sha1' in rev else DummyChecksum(), rev)
+         for rev in future_revs),
     )
 
     for revert in detect(checksum_revisions, radius=radius):
