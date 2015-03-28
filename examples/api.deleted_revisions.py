@@ -1,14 +1,18 @@
 """
 Prints the rev_id, characters and hash of all revisions to Willy_on_Wheels.
 """
-import sys
-import os
-
-sys.path.insert(0, os.path.abspath(os.getcwd()))
-
 import getpass
 import hashlib
-from mw import api
+import os
+import sys
+
+try:
+    sys.path.insert(0, os.path.abspath(os.getcwd()))
+
+    from mw import api
+except: raise
+
+
 
 api_session = api.Session("https://en.wikipedia.org/w/api.php")
 
@@ -17,8 +21,8 @@ username = input("Username: ")
 password = getpass.getpass("Password: ")
 api_session.login(username, password)
 
-revisions = api_session.deleted_revs.query(
-    properties={'revid', 'content'},
+revisions = api_session.deleted_revisions.query(
+    properties={'ids', 'content'},
     titles={'Willy on Wheels'},
     direction="newer"
 )

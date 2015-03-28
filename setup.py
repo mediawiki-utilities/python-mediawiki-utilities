@@ -2,9 +2,11 @@ from distutils.core import setup
 
 from setuptools import find_packages
 
+import mw
+
 setup(
     name='mediawiki-utilities',
-    version=open('VERSION').read().strip(),
+    version=mw.__version__,
     author='Aaron Halfaker',
     author_email='aaron.halfaker@gmail.com',
     packages=find_packages(),

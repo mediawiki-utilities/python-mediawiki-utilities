@@ -7,6 +7,7 @@ logger = logging.getLogger("mw.util.api.session")
 
 from .functions import none_or
 
+FAILURE_THRESHOLD = 5
 
 class Session:
     def __init__(self, uri, headers=None, failure_threshold=None, wait_step=2):
@@ -17,7 +18,7 @@ class Session:
         self.headers = headers if headers is not None else {}
         self.session = requests.Session()
 
-        self.failure_threshold = none_or(failure_threshold, int)
+        self.failure_threshold = int(failure_threshold or FAILURE_THRESHOLD)
         self.wait_step = float(wait_step)
 
         self.failed = 0

@@ -10,7 +10,7 @@ class DocError(Exception):
 
 class APIError(DocError):
     def __init__(self, doc):
-        
+
         code = doc.get('error', {}).get('code')
         message = doc.get('error', {}).get('message')
 
@@ -26,10 +26,10 @@ class APIError(DocError):
         The error message returned by the api -- if available.
         """
 
-class AuthenticationError(APIError):
+class AuthenticationError(DocError):
     def __init__(self, doc):
         result = doc['login']['result']
-        super().__init__(doc)
+        super().__init__(result, doc)
 
         self.result = result
         """

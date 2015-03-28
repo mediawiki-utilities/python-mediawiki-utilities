@@ -1,4 +1,4 @@
-from .deleted_revs import DeletedRevs
+from .deleted_revisions import DeletedRevisions
 from .pages import Pages
 from .recent_changes import RecentChanges
 from .revisions import Revisions
