@@ -51,7 +51,8 @@ def check_row(db, rev_row, **kwargs):
     return check(db, rev_id, page_id=page_id, **kwargs)
 
 
-def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False, before=None):
+def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
+          before=None, window=None):
 
     """
     Checks whether a revision was reverted (identity) and returns a named tuple
@@ -70,6 +71,9 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
             should the archive table be checked for reverting revisions?
         before : `Timestamp`
             if set, limits the search for *reverting* revisions to those which were saved before this timestamp
+        window : int
+            if set, limits the search for *reverting* revisions to those which
+            were saved within `window` seconds after the reverted edit
     """
 
     if not hasattr(db, "revisions") and hasattr(db, "all_revisions"):
@@ -112,6 +116,9 @@ def check(db, rev_id, page_id=None, radius=defaults.RADIUS, check_archive=False,
         # Only way to get here is if there isn't enough history.  Couldn't be
         # reverted.  Just return None.
         return None
+
+    if window is not None and before is None:
+        before = Timestamp(current_rev['rev_timestamp']) + window
 
     # Load future revisions
     future_revs = dbrevs.query(

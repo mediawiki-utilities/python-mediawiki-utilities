@@ -42,7 +42,7 @@ def check_rev(session, rev, **kwargs):
 
 
 def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
-          before=None, properties=None):
+          before=None, window=None, properties=None):
     """
     Checks whether a revision was reverted (identity) and returns a named tuple
     of Revert(reverting, reverteds, reverted_to).
@@ -55,9 +55,14 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
         page_id : int
             the ID of the page the revision occupies (slower if not provided)
         radius : int
-            a positive integer indicating the maximum number of revisions that can be reverted
+            a positive integer indicating the maximum number of revisions
+            that can be reverted
         before : :class:`mw.Timestamp`
-            if set, limits the search for *reverting* revisions to those which were saved before this timestamp
+            if set, limits the search for *reverting* revisions to those which
+            were saved before this timestamp
+        window : int
+            if set, limits the search for *reverting* revisions to those which
+            were saved within `window` seconds after the reverted edit
         properties : set( str )
             a set of properties to include in revisions (see :class:`mw.api.Revisions`)
     """
@@ -98,6 +103,9 @@ def check(session, rev_id, page_id=None, radius=defaults.RADIUS,
         # Only way to get here is if there isn't enough history.  Couldn't be
         # reverted.  Just return None.
         return None
+
+    if window is not None and before is None:
+        before = Timestamp(current_rev['timestamp']) + window
 
     # Load future revisions
     future_revs = session.revisions.query(
