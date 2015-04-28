@@ -7,7 +7,7 @@ Performance
     Performance is a serious concern when processing large database XML dumps.
     Regretfully, the Global Intepreter Lock prevents us from running threads on
     multiple CPUs.  This library provides a :func:`map`, a function
-    that maps a dump processsing over a set of dump files using
+    that maps a dump processing over a set of dump files using
     :class:`multiprocessing` to distribute the work over multiple CPUS
 
 Complexity
