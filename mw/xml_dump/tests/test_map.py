@@ -1,6 +1,7 @@
 import io
 
 from nose.tools import eq_, raises
+
 from ..map import map
 
 

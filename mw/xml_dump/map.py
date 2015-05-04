@@ -1,11 +1,11 @@
 import logging
-from multiprocessing import cpu_count, Queue, Value
+from multiprocessing import Queue, Value, cpu_count
 from queue import Empty
 
 from .functions import file
 from .processor import DONE, Processor
 
-logger = logging.getLogger("mw.dump.map")
+logger = logging.getLogger("mw.xml_dump.map")
 
 
 def re_raise(error, path):
@@ -57,7 +57,7 @@ def map(paths, process_dump, handle_error=re_raise,
     outputq = Queue(maxsize=output_buffer)
     running = Value('i', 0)
     threads = max(1, min(int(threads), pathsq.qsize()))
-    
+
     processors = []
 
     for i in range(0, threads):
@@ -85,7 +85,6 @@ def map(paths, process_dump, handle_error=re_raise,
         else:
             error, path = item
             re_raise(error, path)
-
 
 def queue_files(paths):
     """
