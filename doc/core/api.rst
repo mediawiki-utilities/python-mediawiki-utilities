@@ -42,7 +42,7 @@ Session
 Collections
 ===========
 
-.. autoclass:: mw.api.DeletedRevs
+.. autoclass:: mw.api.DeletedRevisions
    :members:
 
 .. autoclass:: mw.api.Pages
