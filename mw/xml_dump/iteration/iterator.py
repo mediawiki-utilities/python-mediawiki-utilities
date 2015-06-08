@@ -187,8 +187,8 @@ class Iterator(serializable.Type):
         return cls.from_element(element)
     
     @classmethod
-    def from_ref(cls, ref):
-        f = io.StringIO(ref)
+    def from_string(cls, string):
+        f = io.StringIO(string)
         element = ElementIterator.from_file(f)
         assert element.tag == "mediawiki"
         return cls.from_element(element)
