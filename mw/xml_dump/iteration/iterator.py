@@ -187,6 +187,13 @@ class Iterator(serializable.Type):
         return cls.from_element(element)
     
     @classmethod
+    def from_string(cls, string):
+        f = io.StringIO(string)
+        element = ElementIterator.from_file(f)
+        assert element.tag == "mediawiki"
+        return cls.from_element(element)
+    
+    @classmethod
     def from_page_xml(cls, page_xml):
         header = """
         <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.5/"
