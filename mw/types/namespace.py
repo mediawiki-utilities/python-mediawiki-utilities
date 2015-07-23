@@ -17,7 +17,7 @@ class Namespace(serializable.Type):
         Namespace ID : `int`
         """
 
-        self.name = str(name)
+        self.name = none_or(name, str)
         """
         Namespace name : `str`
         """
