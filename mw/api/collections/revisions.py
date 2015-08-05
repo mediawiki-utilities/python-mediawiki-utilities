@@ -153,7 +153,8 @@ class Revisions(Collection):
         
         params = {
             'action': "query",
-            'prop': "revisions"
+            'prop': "revisions",
+            'rawcontinue': ''
         }
         
         params['revids'] = self._items(revids, type=int)
@@ -179,7 +180,7 @@ class Revisions(Collection):
         params['rvparse'] = none_or(parse, bool)
         params['rvsection'] = none_or(section, int)
         params['rvtoken'] = none_or(token, str)
-        params['rvcontinue'] = none_or(rvcontinue, int)
+        params['rvcontinue'] = none_or(rvcontinue, str)
         params['rvdiffto'] = self._check_diffto(diffto)
         params['rvdifftotext'] = none_or(difftotext, str)
         params['rvcontentformat'] = none_or(contentformat, str)
