@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='mediawiki-utilities',
-    version="0.4.15",
+    version="0.4.16",
     author='Aaron Halfaker',
     author_email='aaron.halfaker@gmail.com',
     packages=find_packages(),
