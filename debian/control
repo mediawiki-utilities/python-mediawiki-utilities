@@ -1,0 +1,18 @@
+Source: python3-mediawiki-utilities
+Maintainer: Aaron Halfakar <aaron.halfakar@gmail.com>
+Section: python
+Priority: optional
+Build-Depends: python3-setuptools, python3-all, debhelper (>= 9), python3-nose, python3-pymysql, python3-requests
+Standards-Version: 3.9.6
+
+Package: python3-mediawiki-utilities
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: Infrastructure for running webservices on tools.wmflabs.org
+ Provides scripts and a python package for running and controlling
+ user provided webservices on tools.wmflabs.org.
+ .
+ webservice-new is the user facing script that can start / stop / restart
+ webservices when run from commandline in bastion hosts.
+ webservice-runner is the script that starts on the exec hosts and
+ exec's to the appropriate command to run the webserver itself.

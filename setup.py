@@ -14,9 +14,8 @@ setup(
     description='A set of utilities for extracting and processing MediaWiki data.',
     long_description=open('README.rst').read(),
     install_requires=[
-        "argparse >= 1.1",
-        "requests >= 2.0.1",
-        "pymysql >= 0.6.2"],
+        "requests>=2.4",
+        "pymysql>=0.6.2"],
     test_suite='nose.collector',
     classifiers=[
         "Programming Language :: Python",
