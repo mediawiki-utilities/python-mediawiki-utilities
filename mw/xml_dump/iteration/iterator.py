@@ -9,24 +9,24 @@ from .page import Page
 
 
 class ConcatinatingTextReader(io.TextIOBase):
-    
+
     def __init__(self, *items):
         self.items = [io.StringIO(i) if isinstance(i, str) else i
                       for i in items]
-    
+
     def read(self, size=-1):
         return "".join(self._read(size))
-    
+
     def readline(self):
-        
+
         if len(self.items) > 0:
             line = self.items[0].readline()
             if line == "": self.items.pop(0)
         else:
             line = ""
-        
+
         return line
-    
+
     def _read(self, size):
         if size > 0:
             while len(self.items) > 0:
@@ -37,13 +37,13 @@ class ConcatinatingTextReader(io.TextIOBase):
                     self.items.pop(0)
                 else:
                     break
-        
+
         else:
             for item in self.items:
                 yield item.read()
-            
-        
-    
+
+
+
 
 def concat(*stream_items):
     return ConcatinatingTextReader(*stream_items)
@@ -72,12 +72,18 @@ class Iterator(serializable.Type):
     __slots__ = ('site_name', 'base', 'generator', 'case', 'namespaces',
                  '__pages')
 
-    def __init__(self, site_name=None, base=None, generator=None, case=None,
-                 namespaces=None, pages=None):
+    def __init__(self, site_name=None, dbname=None, base=None, generator=None,
+                 case=None, namespaces=None, pages=None):
 
         self.site_name = none_or(site_name, str)
         """
         The name of the site. : str | `None` (if not specified in the XML)
+        """
+
+        self.dbname = none_or(dbname, str)
+        """
+        The database name of the site. : str | `None` (if not specified in the
+        XML)
         """
 
         self.base = none_or(base, str)
@@ -127,6 +133,7 @@ class Iterator(serializable.Type):
     def load_site_info(cls, element):
 
         site_name = None
+        dbname = None
         base = None
         generator = None
         case = None
@@ -135,6 +142,8 @@ class Iterator(serializable.Type):
         for sub_element in element:
             if sub_element.tag == 'sitename':
                 site_name = sub_element.text
+            if sub_element.tag == 'dbname':
+                dbname = sub_element.text
             elif sub_element.tag == 'base':
                 base = sub_element.text
             elif sub_element.tag == 'generator':
@@ -144,7 +153,7 @@ class Iterator(serializable.Type):
             elif sub_element.tag == 'namespaces':
                 namespaces = cls.load_namespaces(sub_element)
 
-        return site_name, base, generator, case, namespaces
+        return site_name, dbname, base, generator, case, namespaces
 
     @classmethod
     def load_pages(cls, element):
@@ -171,28 +180,28 @@ class Iterator(serializable.Type):
         for sub_element in element:
             tag = sub_element.tag
             if tag == "siteinfo":
-                site_name, base, generator, case, namespaces = \
+                site_name, dbname, base, generator, case, namespaces = \
                     cls.load_site_info(sub_element)
                 break
 
         # Consume all <page>
         pages = cls.load_pages(element)
 
-        return cls(site_name, base, generator, case, namespaces, pages)
+        return cls(site_name, dbname, base, generator, case, namespaces, pages)
 
     @classmethod
     def from_file(cls, f):
         element = ElementIterator.from_file(f)
         assert element.tag == "mediawiki"
         return cls.from_element(element)
-    
+
     @classmethod
     def from_string(cls, string):
         f = io.StringIO(string)
         element = ElementIterator.from_file(f)
         assert element.tag == "mediawiki"
         return cls.from_element(element)
-    
+
     @classmethod
     def from_page_xml(cls, page_xml):
         header = """
@@ -206,7 +215,7 @@ class Iterator(serializable.Type):
             </namespaces>
         </siteinfo>
         """
-        
+
         footer = "</mediawiki>"
-        
+
         return cls.from_file(concat(header, page_xml, footer))
