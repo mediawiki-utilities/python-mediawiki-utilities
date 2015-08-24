@@ -97,6 +97,8 @@ class Page(serializable.Type):
                 redirect = Redirect.from_element(sub_element)
             elif tag == "restrictions":
                 restrictions.append(sub_element.text)
+            elif tag == "DiscussionThreading":
+                continue
             elif tag == "revision":
                 first_revision = sub_element
                 break
